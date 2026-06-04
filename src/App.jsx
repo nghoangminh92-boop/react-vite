@@ -1,41 +1,43 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import MyComponent from './components/learn/MyComponent'
-import {SecondComponent,ThirdComponent} from './components/learn/SecondComponent'
 
-
-
+import './components/todo/todo.css';
+import TodoData from './components/todo/TodoData';
+import TodoNew from './components/todo/TodoNew';
+import reactLogo from './assets/react.svg';
+import { useState } from 'react';
 const  App= ()=> {
-  const [count, setCount] = useState(0)
 
+  const [todoList,setTodoList]=useState([
+    // {id:1,name:"Learning React"},
+    // {id:2,name:"Watching Youtube"}
+  
+  ])
+
+  const addNewTodo=(name)=>{
+    const newTodo={
+      id:randomIntFromInterval(1,100000),
+      name:name
+    }
+
+    setTodoList([...todoList,newTodo])
+    
+}
+  const randomIntFromInterval=(min, max)=> { // min and max included 
+  return Math.floor(Math.random() * (max - min + 1) + min);
+  }
+  
+  //{key:value}
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="todo-container">
+      <div className="todo-title"> Todo List</div>
+      <TodoNew
+      addNewTodo={addNewTodo}/>
+      <TodoData
+      todoList={todoList}
+      />
+      <div className="todo-image" >
+        <img src={reactLogo} className="logo"/>
       </div>
-      <h1>Hello world & hoidanit</h1>
-      <MyComponent/>
-      <SecondComponent/>
-      <ThirdComponent/>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    </div>
   )
 }
 
