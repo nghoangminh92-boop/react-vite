@@ -1,30 +1,27 @@
 const TodoData = (props) =>{
-  //props là biến object {}
-  // {
-  //   name:"Ren",
-  //   age:24,
-  //   data:{}
-  // }
-  const {todoList}=props;
+
+  const {todoList, deleteTodo}=props;
 
   // const name=props.name;
   // const age=props.age;
   // const data=props.data;
 
+  const handleClick =(id)=>{
+    deleteTodo(id)
+  }
 
-
-  console.log(">>> check props: ",todoList);  
     return (
     <div className='todo-data'>
         {todoList.map((item,index)=> {
-          console.log(">>>check map",item,index)
           return (
-            <div className={`todo-item`} key={index.id}>
-            <div >
-              {item.name}
-            </div>
-           <button>Delete</button>
-           </div>)
+            <div className={`todo-item`} key={item.id}>
+            <div >{item.name}</div>
+           <button 
+           onClick={()=> handleClick(item.id)}
+           
+           style={{cursor:"pointer"}}>Delete</button>
+           </div>
+          )
           
         })}
         
