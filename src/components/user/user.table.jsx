@@ -1,6 +1,6 @@
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import {notification, Popconfirm, Table} from 'antd';
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import UpdateUserModal from './updateUser.modal';
 import ViewUserDetail from './view.user.detail';
 import { deleteUserAPI } from '../../services/api.services';
