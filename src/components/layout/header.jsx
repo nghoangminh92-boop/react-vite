@@ -1,7 +1,7 @@
 import { Link, NavLink } from 'react-router-dom';
-import { HomeOutlined,AuditOutlined, UsergroupAddOutlined } from '@ant-design/icons';
+import { HomeOutlined,AuditOutlined, UsergroupAddOutlined, SettingOutlined } from '@ant-design/icons';
 import { Menu } from 'antd';
-import { useState } from 'react';
+import { Children, useState } from 'react';
 
 const Header=()=>{
     
@@ -28,6 +28,22 @@ const items = [
     icon: <AuditOutlined />,
 
   },
+  {
+  label: 'Cài đặt',
+  key: 'setting',
+  icon: <SettingOutlined />,
+  children: [
+    {
+      label: <Link to={"/login"}>Đăng nhập</Link>,
+      key: 'login',
+    },
+    {
+      label: 'Đăng xuất',
+      key: 'logout',
+    }
+  ]
+}
+
 
 ];
     return(

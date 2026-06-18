@@ -1,7 +1,120 @@
+import { ArrowRightOutlined } from "@ant-design/icons";
+import { Button, Form, Input, Row, Col, Divider, message, notification } from "antd";
+import { Link, useNavigate } from "react-router-dom";
+import { loginUserAPI } from "../services/api.services";
+import { useState } from "react";
 
-const LoginPage =()=>{
-    return (
-        <div>Login page</div>
-    )
-}
+const LoginPage = () => {
+  const [form] = Form.useForm();
+  const [loading, setLoading]= useState(false);
+  const navigate = useNavigate();
+
+  const onFinish = async (values) => {
+    setLoading(true)
+    const res= await loginUserAPI(values.email,values.password)
+    if(res.data){
+        message.success("Đăng nhập thành công")
+        navigate("/");
+    }else{
+        notification.error({
+        message: "Error login",
+        description: JSON.stringify(res.message),
+      });
+    }
+    setLoading(false)
+};
+
+  return (
+    <Row justify="center" style={{ margin: "30px" }}>
+      <Col span={24}>
+        <fieldset
+          style={{
+            padding: "20px",
+            margin: "5px auto",
+            border: "1px solid #ccc",
+            borderRadius: "6px",
+            maxWidth: "420px",
+            background: "#fff",
+          }}
+        >
+          <legend style={{ padding: "0 10px", fontWeight: 600 }}>
+            Đăng nhập
+          </legend>
+
+          {/* ⭐ LOGO KHÔNG ĐỔ BÓNG */}
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "center",
+              marginBottom: 20,
+            }}
+          >
+            <img
+              src="https://img.freepik.com/free-vector/bird-colorful-gradient-design-vector_343694-2506.jpg"
+              alt="Logo"
+              style={{
+                width: 90,
+                height: 90,
+                borderRadius: "50%",   // logo tròn
+                objectFit: "cover",
+                boxShadow: "none",     // ⭐ bỏ đổ bóng
+                border: "none",        // ⭐ bỏ khung
+              }}
+            />
+          </div>
+
+          <Form form={form} layout="vertical" onFinish={onFinish}>
+            <Form.Item
+              label="Email"
+              name="email"
+              rules={[
+                { required: true, message: "Email is required" },
+                { type: "email", message: "Email is not valid" },
+              ]}
+            >
+              <Input placeholder="example@gmail.com" />
+            </Form.Item>
+
+            <Form.Item
+              label="Password"
+              name="password"
+              rules={[{ required: true, message: "Password is required" }]}
+            >
+              <Input.Password placeholder="Enter password" />
+            </Form.Item>
+
+            <Form.Item>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  marginTop: "10px",
+                }}
+              >
+                <Button 
+                loading={loading}
+                type="primary" htmlType="submit" icon={<ArrowRightOutlined />}>
+                  Login
+                </Button>
+                
+                <Link to={"/"} style={{ fontWeight: 500 }}>
+                  Go to homepage <ArrowRightOutlined />
+                </Link>
+              </div>
+            </Form.Item>
+
+            <Divider>
+              <div style={{ textAlign: "center" }}>
+                Chưa có tài khoản? <Link to={"/register"}>Đăng ký tại đây</Link>
+              </div>
+            </Divider>
+          </Form>
+        </fieldset>
+      </Col>
+    </Row>
+  );
+};
+
 export default LoginPage;
