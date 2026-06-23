@@ -1,5 +1,6 @@
 import { Input, Modal, notification } from "antd";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { AuthContext } from "../context/auth.context";
 import { updateCommentAPI } from "../../services/api.services";
 
 const { TextArea } = Input;
@@ -12,17 +13,20 @@ const UpdateCommentModal = (props) => {
     setDataUpdate,
     loadComments,
     postId,
+    onUpdateSuccess,
   } = props;
+
+  const { user } = useContext(AuthContext);
 
   const [id, setId] = useState("");
   const [content, setContent] = useState("");
-  const [user, setUser] = useState("");
+  const [commentUser, setCommentUser] = useState("");
 
   useEffect(() => {
     if (dataUpdate) {
       setId(dataUpdate._id);
       setContent(dataUpdate.content || "");
-      setUser(dataUpdate.user || "");
+      setCommentUser(dataUpdate.user || "");
     }
   }, [dataUpdate]);
 
@@ -35,15 +39,25 @@ const UpdateCommentModal = (props) => {
       return;
     }
 
-    const res = await updateCommentAPI(id, content, user);
+    const res = await updateCommentAPI(id, content, user.fullName, user?.id, user?.avatar || "", postId);
 
     if (res.data) {
       notification.success({
         message: "Cập nhật bình luận",
         description: "Cập nhật bình luận thành công",
       });
+      const updatedComment = {
+        _id: id,
+        content: content,
+        user: user.fullName,
+        userId: user?.id,
+        avatar: user?.avatar || "",
+        postId: postId,
+      };
+      if (onUpdateSuccess) {
+        onUpdateSuccess(updatedComment);
+      }
       resetAndCloseModal();
-      await loadComments(postId);
     } else {
       notification.error({
         message: "Error update comment",
@@ -57,7 +71,7 @@ const UpdateCommentModal = (props) => {
     setDataUpdate(null);
     setId("");
     setContent("");
-    setUser("");
+    setCommentUser("");
   };
 
   return (
@@ -74,7 +88,7 @@ const UpdateCommentModal = (props) => {
       <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
         <div>
           <span>Người bình luận</span>
-          <Input value={user} disabled />
+          <Input value={commentUser} disabled />
         </div>
 
         <div>

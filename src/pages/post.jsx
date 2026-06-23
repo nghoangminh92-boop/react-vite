@@ -63,6 +63,7 @@ const PostPage = () => {
       const { posts, total: totalCount, current: newCurrent, pageSize: newPageSize } =
         parsePostListResponse(res, current, pageSize);
 
+      console.log("Posts from backend:", posts);
       setDataPosts(posts);
       setTotal(totalCount);
       setCurrent(newCurrent);

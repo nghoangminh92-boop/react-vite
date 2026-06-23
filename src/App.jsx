@@ -26,7 +26,7 @@ const  App= ()=> {
   const fetchUserInfo= async()=>{
     const res= await getAccountAPI();
     if(res.data){
-      //succes
+      console.log("Backend user data:", res.data.user);
       setUser(res.data.user)
     }
     setIsAppLoading(false)
