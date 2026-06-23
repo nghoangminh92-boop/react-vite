@@ -1,57 +1,96 @@
-import { Link, NavLink } from 'react-router-dom';
-import { HomeOutlined,AuditOutlined, UsergroupAddOutlined, SettingOutlined } from '@ant-design/icons';
-import { Menu } from 'antd';
-import { Children, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { 
+  HomeOutlined,
+  AuditOutlined,
+  UsergroupAddOutlined,
+  LoginOutlined,
+  AliwangwangOutlined,
+  FileTextOutlined
+} from '@ant-design/icons';
+import { Menu, message } from 'antd';
+import { useContext, useState } from 'react';
+import { AuthContext } from '../context/auth.context';
+import { logoutAPI } from '../../services/api.services';
 
-const Header=()=>{
-    
+const Header = () => {
   const [current, setCurrent] = useState('');
-  const onClick = e => {
-    console.log('click ', e);
+  const { user,setUser } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const onClick = (e) => {
     setCurrent(e.key);
   };
-const items = [
-  {
-    label: <Link to={"/"}>Home</Link>,
-    key: 'home',
-    icon: <HomeOutlined />,
-  },
-  {
-    label: <Link to={"/users"}>Users</Link>,
-    key: 'users',
-    icon: <UsergroupAddOutlined />,
-    
-  },
-  {
-    label:<Link to={"/books"}>Book</Link> ,
-    key: 'books',
-    icon: <AuditOutlined />,
 
-  },
-  {
-  label: 'Cài đặt',
-  key: 'setting',
-  icon: <SettingOutlined />,
-  children: [
-    {
-      label: <Link to={"/login"}>Đăng nhập</Link>,
-      key: 'login',
-    },
-    {
-      label: 'Đăng xuất',
-      key: 'logout',
+  const handleLogout= async()=>{
+    const res= await logoutAPI();
+    if(res.data){
+      //clear dât
+      localStorage.removeItem("access_token");
+      setUser({
+          "email": "",
+          "phone": "",
+          "fullName": "",
+          "role": "",
+          "avatar": "",
+          "id": ""
+      })
+      message.success("Logout success");
+
+      // redirect to home
+      // navigate("/")
     }
-  ]
-}
+  }
+  const items = [
+    {
+      label: <Link to="/">Home</Link>,
+      key: 'home',
+      icon: <HomeOutlined />,
+    },
+    ...(user.role === 'ADMIN' ? [{
+      label: <Link to="/users">Users</Link>,
+      key: 'users',
+      icon: <UsergroupAddOutlined />,
+    }] : []),
+    {
+      label: <Link to="/foods">Foods</Link>,
+      key: 'foods',
+      icon: <AuditOutlined />,
+    },
+    ...(user.role === 'ADMIN' ? [{
+      label: <Link to="/posts">Posts</Link>,
+      key: 'posts',
+      icon: <FileTextOutlined />,
+    }] : []),
+   ...(!user.id ?[{
+   label: <Link to="/login">Đăng nhập</Link>,
+              key: 'login',
+              icon: <LoginOutlined />,
 
+   }]:[]),
 
-];
-    return(
-    <Menu onClick={onClick} 
-    selectedKeys={[current]} 
-    mode="horizontal" items={items} />
+      ...(user.id ?[ {
+              label: `Welcome ${user.fullName}`,
+              key: 'setting',
+              icon: <AliwangwangOutlined />,
+                children: [
+                {
+                    label: <span onClick={()=>handleLogout()}> Đăng xuất </span>,
+                    key: 'logout',
+                },
+            ],
+            }, ]:[]),
+           
 
-    )
-}
+  ];
+
+  return (
+    <Menu
+      onClick={onClick}
+      selectedKeys={[current]}
+      mode="horizontal"
+      items={items}
+    />
+  );
+};
 
 export default Header;

@@ -2,18 +2,23 @@ import { ArrowRightOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Row, Col, Divider, message, notification } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { loginUserAPI } from "../services/api.services";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { AuthContext } from "../components/context/auth.context";
 
 const LoginPage = () => {
   const [form] = Form.useForm();
   const [loading, setLoading]= useState(false);
   const navigate = useNavigate();
+  const {setUser} = useContext(AuthContext);
+  
 
   const onFinish = async (values) => {
     setLoading(true)
     const res= await loginUserAPI(values.email,values.password)
     if(res.data){
         message.success("Đăng nhập thành công")
+        localStorage.setItem("access_token",res.data.access_token)
+        setUser(res.data.user);
         navigate("/");
     }else{
         notification.error({
@@ -51,7 +56,7 @@ const LoginPage = () => {
             }}
           >
             <img
-              src="https://img.freepik.com/free-vector/bird-colorful-gradient-design-vector_343694-2506.jpg"
+              src="https://image.jimcdn.com/app/cms/image/transf/dimension=320x10000:format=jpg/path/sdebecf2bdf0cca64/image/icfa5182b8564128f/version/1752621256/image.jpg"
               alt="Logo"
               style={{
                 width: 90,
@@ -81,7 +86,9 @@ const LoginPage = () => {
               name="password"
               rules={[{ required: true, message: "Password is required" }]}
             >
-              <Input.Password placeholder="Enter password" />
+              <Input.Password placeholder="Enter password" onKeyDown={(event)=>{
+                if(event.key==='enter') form.submit;
+              }} />
             </Form.Item>
 
             <Form.Item>

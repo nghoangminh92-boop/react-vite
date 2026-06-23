@@ -64,7 +64,6 @@ const ViewUserDetail=(props)=>{
       )
     }
   }
-  console.log(">>>>check file ",preview);
   
   return (
     <Drawer title="Chi tiết user"

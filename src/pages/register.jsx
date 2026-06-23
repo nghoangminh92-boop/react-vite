@@ -73,7 +73,7 @@ const RegisterPage = () => {
             }}
           >
             <img
-              src="https://img.freepik.com/free-vector/bird-colorful-gradient-design-vector_343694-2506.jpg?semt=ais_incoming&w=740&q=80"
+              src="https://image.jimcdn.com/app/cms/image/transf/dimension=320x10000:format=jpg/path/sdebecf2bdf0cca64/image/icfa5182b8564128f/version/1752621256/image.jpg"
               alt="Logo"
               style={{
                 width: "100%",

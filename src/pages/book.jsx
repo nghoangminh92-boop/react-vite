@@ -1,6 +1,10 @@
+import FoodTable from "../components/food/food.table";
+
 const BookPage =()=>{
     return (
-        <div>Book page</div>
+        <div>
+            <FoodTable/>
+        </div>
     )
 }
 export default BookPage;

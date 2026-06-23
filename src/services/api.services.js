@@ -80,8 +80,76 @@ const handleUpdateFile =(file,folder)=>{
       return  axios.post(URL_BACKEND,data);
 }
 
+ const getAccountAPI=()=>{
+        const URL_BACKEND="/api/v1/auth/account";
+        return  axios.get(URL_BACKEND);
+}
+
+ const logoutAPI=()=>{
+        const URL_BACKEND="/api/v1/auth/logout";
+        return  axios.post(URL_BACKEND);
+}
+
+const fetchAllFoodAPI = (current, pageSize) => {
+  const URL_BACKEND = `/api/v1/book?current=${current}&pageSize=${pageSize}`;
+  return axios.get(URL_BACKEND);
+};
+
+const createPostAPI = (title, content, image, author, userId, avatar) => {
+  const URL_BACKEND = "/api/v1/post";
+  const data = { title, content, image, author, userId, avatar };
+  return axios.post(URL_BACKEND, data);
+};
+
+const fetchAllPostAPI = (current, pageSize) => {
+  const URL_BACKEND = `/api/v1/post?current=${current}&pageSize=${pageSize}`;
+  return axios.get(URL_BACKEND);
+};
+
+const fetchPostByIdAPI = (id) => {
+  const URL_BACKEND = `/api/v1/post/${id}`;
+  return axios.get(URL_BACKEND);
+};
+
+const updatePostAPI = (_id, title, content, image, author) => {
+  const URL_BACKEND = "/api/v1/post";
+  const data = { _id, title, content, image, author };
+  return axios.put(URL_BACKEND, data);
+};
+
+const deletePostAPI = (id) => {
+  const URL_BACKEND = `/api/v1/post/${id}`;
+  return axios.delete(URL_BACKEND);
+};
+
+const createCommentAPI = (postId, content, user, userId, avatar) => {
+  const URL_BACKEND = "/api/v1/comment";
+  const data = { postId, content, user, userId, avatar };
+  return axios.post(URL_BACKEND, data);
+};
+
+const fetchCommentsByPostAPI = (postId) => {
+  const URL_BACKEND = `/api/v1/comment/${postId}`;
+  return axios.get(URL_BACKEND);
+};
+
+const updateCommentAPI = (_id, content, user) => {
+  const URL_BACKEND = "/api/v1/comment";
+  const data = { _id, content, user };
+  return axios.put(URL_BACKEND, data);
+};
+
+const deleteCommentAPI = (id) => {
+  const URL_BACKEND = `/api/v1/comment/${id}`;
+  return axios.delete(URL_BACKEND);
+};
+
 export {
     createUserAPI,updateUserAPI,fetchAllUserAPI,
     deleteUserAPI,handleUpdateFile,updateUserAvatarAPI,
-    registerUserAPI,loginUserAPI
+    registerUserAPI,loginUserAPI,getAccountAPI,logoutAPI,
+    fetchAllFoodAPI,
+    createPostAPI,fetchAllPostAPI,fetchPostByIdAPI,
+    updatePostAPI,deletePostAPI,
+    createCommentAPI,fetchCommentsByPostAPI,updateCommentAPI,deleteCommentAPI
 }

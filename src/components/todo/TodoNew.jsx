@@ -1,7 +1,6 @@
 import { useState } from "react";
 
 const TodoNew =(props) =>{
-    console.log(">>check props ",props)
     //useState hook (getter/setter)
     // const valueInput="Ren";
 
