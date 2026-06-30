@@ -4,12 +4,40 @@ import { fetchAllPostAPI } from "../services/api.services";
 import { notification, Spin } from "antd";
 import { useEffect, useState } from "react";
 
+// const parsePostListResponse = (res, current, pageSize) => {
+//   if (!res?.data) {
+//     return { posts: [], total: 0, current, pageSize };
+//   }
+
+//   // Backend trả dạng phân trang: { result: [], meta: {} }
+//   if (res.data.result && Array.isArray(res.data.result)) {
+//     return {
+//       posts: res.data.result,
+//       total: +res.data.meta?.total || res.data.result.length,
+//       current: +res.data.meta?.current || current,
+//       pageSize: +res.data.meta?.pageSize || pageSize,
+//     };
+//   }
+
+//   // Backend trả dạng mảng trực tiếp: data: []
+//   if (Array.isArray(res.data)) {
+//     const start = (current - 1) * pageSize;
+//     return {
+//       posts: res.data.slice(start, start + pageSize),
+//       total: res.data.length,
+//       current,
+//       pageSize,
+//     };
+//   }
+
+//   return { posts: [], total: 0, current, pageSize };
+// };
 const parsePostListResponse = (res, current, pageSize) => {
   if (!res?.data) {
     return { posts: [], total: 0, current, pageSize };
   }
 
-  // Backend trả dạng phân trang: { result: [], meta: {} }
+  // Backend trả dạng phân trang chuẩn: { result: [], meta: {} }
   if (res.data.result && Array.isArray(res.data.result)) {
     return {
       posts: res.data.result,
@@ -25,6 +53,21 @@ const parsePostListResponse = (res, current, pageSize) => {
     return {
       posts: res.data.slice(start, start + pageSize),
       total: res.data.length,
+      current,
+      pageSize,
+    };
+  }
+
+  // Backend trả dạng object với key số: { "0": {...}, "1": {...}, "author": "..." }
+  if (typeof res.data === "object") {
+    const posts = Object.keys(res.data)
+      .filter((key) => /^\d+$/.test(key)) // chỉ lấy key là số, bỏ qua field "author" rác
+      .sort((a, b) => +a - +b)
+      .map((key) => res.data[key]);
+
+    return {
+      posts,
+      total: posts.length,
       current,
       pageSize,
     };
