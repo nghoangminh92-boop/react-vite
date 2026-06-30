@@ -12,9 +12,15 @@ const  App= ()=> {
   const { setUser,isAppLoading,setIsAppLoading } = useContext(AuthContext);
 
 
-  useEffect(()=>{
+useEffect(()=>{
+  const token = localStorage.getItem("access_token");
+  if(token){
     fetchUserInfo();
-  }, [])
+  } else {
+    setIsAppLoading(false);
+  }
+}, [])
+
 
 //   const delay = (milSeconds)=>{
 //     return new Promise((resolve,reject)=>{
@@ -33,25 +39,25 @@ const  App= ()=> {
   }
   //{key:value}
   return (
-    <>{isAppLoading===true? 
-      <div style={{
-        position:"fixed",
-        top:"50%",
-        left:"50%",
-        transform:"translate(-50%,-50%)",
-      }}>
-        <Spin/>
+  <>
+    {isAppLoading && (
+      <div
+        style={{
+          position: "fixed",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+        }}
+      >
+        <Spin />
       </div>
-      
-      :
-      <>
-      <Header/>
-    <Outlet/>
-    <Footer/>
-    </>
-      }
-    </>
-  )
+    )}
+
+    <Header />
+    <Outlet />
+    <Footer />
+  </>
+);
 }
 
 export default App
