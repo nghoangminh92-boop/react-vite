@@ -12,21 +12,29 @@ const LoginPage = () => {
   const {setUser} = useContext(AuthContext);
   
 
-  const onFinish = async (values) => {
-    setLoading(true)
-    const res= await loginUserAPI(values.email,values.password)
-    if(res.data){
-        message.success("Đăng nhập thành công")
-        localStorage.setItem("access_token",res.data.access_token)
-        setUser(res.data.user);
-        navigate("/");
-    }else{
-        notification.error({
+const onFinish = async (values) => {
+  setLoading(true);
+  try {
+    const res = await loginUserAPI(values.email, values.password);
+
+    if (res.data) {
+      message.success("Đăng nhập thành công");
+      localStorage.setItem("access_token", res.data.access_token);
+      setUser(res.data.user);
+      navigate("/");
+    } else {
+      notification.error({
         message: "Error login",
         description: JSON.stringify(res.message),
       });
     }
-    setLoading(false)
+  } catch (error) {
+    notification.error({
+      message: "Network Error",
+      description: error.message,
+    });
+  }
+  setLoading(false);
 };
 
   return (

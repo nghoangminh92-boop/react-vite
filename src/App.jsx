@@ -2,7 +2,7 @@
 
 import Header from './components/layout/header';
 import Footer from './components/layout/footer';
-import { Outlet } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom';
 import { getAccountAPI } from './services/api.services';
 import { useContext, useEffect } from 'react';
 import { AuthContext } from './components/context/auth.context';
