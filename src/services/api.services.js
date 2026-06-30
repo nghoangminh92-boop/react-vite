@@ -95,9 +95,9 @@ const fetchAllFoodAPI = (current, pageSize) => {
   return axios.get(URL_BACKEND);
 };
 
-const createPostAPI = (title, content, image, author, userId, avatar) => {
-  const URL_BACKEND = "/api/v1/post";
-  const data = { title, content, image, author, userId, avatar };
+const createPostAPI = (title, content, image, author) => {
+  const URL_BACKEND = `/api/v1/post`;
+  const data = { title, content, image, author };
   return axios.post(URL_BACKEND, data);
 };
 
@@ -111,9 +111,9 @@ const fetchPostByIdAPI = (id) => {
   return axios.get(URL_BACKEND);
 };
 
-const updatePostAPI = (_id, title, content, image, author, userId) => {
-  const URL_BACKEND = "/api/v1/post";
-  const data = { _id, title, content, image, author, userId };
+const updatePostAPI = (_id, title, content, image, author) => {
+  const URL_BACKEND = `/api/v1/post`;
+  const data = { _id, title, content, image, author };
   return axios.put(URL_BACKEND, data);
 };
 
@@ -122,9 +122,9 @@ const deletePostAPI = (id) => {
   return axios.delete(URL_BACKEND);
 };
 
-const createCommentAPI = (postId, content, user, userId, avatar) => {
+const createCommentAPI = (postId, content, user) => {
   const URL_BACKEND = "/api/v1/comment";
-  const data = { postId, content, user, userId, avatar };
+  const data = { postId, content, user };
   return axios.post(URL_BACKEND, data);
 };
 
@@ -133,9 +133,9 @@ const fetchCommentsByPostAPI = (postId) => {
   return axios.get(URL_BACKEND);
 };
 
-const updateCommentAPI = (_id, content, user, userId, avatar, postId) => {
-  const URL_BACKEND = `/api/v1/comment/${_id}`;
-  const data = { postId, content, user, userId, avatar };
+const updateCommentAPI = (_id, content, user) => {
+  const URL_BACKEND = "/api/v1/comment";
+  const data = { _id, content, user };
   return axios.put(URL_BACKEND, data);
 };
 

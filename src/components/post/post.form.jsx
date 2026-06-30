@@ -29,22 +29,6 @@ const PostForm = (props) => {
   };
 
   const handleSubmitBtn = async () => {
-    if (!user?.id) {
-      notification.warning({
-        message: "Chưa đăng nhập",
-        description: "Bạn cần đăng nhập để tạo bài viết",
-      });
-      return;
-    }
-
-    if (!user?.fullName?.trim()) {
-      notification.warning({
-        message: "Thiếu thông tin",
-        description: "Vui lòng cập nhật tên người dùng trước khi tạo bài viết",
-      });
-      return;
-    }
-
     if (!title.trim()) {
       notification.warning({
         message: "Thiếu tiêu đề",
@@ -61,7 +45,6 @@ const PostForm = (props) => {
       return;
     }
 
-    console.log("User data:", user);
     let imageName = "";
 
     try {
@@ -82,9 +65,7 @@ const PostForm = (props) => {
         title,
         content,
         imageName,
-        user.fullName,
-        user.id,
-        user.avatar || ""
+        user?.fullName || "Anonymous"
       );
 
       if (res.data) {

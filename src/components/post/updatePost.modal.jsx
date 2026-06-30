@@ -1,6 +1,5 @@
 import { Input, Modal, notification } from "antd";
-import { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../context/auth.context";
+import { useEffect, useState } from "react";
 import { handleUpdateFile, updatePostAPI } from "../../services/api.services";
 
 const { TextArea } = Input;
@@ -13,8 +12,6 @@ const UpdatePostModal = (props) => {
     setDataUpdate,
     loadPost,
   } = props;
-
-  const { user } = useContext(AuthContext);
 
   const [id, setId] = useState("");
   const [title, setTitle] = useState("");
@@ -79,7 +76,7 @@ const UpdatePostModal = (props) => {
       }
     }
 
-    const res = await updatePostAPI(id, title, content, imageName, author, user?.id);
+    const res = await updatePostAPI(id, title, content, imageName, author);
 
     if (res.data) {
       notification.success({

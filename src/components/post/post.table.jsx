@@ -1,8 +1,7 @@
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { notification, Popconfirm, Table } from "antd";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { deletePostAPI } from "../../services/api.services";
-import { AuthContext } from "../context/auth.context";
 import PostDetail from "./post.detail";
 import UpdatePostModal from "./updatePost.modal";
 
@@ -16,8 +15,6 @@ const PostTable = (props) => {
     setCurrent,
     setPageSize,
   } = props;
-
-  const { user } = useContext(AuthContext);
 
   const [dataDetail, setDataDetail] = useState(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
@@ -126,42 +123,28 @@ const PostTable = (props) => {
     {
       title: "Thao tác",
       key: "action",
-      render: (_, record) => {
-        const isOwner = record.userId === user?.id;
-        return (
-          <div style={{ display: "flex", gap: "20px" }}>
-            {isOwner && (
-              <>
-                <EditOutlined
-                  onClick={() => {
-                    setDataUpdate(record);
-                    setIsModalUpdateOpen(true);
-                  }}
-                  style={{ cursor: "pointer", color: "orange" }}
-                  title="Chỉnh sửa"
-                />
+      render: (_, record) => (
+        <div style={{ display: "flex", gap: "20px" }}>
+          <EditOutlined
+            onClick={() => {
+              setDataUpdate(record);
+              setIsModalUpdateOpen(true);
+            }}
+            style={{ cursor: "pointer", color: "orange" }}
+          />
 
-                <Popconfirm
-                  title="Xóa bài viết"
-                  description="Bạn chắc chắn xóa bài viết này?"
-                  onConfirm={() => handleDeletePost(record._id)}
-                  okText="Có"
-                  cancelText="Không"
-                  placement="left"
-                >
-                  <DeleteOutlined
-                    style={{ cursor: "pointer", color: "red" }}
-                    title="Xóa"
-                  />
-                </Popconfirm>
-              </>
-            )}
-            {!isOwner && (
-              <span style={{ color: "#ccc", fontSize: "12px" }}>Không có quyền</span>
-            )}
-          </div>
-        );
-      },
+          <Popconfirm
+            title="Xóa bài viết"
+            description="Bạn chắc chắn xóa bài viết này?"
+            onConfirm={() => handleDeletePost(record._id)}
+            okText="Có"
+            cancelText="Không"
+            placement="left"
+          >
+            <DeleteOutlined style={{ cursor: "pointer", color: "red" }} />
+          </Popconfirm>
+        </div>
+      ),
     },
   ];
 
