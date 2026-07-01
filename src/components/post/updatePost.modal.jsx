@@ -168,7 +168,7 @@ const UpdatePostModal = (props) => {
             <img
               src={
                 preview ||
-                `${import.meta.env.VITE_BACKEND_URL}/images/images/${image}`
+                `${import.meta.env.VITE_BACKEND_URL}/images/${image}`
               }
               alt="preview"
               style={{
