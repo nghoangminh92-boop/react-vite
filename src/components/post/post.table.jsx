@@ -98,7 +98,7 @@ const PostTable = (props) => {
       render: (image) =>
         image ? (
           <img
-            src={`${import.meta.env.VITE_BACKEND_URL}/images/post/${image}`}
+            src={`${import.meta.env.VITE_BACKEND_URL}/images/${image}`}
             alt=""
             style={{
               width: 60,
