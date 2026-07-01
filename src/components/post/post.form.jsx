@@ -150,7 +150,7 @@ const PostForm = (props) => {
               <input
                 type="file"
                 hidden
-                id="btnUploadPostHome"
+                id="btnUploadPost"
                 accept="image/*"
                 onChange={handleOnChangeFile}
               />
