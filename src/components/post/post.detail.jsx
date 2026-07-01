@@ -167,7 +167,7 @@ const PostDetail = (props) => {
                   <strong>Ảnh:</strong>
                 </p>
                 <img
-                  src={`${import.meta.env.VITE_BACKEND_URL}/images/post/${postDetail.image}`}
+                  src={`${import.meta.env.VITE_BACKEND_URL}/images/images/${postDetail.image}`}
                   alt=""
                   style={{
                     maxWidth: "100%",
