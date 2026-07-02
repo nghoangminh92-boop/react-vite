@@ -43,7 +43,7 @@ const PostForm = (props) => {
       if (selectedFile) {
         const resUpload = await handleUpdateFile(selectedFile, "post");
         if (resUpload.data) {
-          imageName = resUpload.data.fileName;
+          imageName = resUpload.data.url;
         } else {
           notification.error({ message: "Error upload file", description: JSON.stringify(resUpload.message) });
           return;
