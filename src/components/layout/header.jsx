@@ -48,11 +48,16 @@ const Header = () => {
       key: 'users',
       icon: <UsergroupAddOutlined />,
     }] : []),
-    {
-      label: <Link to="/foods">Foods</Link>,
-      key: 'foods',
+    // {
+    //   label: <Link to="/foods">Foods</Link>,
+    //   key: 'foods',
+    //   icon: <AuditOutlined />,
+    // },
+    ...(user.role === 'ADMIN' ? [{
+      label: <Link to="/dishes">Món ăn</Link>,
+      key: 'dishes',
       icon: <AuditOutlined />,
-    },
+    }] : []),
     ...(user.role === 'ADMIN' ? [{
       label: <Link to="/posts">Posts</Link>,
       key: 'posts',

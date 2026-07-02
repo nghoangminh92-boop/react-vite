@@ -16,6 +16,8 @@ import TodoApp from './components/todo/TodoApp.jsx';
 import ErrorPage from './pages/error.jsx';
 import { AuthWrapper } from './components/context/auth.context.jsx';
 import PrivateRoute from './pages/private.route.jsx';
+import MenuPage from './pages/menu.jsx';
+import DishPage from './pages/dish.jsx';
  
 
 const router = createBrowserRouter([
@@ -33,13 +35,20 @@ const router = createBrowserRouter([
     element:<UserPage/>
 
   },
-   {
-    path:"/foods",
+  //  {
+  //   path:"/foods",
+  //   element:(
+  //     <PrivateRoute>
+  //       <BookPage/>
+  //     </PrivateRoute>)
+
+  // },
+  {
+    path:"/dishes",
     element:(
       <PrivateRoute>
-        <BookPage/>
+        <DishPage/>
       </PrivateRoute>)
-
   },
   {
     path:"/posts",
@@ -47,6 +56,10 @@ const router = createBrowserRouter([
       <PrivateRoute>
         <PostPage/>
       </PrivateRoute>)
+  },
+  {
+    path:"/menu",
+    element:<MenuPage/>
   },
   {
   path: "/profile",

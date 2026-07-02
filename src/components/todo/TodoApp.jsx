@@ -1,79 +1,13 @@
-// import './todo.css';
-// import TodoData from './TodoData';
-// import TodoNew from './TodoNew';
-// import reactLogo from '../../assets/react.svg';
-// import { useState } from 'react';
-
-// const TodoApp=()=>{
-//     const [todoList,setTodoList]=useState([
-//     // {id:1,name:"Learning React"},
-//     // {id:2,name:"Watching Youtube"}
-  
-//   ])
-
-//   const addNewTodo=(name)=>{
-//     const newTodo={
-//       id:randomIntFromInterval(1,100000),
-//       name:name
-//     }
-
-//     setTodoList([...todoList,newTodo])
-    
-// }
-//   const randomIntFromInterval=(min, max)=> { // min and max included 
-//   return Math.floor(Math.random() * (max - min + 1) + min);
-//   }
-  
-//   const deleteTodo = (id)=>{
-//     const newTodo=todoList.filter(item => item.id !== id)
-//     setTodoList(newTodo);
-//   }
-//   return (
-//         <div className="todo-container">
-//       <div className="todo-title"> Todo List</div>
-//       <TodoNew
-//       addNewTodo={addNewTodo}/>
-      
-//       {/* /* toán từ điều kiện */ }
-//       {/* {todoList.length  > 0 &&
-//       <TodoData
-//       todoList={todoList}/>
-//         }
-
-
-//       {todoList.length === 0 && 
-//       <div className="todo-image" >
-//         <img src={reactLogo} className="logo"/>
-//       </div>
-//       } */}
-      
-
-//       {todoList.length >0 ?
-//                           <TodoData
-//                           todoList={todoList}
-//                           deleteTodo={deleteTodo}
-//                           /> :
-//                           <div className="todo-image" >
-//                             <img src={reactLogo} className="logo"/>
-//                           </div>
-//         }
-
-//     </div>
-//   )
-// }
-// export default TodoApp;
 import "./todo.css";
 import banner from "../../assets/banner.jpg";
 import ramen1 from "../../assets/ramen1.jpg";
-import ramen2 from "../../assets/ramen2.jpg";
-import ramen3 from "../../assets/ramen3.jpg";
 import { useContext, useEffect, useState } from "react";
 import { Button, notification } from "antd";
 import PostForm from "../post/post.form";
 import PostsFeedList from "../post/PostsFeedList";
 import PostDetail from "../post/post.detail";
 import { AuthContext } from "../context/auth.context";
-import { fetchAllPostAPI } from "../../services/api.services";
+import { fetchAllPostAPI, fetchMenuAPI } from "../../services/api.services";
 
 const parsePostListResponse = (res, current, pageSize) => {
   if (!res?.data) {
@@ -105,6 +39,7 @@ const parsePostListResponse = (res, current, pageSize) => {
 const TodoApp = () => {
   const { user } = useContext(AuthContext);
   const [dataPosts, setDataPosts] = useState([]);
+  const [dataMenu, setDataMenu] = useState([]); // 👈 state menu món ăn
   const [current, setCurrent] = useState(1);
   const [pageSize] = useState(10);
   const [total, setTotal] = useState(0);
@@ -114,8 +49,23 @@ const TodoApp = () => {
 
   useEffect(() => {
     loadPost();
+    loadMenu(); // 👈 gọi thêm
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const loadMenu = async () => {
+    try {
+      const res = await fetchMenuAPI();
+      if (Array.isArray(res?.data)) {
+        setDataMenu(res.data);
+      } else {
+        setDataMenu([]);
+      }
+    } catch (error) {
+      console.error("Lỗi khi tải menu:", error);
+      setDataMenu([]);
+    }
+  };
 
   const loadPost = async (page = 1) => {
     setLoading(true);
@@ -138,7 +88,6 @@ const TodoApp = () => {
         pageSize
       );
 
-      // Append new posts if loading more, replace if first page
       if (page === 1) {
         setDataPosts(newPosts);
         setCurrent(1);
@@ -170,7 +119,6 @@ const TodoApp = () => {
 
   return (
     <div className="home-container">
-
       {/* HEADER */}
       <div className="home-header">
         <div className="logo">🍜 Food Review</div>
@@ -194,25 +142,23 @@ const TodoApp = () => {
         <h2 className="section-title">おすすめメニュー</h2>
 
         <div className="food-list">
-
-          <div className="food-card">
-            <img src={ramen1} alt="ramen" />
-            <h3>無塩ラーメン</h3>
-            <p className="price">980円</p>
-          </div>
-
-          <div className="food-card">
-            <img src={ramen2} alt="ramen" />
-            <h3>極辛ラーメン</h3>
-            <p className="price">1030円</p>
-          </div>
-
-          <div className="food-card">
-            <img src={ramen3} alt="ramen" />
-            <h3>チャーシューラーメン</h3>
-            <p className="price">1480円</p>
-          </div>
-
+          {dataMenu.length > 0 ? (
+            dataMenu.map((dish) => (
+              <div className="food-card" key={dish._id}>
+                <img src={dish.image || ramen1} alt={dish.name} />
+                <h3>{dish.name}</h3>
+                {dish.total > 0 ? (
+                  <p className="rating">
+                    ⭐ {dish.average.toFixed(1)} ({dish.total} đánh giá)
+                  </p>
+                ) : (
+                  <p className="rating">Chưa có đánh giá</p>
+                )}
+              </div>
+            ))
+          ) : (
+            <p>Chưa có món ăn nào</p>
+          )}
         </div>
       </div>
 
@@ -245,7 +191,6 @@ const TodoApp = () => {
         isDetailOpen={isDetailOpen}
         setIsDetailOpen={setIsDetailOpen}
       />
-
     </div>
   );
 };

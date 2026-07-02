@@ -1,4 +1,5 @@
 import { Empty, Spin } from "antd";
+import RatingDisplay from "./RatingDisplay";
 
 const PostsFeedList = ({ posts, onPostClick, loading }) => {
   const formatDate = (date) => {
@@ -54,6 +55,7 @@ const PostsFeedList = ({ posts, onPostClick, loading }) => {
               </div>
               <span className="post-card-date">{formatDate(post.createdAt)}</span>
             </div>
+            <RatingDisplay postId={post._id} />
           </div>
         </div>
       ))}

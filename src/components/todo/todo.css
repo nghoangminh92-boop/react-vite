@@ -265,3 +265,8 @@ button{
   border-top: 1px solid #eee;
 }
 
+.food-card .rating {
+  font-size: 14px;
+  color: #f5a623;
+  margin-top: 4px;
+}

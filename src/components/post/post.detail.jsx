@@ -18,7 +18,7 @@ import {
   fetchPostByIdAPI,
 } from "../../services/api.services";
 import UpdateCommentModal from "./updateComment.modal";
-
+import RatingStar from "./RatingStar";
 const { TextArea } = Input;
 
 const normalizeListData = (res) => {
@@ -178,6 +178,8 @@ src={postDetail.image?.startsWith('http') ? postDetail.image : `${import.meta.en
                 />
               </>
             )}
+
+           <RatingStar postId={postDetail._id} />
 
             <hr />
             <h4>Bình luận ({comments.length})</h4>

@@ -144,6 +144,53 @@ const deleteCommentAPI = (id) => {
   return axios.delete(URL_BACKEND);
 };
 
+const ratePostAPI = (postId, star) => {
+  const URL_BACKEND = "/api/v1/rating";
+  const data = { postId, star };
+  return axios.post(URL_BACKEND, data);
+};
+
+const fetchPostRatingAPI = (postId) => {
+  const URL_BACKEND = `/api/v1/rating/${postId}`;
+  return axios.get(URL_BACKEND);
+};
+
+const fetchUserRatingAPI = (postId) => {
+  const URL_BACKEND = `/api/v1/rating/${postId}/user`;
+  return axios.get(URL_BACKEND);
+};
+
+const fetchMenuAPI = () => {
+  const URL_BACKEND = `/api/v1/food/menu`;   // đổi từ /post/menu sang /food/menu
+  return axios.get(URL_BACKEND);
+};
+
+const createDishAPI = (name, description, image) => {
+  const URL_BACKEND = `/api/v1/food`;
+  const data = { name, description, image };
+  return axios.post(URL_BACKEND, data);
+};
+
+const fetchAllDishAPI = () => {
+  const URL_BACKEND = `/api/v1/food`;
+  return axios.get(URL_BACKEND);
+};
+
+const fetchDishByIdAPI = (id) => {
+  const URL_BACKEND = `/api/v1/food/${id}`;
+  return axios.get(URL_BACKEND);
+};
+
+const updateDishAPI = (id, name, description, image) => {
+  const URL_BACKEND = `/api/v1/food/${id}`;
+  const data = { name, description, image };
+  return axios.put(URL_BACKEND, data);
+};
+
+const deleteDishAPI = (id) => {
+  const URL_BACKEND = `/api/v1/food/${id}`;
+  return axios.delete(URL_BACKEND);
+};
 export {
     createUserAPI,updateUserAPI,fetchAllUserAPI,
     deleteUserAPI,handleUpdateFile,updateUserAvatarAPI,
@@ -151,5 +198,8 @@ export {
     fetchAllFoodAPI,
     createPostAPI,fetchAllPostAPI,fetchPostByIdAPI,
     updatePostAPI,deletePostAPI,
-    createCommentAPI,fetchCommentsByPostAPI,updateCommentAPI,deleteCommentAPI
+    createCommentAPI,fetchCommentsByPostAPI,updateCommentAPI,deleteCommentAPI,
+    ratePostAPI,fetchPostRatingAPI,fetchUserRatingAPI,
+    fetchMenuAPI,
+    createDishAPI,fetchAllDishAPI,fetchDishByIdAPI,updateDishAPI,deleteDishAPI
 }

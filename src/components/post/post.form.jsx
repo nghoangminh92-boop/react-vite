@@ -1,7 +1,7 @@
-import { Button, Input, Modal, notification } from "antd";
-import { useContext, useRef, useState } from "react";
+import { Button, Input, Modal, notification, Select } from "antd";
+import { useContext, useEffect, useRef, useState } from "react";
 import { AuthContext } from "../context/auth.context";
-import { createPostAPI, handleUpdateFile } from "../../services/api.services";
+import { createPostAPI, handleUpdateFile, fetchAllDishAPI } from "../../services/api.services";
 
 const { TextArea } = Input;
 
@@ -16,6 +16,28 @@ const PostForm = (props) => {
   const [preview, setPreview] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const [dishOptions, setDishOptions] = useState([]);
+  const [selectedFoodId, setSelectedFoodId] = useState(null);
+
+  useEffect(() => {
+    if (isModalOpen) {
+      loadDishOptions();
+    }
+  }, [isModalOpen]);
+
+  const loadDishOptions = async () => {
+    try {
+      const res = await fetchAllDishAPI();
+      const list = Array.isArray(res?.data) ? res.data : [];
+      setDishOptions(
+        list.map((dish) => ({ label: dish.name, value: dish._id }))
+      );
+    } catch (error) {
+      console.error("Lỗi khi tải danh sách món ăn:", error);
+      setDishOptions([]);
+    }
+  };
+
   const handleOnChangeFile = (event) => {
     if (!event.target.files || event.target.files.length === 0) {
       setSelectedFile(null);
@@ -28,6 +50,10 @@ const PostForm = (props) => {
   };
 
   const handleSubmitBtn = async () => {
+    if (!selectedFoodId) {
+      notification.warning({ message: "Thiếu món ăn", description: "Vui lòng chọn món ăn muốn đánh giá" });
+      return;
+    }
     if (!title.trim()) {
       notification.warning({ message: "Thiếu tiêu đề", description: "Vui lòng nhập tiêu đề bài viết" });
       return;
@@ -50,7 +76,13 @@ const PostForm = (props) => {
         }
       }
 
-      const res = await createPostAPI(title, content, imageName, user?.fullName || "Anonymous");
+      const res = await createPostAPI(
+        title,
+        content,
+        imageName,
+        user?.fullName || "Anonymous",
+        selectedFoodId
+      );
 
       if (res.data) {
         notification.success({ message: "Create post", description: "Tạo bài viết thành công" });
@@ -70,6 +102,7 @@ const PostForm = (props) => {
     setContent("");
     setSelectedFile(null);
     setPreview(null);
+    setSelectedFoodId(null);
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
@@ -93,6 +126,20 @@ const PostForm = (props) => {
         width={600}
       >
         <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+          <div>
+            <span>Món ăn đánh giá</span>
+            <Select
+              style={{ width: "100%", marginTop: "5px" }}
+              placeholder="Chọn món ăn"
+              options={dishOptions}
+              value={selectedFoodId}
+              onChange={(value) => setSelectedFoodId(value)}
+              showSearch
+              filterOption={(input, option) =>
+                (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
+              }
+            />
+          </div>
           <div>
             <span>Tiêu đề</span>
             <Input value={title} onChange={(e) => setTitle(e.target.value)} />
