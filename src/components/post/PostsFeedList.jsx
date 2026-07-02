@@ -33,7 +33,7 @@ const PostsFeedList = ({ posts, onPostClick, loading }) => {
         >
           {post.image && (
             <img
-              src={`${import.meta.env.VITE_BACKEND_URL}/images/${post.image}`}
+              src={post.image?.startsWith('http') ? post.image : `${import.meta.env.VITE_BACKEND_URL}/images/${post.image}`}
               alt={post.title}
               className="post-card-image"
             />
