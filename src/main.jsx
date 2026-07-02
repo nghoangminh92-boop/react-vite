@@ -5,6 +5,7 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
+import ProfilePage from './pages/profile.jsx'; // thêm dòng này
 import LoginPage from './pages/login.jsx';
 import RegisterPage from './pages/register.jsx';
 import UserPage from './pages/user.jsx';
@@ -47,6 +48,14 @@ const router = createBrowserRouter([
         <PostPage/>
       </PrivateRoute>)
   },
+  {
+  path: "/profile",
+  element: (
+    <PrivateRoute>
+      <ProfilePage />
+    </PrivateRoute>
+  )
+},
     ]
   },
   {
@@ -59,6 +68,7 @@ const router = createBrowserRouter([
     element:<RegisterPage/>
 
   }
+  
   
 ]);
 
