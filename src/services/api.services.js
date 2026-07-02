@@ -95,9 +95,9 @@ const fetchAllFoodAPI = (current, pageSize) => {
   return axios.get(URL_BACKEND);
 };
 
-const createPostAPI = (title, content, image, author) => {
+const createPostAPI = (title, content, image, author, foodId) => {
   const URL_BACKEND = `/api/v1/post`;
-  const data = { title, content, image, author };
+  const data = { title, content, image, author, foodId };
   return axios.post(URL_BACKEND, data);
 };
 
@@ -111,9 +111,9 @@ const fetchPostByIdAPI = (id) => {
   return axios.get(URL_BACKEND);
 };
 
-const updatePostAPI = (_id, title, content, image, author) => {
+const updatePostAPI = (_id, title, content, image, author, foodId) => {
   const URL_BACKEND = `/api/v1/post`;
-  const data = { _id, title, content, image, author };
+  const data = { _id, title, content, image, author, foodId };
   return axios.put(URL_BACKEND, data);
 };
 
@@ -144,19 +144,19 @@ const deleteCommentAPI = (id) => {
   return axios.delete(URL_BACKEND);
 };
 
-const ratePostAPI = (postId, star) => {
+const ratePostAPI = (foodId, star) => {
   const URL_BACKEND = "/api/v1/rating";
-  const data = { postId, star };
+  const data = { foodId, star };
   return axios.post(URL_BACKEND, data);
 };
 
-const fetchPostRatingAPI = (postId) => {
-  const URL_BACKEND = `/api/v1/rating/${postId}`;
+const fetchPostRatingAPI = (foodId) => {
+  const URL_BACKEND = `/api/v1/rating/${foodId}`;
   return axios.get(URL_BACKEND);
 };
 
-const fetchUserRatingAPI = (postId) => {
-  const URL_BACKEND = `/api/v1/rating/${postId}/user`;
+const fetchUserRatingAPI = (foodId) => {
+  const URL_BACKEND = `/api/v1/rating/${foodId}/user`;
   return axios.get(URL_BACKEND);
 };
 

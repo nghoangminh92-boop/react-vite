@@ -179,7 +179,7 @@ src={postDetail.image?.startsWith('http') ? postDetail.image : `${import.meta.en
               </>
             )}
 
-           <RatingStar postId={postDetail._id} />
+           <RatingStar postId={postDetail.foodId} />
 
             <hr />
             <h4>Bình luận ({comments.length})</h4>
