@@ -235,9 +235,27 @@ src={postDetail.image?.startsWith('http') ? postDetail.image : `${import.meta.en
                     ]}
                   >
                     <List.Item.Meta
-                      title={item.user || "Anonymous"}
-                      description={formatDate(item.createdAt)}
-                    />
+  avatar={
+    item.avatar ? (
+      <img
+        src={item.avatar?.startsWith('http') ? item.avatar : `${import.meta.env.VITE_BACKEND_URL}/images/avatar/${item.avatar}`}
+        alt={item.user}
+        style={{ width: 36, height: 36, borderRadius: "50%", objectFit: "cover" }}
+      />
+    ) : (
+      <div style={{
+        width: 36, height: 36, borderRadius: "50%",
+        background: "#1677ff", color: "#fff",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        fontWeight: "bold", fontSize: 16,
+      }}>
+        {(item.user || "A")[0].toUpperCase()}
+      </div>
+    )
+  }
+  title={item.user || "Anonymous"}
+  description={formatDate(item.createdAt)}
+/>
                     <p>{item.content}</p>
                   </List.Item>
                 )}
