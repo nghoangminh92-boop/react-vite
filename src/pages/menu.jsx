@@ -19,6 +19,11 @@ const MenuPage = () => {
     setLoading(false);
   };
 
+  const formatPrice = (price) => {
+    if (price == null) return "";
+    return price.toLocaleString("vi-VN") + " đ";
+  };
+
   if (loading) {
     return (
       <div style={{ textAlign: "center", padding: "60px" }}>
@@ -62,7 +67,7 @@ const MenuPage = () => {
           {item.image && (
             <img
               src={item.image}
-              alt={item.title}
+              alt={item.name}
               style={{
                 width: 100,
                 height: 100,
@@ -73,11 +78,14 @@ const MenuPage = () => {
           )}
 
           <div style={{ flex: 1 }}>
-            <h3 style={{ margin: 0 }}>{item.title}</h3>
+            <h3 style={{ margin: 0 }}>{item.name}</h3>
             <p style={{ color: "#666", margin: "4px 0" }}>
-              {item.content?.substring(0, 100)}
-              {item.content?.length > 100 ? "..." : ""}
+              {item.description?.substring(0, 100)}
+              {item.description?.length > 100 ? "..." : ""}
             </p>
+            <div style={{ fontWeight: "bold", color: "#d4380d", marginBottom: 4 }}>
+              {formatPrice(item.price)}
+            </div>
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <Rate disabled allowHalf value={item.average} style={{ fontSize: 14 }} />
               <span style={{ fontSize: 13, color: "#888" }}>
@@ -88,9 +96,6 @@ const MenuPage = () => {
                   Top {index + 1}
                 </Tag>
               )}
-            </div>
-            <div style={{ fontSize: 12, color: "#aaa", marginTop: 4 }}>
-              Đầu bếp: {item.author || "Anonymous"}
             </div>
           </div>
         </div>

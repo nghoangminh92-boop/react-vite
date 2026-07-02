@@ -16,6 +16,7 @@ import {
   deleteCommentAPI,
   fetchCommentsByPostAPI,
   fetchPostByIdAPI,
+  fetchDishByIdAPI,
 } from "../../services/api.services";
 import UpdateCommentModal from "./updateComment.modal";
 import RatingStar from "./RatingStar";
@@ -29,11 +30,18 @@ const normalizeListData = (res) => {
   return [];
 };
 
+const formatPrice = (price) => {
+  if (price == null) return "";
+  return price.toLocaleString("vi-VN") + " đ";
+};
+
 const PostDetail = (props) => {
   const { dataDetail, setDataDetail, isDetailOpen, setIsDetailOpen } = props;
   const { user } = useContext(AuthContext);
 
   const [postDetail, setPostDetail] = useState(null);
+  const [dishDetail, setDishDetail] = useState(null);
+  const [loadingDish, setLoadingDish] = useState(false);
   const [comments, setComments] = useState([]);
   const [commentContent, setCommentContent] = useState("");
   const [loadingPost, setLoadingPost] = useState(false);
@@ -53,13 +61,25 @@ const PostDetail = (props) => {
   const loadPostDetail = async (postId) => {
     setLoadingPost(true);
     const res = await fetchPostByIdAPI(postId);
-    if (res?.data) {
-      setPostDetail(res.data);
-    } else {
-      setPostDetail(dataDetail);
-    }
+    const detail = res?.data ? res.data : dataDetail;
+    setPostDetail(detail);
     setLoadingPost(false);
+
+    if (detail?.foodId) {
+      await loadDishDetail(detail.foodId);
+    }
     await loadComments(postId);
+  };
+
+  const loadDishDetail = async (foodId) => {
+    setLoadingDish(true);
+    try {
+      const res = await fetchDishByIdAPI(foodId);
+      setDishDetail(res?.data || null);
+    } catch (error) {
+      setDishDetail(null);
+    }
+    setLoadingDish(false);
   };
 
   const loadComments = async (postId) => {
@@ -125,6 +145,7 @@ const PostDetail = (props) => {
   const handleClose = () => {
     setDataDetail(null);
     setPostDetail(null);
+    setDishDetail(null);
     setIsDetailOpen(false);
     setComments([]);
     setCommentContent("");
@@ -144,6 +165,50 @@ const PostDetail = (props) => {
           </div>
         ) : postDetail ? (
           <>
+            {loadingDish ? (
+              <div style={{ textAlign: "center", padding: "20px" }}>
+                <Spin size="small" />
+              </div>
+            ) : dishDetail ? (
+              <div
+                style={{
+                  display: "flex",
+                  gap: 16,
+                  padding: 16,
+                  marginBottom: 20,
+                  background: "#fafafa",
+                  border: "1px solid #eee",
+                  borderRadius: 8,
+                }}
+              >
+                {dishDetail.image && (
+                  <img
+                    src={
+                      dishDetail.image?.startsWith("http")
+                        ? dishDetail.image
+                        : `${import.meta.env.VITE_BACKEND_URL}/images/${dishDetail.image}`
+                    }
+                    alt={dishDetail.name}
+                    style={{
+                      width: 90,
+                      height: 90,
+                      objectFit: "cover",
+                      borderRadius: 8,
+                    }}
+                  />
+                )}
+                <div>
+                  <h4 style={{ margin: 0 }}>{dishDetail.name}</h4>
+                  <p style={{ margin: "4px 0", color: "#666" }}>
+                    {dishDetail.description}
+                  </p>
+                  <div style={{ fontWeight: "bold", color: "#d4380d" }}>
+                    {formatPrice(dishDetail.price)}
+                  </div>
+                </div>
+              </div>
+            ) : null}
+
             <p>
               <strong>ID:</strong> {postDetail._id}
             </p>
@@ -167,7 +232,8 @@ const PostDetail = (props) => {
                   <strong>Ảnh:</strong>
                 </p>
                 <img
-src={postDetail.image?.startsWith('http') ? postDetail.image : `${import.meta.env.VITE_BACKEND_URL}/images/${postDetail.image}`}                  alt=""
+                  src={postDetail.image?.startsWith('http') ? postDetail.image : `${import.meta.env.VITE_BACKEND_URL}/images/${postDetail.image}`}
+                  alt=""
                   style={{
                     maxWidth: "100%",
                     maxHeight: "300px",
@@ -179,7 +245,7 @@ src={postDetail.image?.startsWith('http') ? postDetail.image : `${import.meta.en
               </>
             )}
 
-           <RatingStar postId={postDetail.foodId} />
+            <RatingStar postId={postDetail.foodId} />
 
             <hr />
             <h4>Bình luận ({comments.length})</h4>
@@ -237,27 +303,27 @@ src={postDetail.image?.startsWith('http') ? postDetail.image : `${import.meta.en
                     ]}
                   >
                     <List.Item.Meta
-  avatar={
-    item.avatar ? (
-      <img
-        src={item.avatar?.startsWith('http') ? item.avatar : `${import.meta.env.VITE_BACKEND_URL}/images/avatar/${item.avatar}`}
-        alt={item.user}
-        style={{ width: 36, height: 36, borderRadius: "50%", objectFit: "cover" }}
-      />
-    ) : (
-      <div style={{
-        width: 36, height: 36, borderRadius: "50%",
-        background: "#1677ff", color: "#fff",
-        display: "flex", alignItems: "center", justifyContent: "center",
-        fontWeight: "bold", fontSize: 16,
-      }}>
-        {(item.user || "A")[0].toUpperCase()}
-      </div>
-    )
-  }
-  title={item.user || "Anonymous"}
-  description={formatDate(item.createdAt)}
-/>
+                      avatar={
+                        item.avatar ? (
+                          <img
+                            src={item.avatar?.startsWith('http') ? item.avatar : `${import.meta.env.VITE_BACKEND_URL}/images/avatar/${item.avatar}`}
+                            alt={item.user}
+                            style={{ width: 36, height: 36, borderRadius: "50%", objectFit: "cover" }}
+                          />
+                        ) : (
+                          <div style={{
+                            width: 36, height: 36, borderRadius: "50%",
+                            background: "#1677ff", color: "#fff",
+                            display: "flex", alignItems: "center", justifyContent: "center",
+                            fontWeight: "bold", fontSize: 16,
+                          }}>
+                            {(item.user || "A")[0].toUpperCase()}
+                          </div>
+                        )
+                      }
+                      title={item.user || "Anonymous"}
+                      description={formatDate(item.createdAt)}
+                    />
                     <p>{item.content}</p>
                   </List.Item>
                 )}
