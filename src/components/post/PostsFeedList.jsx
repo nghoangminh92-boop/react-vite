@@ -45,7 +45,7 @@ const PostsFeedList = ({ posts, onPostClick, loading }) => {
               <div className="post-card-author-info">
                 {post.avatar && (
                   <img
-                    src={`${import.meta.env.VITE_BACKEND_URL}/images/avatar/${post.avatar}`}
+                    src={post.avatar?.startsWith('http') ? post.avatar : `${import.meta.env.VITE_BACKEND_URL}/images/avatar/${post.avatar}`}
                     alt={post.author}
                     className="post-card-avatar"
                   />
