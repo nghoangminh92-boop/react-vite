@@ -81,6 +81,11 @@ const DishTable = () => {
       key: "name",
     },
     {
+      title: "Gia",
+      dataIndex: "price",
+      key: "price",
+    },
+    {
       title: "Mô tả",
       dataIndex: "description",
       key: "description",

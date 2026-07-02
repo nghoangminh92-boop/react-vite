@@ -50,6 +50,7 @@ const PostDetail = (props) => {
 
   const [dataUpdateComment, setDataUpdateComment] = useState(null);
   const [isModalUpdateCommentOpen, setIsModalUpdateCommentOpen] = useState(false);
+  const [foodDetail, setFoodDetail] = useState(null);
 
   useEffect(() => {
     if (dataDetail?._id && isDetailOpen) {
@@ -58,18 +59,43 @@ const PostDetail = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataDetail?._id, isDetailOpen]);
 
+  // const loadPostDetail = async (postId) => {
+  //   setLoadingPost(true);
+  //   const res = await fetchPostByIdAPI(postId);
+  //   const detail = res?.data ? res.data : dataDetail;
+  //   setPostDetail(detail);
+  //   setLoadingPost(false);
+
+  //   if (detail?.foodId) {
+  //     await loadDishDetail(detail.foodId);
+  //   }
+  //   await loadComments(postId);
+  // };
+
   const loadPostDetail = async (postId) => {
-    setLoadingPost(true);
+  setLoadingPost(true);
+
+  try {
     const res = await fetchPostByIdAPI(postId);
-    const detail = res?.data ? res.data : dataDetail;
+    const detail = res?.data;
+
     setPostDetail(detail);
-    setLoadingPost(false);
+
+    // ⭐ Load món ăn + comment song song
+    const promises = [];
 
     if (detail?.foodId) {
-      await loadDishDetail(detail.foodId);
+      promises.push(loadDishDetail(detail.foodId));
     }
-    await loadComments(postId);
-  };
+
+    promises.push(loadComments(postId));
+
+    await Promise.all(promises);
+  } finally {
+    setLoadingPost(false);
+  }
+};
+
 
   const loadDishDetail = async (foodId) => {
     setLoadingDish(true);
@@ -208,10 +234,13 @@ const PostDetail = (props) => {
                 </div>
               </div>
             ) : null}
-
+{/* 
             <p>
               <strong>ID:</strong> {postDetail._id}
-            </p>
+            </p> */}
+             <p>
+  <strong>Món ăn:</strong> {dishDetail?.name || "Không tìm thấy món ăn"}
+</p>
             <p>
               <strong>Tiêu đề:</strong> {postDetail.title}
             </p>
@@ -221,6 +250,8 @@ const PostDetail = (props) => {
             <p>
               <strong>Ngày tạo:</strong> {formatDate(postDetail.createdAt)}
             </p>
+           
+
             <p>
               <strong>Nội dung:</strong>
             </p>
@@ -239,7 +270,7 @@ const PostDetail = (props) => {
                     maxHeight: "300px",
                     objectFit: "contain",
                     borderRadius: "8px",
-                    marginBottom: "20px",
+                    marginBottom: "20px", 
                   }}
                 />
               </>

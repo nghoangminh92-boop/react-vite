@@ -58,13 +58,21 @@ const DishModal = (props) => {
     let res;
     if (dataUpdate) {
       res = await updateDishAPI(
-        dataUpdate._id,
-        values.name,
-        values.description,
-        imageUrl
-      );
+  dataUpdate._id,
+  values.name,
+  values.description,
+  Number(values.price),
+  imageUrl
+);
+
     } else {
-      res = await createDishAPI(values.name, values.description, imageUrl);
+      res = await createDishAPI(
+  values.name,
+  values.description,
+  Number(values.price),
+  imageUrl
+);
+
     }
 
     if (res?.data) {
@@ -98,6 +106,29 @@ const DishModal = (props) => {
         >
           <Input placeholder="VD: Phở bò" />
         </Form.Item>
+<Form.Item
+  label="Giá tiền"
+  name="price"
+  rules={[
+    { required: true, message: "Vui lòng nhập giá tiền" },
+    {
+      validator: (_, value) => {
+        if (value === undefined || value === null || value === "") {
+          return Promise.reject("Giá tiền không được để trống");
+        }
+        if (isNaN(value)) {
+          return Promise.reject("Giá tiền phải là số");
+        }
+        if (Number(value) < 0) {
+          return Promise.reject("Giá tiền phải >= 0");
+        }
+        return Promise.resolve();
+      }
+    }
+  ]}
+>
+  <Input placeholder="Nhập giá tiền" allowClear />
+</Form.Item>
 
         <Form.Item label="Mô tả" name="description">
           <TextArea rows={3} placeholder="Mô tả ngắn về món ăn" />

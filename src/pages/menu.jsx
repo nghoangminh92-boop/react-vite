@@ -21,7 +21,10 @@ const MenuPage = () => {
 
   const formatPrice = (price) => {
     if (price == null) return "";
-    return price.toLocaleString("vi-VN") + " đ";
+    return new Intl.NumberFormat("ja-JP", {
+      style: "currency",
+      currency: "JPY",
+    }).format(price);
   };
 
   if (loading) {
@@ -79,18 +82,31 @@ const MenuPage = () => {
 
           <div style={{ flex: 1 }}>
             <h3 style={{ margin: 0 }}>{item.name}</h3>
-            <p style={{ color: "#666", margin: "4px 0" }}>
-              {item.description?.substring(0, 100)}
-              {item.description?.length > 100 ? "..." : ""}
+
+            <p
+              style={{
+                color: "#666",
+                margin: "4px 0",
+                lineHeight: "1.4",
+              }}
+            >
+              {item.description?.length > 120
+                ? item.description.substring(0, 120) + "..."
+                : item.description}
             </p>
+
             <div style={{ fontWeight: "bold", color: "#d4380d", marginBottom: 4 }}>
               {formatPrice(item.price)}
             </div>
+
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <Rate disabled allowHalf value={item.average} style={{ fontSize: 14 }} />
               <span style={{ fontSize: 13, color: "#888" }}>
-                {item.average > 0 ? `${item.average} (${item.total} đánh giá)` : "Chưa có đánh giá"}
+                {item.average > 0
+                  ? `${item.average} (${item.total} đánh giá)`
+                  : "Chưa có đánh giá"}
               </span>
+
               {index < 3 && item.total > 0 && (
                 <Tag color={index === 0 ? "gold" : index === 1 ? "silver" : "orange"}>
                   Top {index + 1}

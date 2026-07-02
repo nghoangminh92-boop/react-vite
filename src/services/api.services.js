@@ -165,11 +165,12 @@ const fetchMenuAPI = () => {
   return axios.get(URL_BACKEND);
 };
 
-const createDishAPI = (name, description, image, price) => {
+const createDishAPI = (name, description, price, image) => {
   const URL_BACKEND = `/api/v1/food`;
-  const data = { name, description, image, price };
+  const data = { name, description, price, image };
   return axios.post(URL_BACKEND, data);
 };
+
 
 
 
@@ -183,11 +184,12 @@ const fetchDishByIdAPI = (id) => {
   return axios.get(URL_BACKEND);
 };
 
-const updateDishAPI = (id, name, description, image, price) => {
+const updateDishAPI = (id, name, description, price, image) => {
   const URL_BACKEND = `/api/v1/food/${id}`;
-  const data = { name, description, image, price };
+  const data = { name, description, price, image };
   return axios.put(URL_BACKEND, data);
 };
+
 
 const deleteDishAPI = (id) => {
   const URL_BACKEND = `/api/v1/food/${id}`;
