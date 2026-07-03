@@ -7,6 +7,7 @@ import { getAccountAPI } from './services/api.services';
 import { useContext, useEffect } from 'react';
 import { AuthContext } from './components/context/auth.context';
 import {Spin}from 'antd';
+import { Analytics } from '@vercel/analytics/react';
 
 const  App= ()=> {
   const { setUser,isAppLoading,setIsAppLoading } = useContext(AuthContext);
@@ -56,6 +57,7 @@ useEffect(()=>{
     <Header />
     <Outlet />
     <Footer />
+    <Analytics />
   </>
 );
 }
