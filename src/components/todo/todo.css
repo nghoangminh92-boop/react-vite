@@ -14,12 +14,17 @@
   --radius-lg: 16px;
 }
 
+* {
+  box-sizing: border-box;
+}
+
 .home-container {
   width: 100%;
   min-height: 100vh;
   background: var(--color-bg-page);
   font-family: "Noto Sans JP", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   color: var(--color-text);
+  overflow-x: hidden;
 }
 
 /* HEADER */
@@ -27,12 +32,14 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 18px 32px;
+  padding: 16px 32px;
   background: #fff;
   box-shadow: var(--shadow-sm);
   position: sticky;
   top: 0;
   z-index: 10;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .logo {
@@ -40,6 +47,7 @@
   font-weight: 800;
   letter-spacing: -0.5px;
   color: var(--color-primary);
+  white-space: nowrap;
 }
 
 .nav {
@@ -84,6 +92,7 @@
   position: absolute;
   bottom: 40px;
   left: 40px;
+  right: 20px;
   color: white;
   z-index: 2;
   max-width: 600px;
@@ -143,6 +152,7 @@
   box-shadow: var(--shadow-sm);
   transition: transform 0.2s, box-shadow 0.2s;
   cursor: pointer;
+  position: relative;
 }
 
 .food-card:hover {
@@ -251,6 +261,7 @@
   color: var(--color-text-muted);
   gap: 10px;
   margin-bottom: 8px;
+  flex-wrap: wrap;
 }
 
 .post-card-author-info {
@@ -307,19 +318,153 @@
   border-top: 1px solid var(--color-border);
 }
 
-/* RESPONSIVE */
+/* ============ RESPONSIVE - TABLET (<= 900px) ============ */
+@media (max-width: 900px) {
+  .food-section,
+  .posts-section {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .food-list {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 14px;
+  }
+
+  .home-banner {
+    height: 260px;
+  }
+
+  .banner-text h1 {
+    font-size: 30px;
+  }
+}
+
+/* ============ RESPONSIVE - MOBILE (<= 640px) ============ */
 @media (max-width: 640px) {
+  .home-header {
+    padding: 12px 16px;
+  }
+
+  .logo {
+    font-size: 18px;
+  }
+
+  .nav {
+    gap: 16px;
+  }
+
+  .nav span {
+    font-size: 13px;
+  }
+
+  .home-banner {
+    height: 200px;
+  }
+
+  .banner-text {
+    bottom: 20px;
+    left: 16px;
+    right: 16px;
+  }
+
+  .banner-text h1 {
+    font-size: 22px;
+    margin: 0 0 4px;
+  }
+
+  .banner-text p {
+    font-size: 13px;
+  }
+
+  .section-title {
+    font-size: 19px;
+    margin-bottom: 14px;
+  }
+
+  .food-section {
+    margin-top: 24px;
+  }
+
+  .food-list {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .food-card {
+    padding: 8px;
+  }
+
+  .food-card img {
+    height: 100px;
+  }
+
+  .food-card h3 {
+    font-size: 13px;
+    margin: 8px 0 2px;
+  }
+
+  .food-card .rating {
+    font-size: 11px;
+  }
+
+  .posts-section {
+    margin-top: 32px;
+  }
+
+  .posts-section > div:first-child {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 12px;
+  }
+
   .post-feed-card {
     flex-direction: column;
+    padding: 12px;
+    gap: 12px;
   }
+
   .post-card-image {
     width: 100%;
-    height: 180px;
+    height: 160px;
   }
+
+  .post-card-title {
+    font-size: 16px;
+    padding-right: 60px;
+  }
+
+  .post-card-excerpt {
+    font-size: 13px;
+  }
+
+  .post-card-footer {
+    font-size: 11px;
+  }
+
+  .post-card-avatar {
+    width: 26px;
+    height: 26px;
+  }
+
+  .post-card-delete-btn {
+    width: 26px;
+    height: 26px;
+  }
+}
+
+/* ============ RESPONSIVE - SMALL MOBILE (<= 380px) ============ */
+@media (max-width: 380px) {
+  .food-list {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
   .banner-text h1 {
-    font-size: 26px;
+    font-size: 19px;
   }
-  .home-banner {
-    height: 220px;
+
+  .post-card-title {
+    font-size: 15px;
   }
 }

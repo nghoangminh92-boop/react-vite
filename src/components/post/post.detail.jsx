@@ -1,11 +1,10 @@
 import {
   Button,
-  Drawer,
+  Modal,
   Empty,
   Input,
-  List,
-  Popconfirm,
   Spin,
+  Popconfirm,
   notification,
 } from "antd";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
@@ -14,14 +13,14 @@ import { AuthContext } from "../context/auth.context";
 import {
   createCommentAPI,
   deleteCommentAPI,
+  deletePostAPI,
   fetchCommentsByPostAPI,
   fetchPostByIdAPI,
   fetchDishByIdAPI,
 } from "../../services/api.services";
 import UpdateCommentModal from "./updateComment.modal";
-import RatingStar from "./RatingStar";
-
-import { deletePostAPI } from "../../services/api.services";
+import UpdatePostModal from "./updatePost.modal";
+import "./postDetail.css";
 
 const { TextArea } = Input;
 
@@ -33,18 +32,12 @@ const normalizeListData = (res) => {
   return [];
 };
 
-const formatPrice = (price) => {
-  if (price == null) return "";
-  return price.toLocaleString("vi-VN") + " đ";
-};
-
 const PostDetail = (props) => {
   const { dataDetail, setDataDetail, isDetailOpen, setIsDetailOpen } = props;
   const { user } = useContext(AuthContext);
 
   const [postDetail, setPostDetail] = useState(null);
-  const [dishDetail, setDishDetail] = useState(null);
-  const [loadingDish, setLoadingDish] = useState(false);
+  const [foodInfo, setFoodInfo] = useState(null);
   const [comments, setComments] = useState([]);
   const [commentContent, setCommentContent] = useState("");
   const [loadingPost, setLoadingPost] = useState(false);
@@ -54,6 +47,9 @@ const PostDetail = (props) => {
   const [dataUpdateComment, setDataUpdateComment] = useState(null);
   const [isModalUpdateCommentOpen, setIsModalUpdateCommentOpen] = useState(false);
 
+  const [dataUpdatePost, setDataUpdatePost] = useState(null);
+  const [isModalUpdatePostOpen, setIsModalUpdatePostOpen] = useState(false);
+
   useEffect(() => {
     if (dataDetail?._id && isDetailOpen) {
       loadPostDetail(dataDetail._id);
@@ -61,53 +57,28 @@ const PostDetail = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataDetail?._id, isDetailOpen]);
 
-  // const loadPostDetail = async (postId) => {
-  //   setLoadingPost(true);
-  //   const res = await fetchPostByIdAPI(postId);
-  //   const detail = res?.data ? res.data : dataDetail;
-  //   setPostDetail(detail);
-  //   setLoadingPost(false);
-
-  //   if (detail?.foodId) {
-  //     await loadDishDetail(detail.foodId);
-  //   }
-  //   await loadComments(postId);
-  // };
-
   const loadPostDetail = async (postId) => {
-  setLoadingPost(true);
-
-  try {
+    setLoadingPost(true);
     const res = await fetchPostByIdAPI(postId);
-    const detail = res?.data;
-
-    setPostDetail(detail);
-
-    // ⭐ Load món ăn + comment song song
-    const promises = [];
-
-    if (detail?.foodId) {
-      promises.push(loadDishDetail(detail.foodId));
+    if (res?.data) {
+      setPostDetail(res.data);
+      if (res.data.foodId) {
+        loadFoodInfo(res.data.foodId);
+      }
+    } else {
+      setPostDetail(dataDetail);
     }
-
-    promises.push(loadComments(postId));
-
-    await Promise.all(promises);
-  } finally {
     setLoadingPost(false);
-  }
-};
+    await loadComments(postId);
+  };
 
-
-  const loadDishDetail = async (foodId) => {
-    setLoadingDish(true);
-    try {
-      const res = await fetchDishByIdAPI(foodId);
-      setDishDetail(res?.data || null);
-    } catch (error) {
-      setDishDetail(null);
+  const loadFoodInfo = async (foodId) => {
+    const res = await fetchDishByIdAPI(foodId);
+    if (res?.data) {
+      setFoodInfo(res.data);
+    } else {
+      setFoodInfo(null);
     }
-    setLoadingDish(false);
   };
 
   const loadComments = async (postId) => {
@@ -126,24 +97,6 @@ const PostDetail = (props) => {
       return;
     }
 
-    const canDeletePost = () => {
-  if (!user || !postDetail) return false;
-  const uid = user._id || user.id;
-  return user.role === "ADMIN" || postDetail.userId === uid;
-};
-
-const handleDeletePost = async () => {
-  const res = await deletePostAPI(postDetail._id);
-  if (res?.data) {
-    notification.success({ message: "Xóa bài viết thành công" });
-    handleClose();
-  } else {
-    notification.error({
-      message: "Lỗi xóa bài viết",
-      description: JSON.stringify(res?.message || "Có lỗi xảy ra"),
-    });
-  }
-};
     setSubmittingComment(true);
     const res = await createCommentAPI(
       postDetail._id,
@@ -183,6 +136,25 @@ const handleDeletePost = async () => {
     }
   };
 
+  const canDeletePost = () => {
+    if (!user || !postDetail) return false;
+    const uid = user._id || user.id;
+    return user.role === "ADMIN" || postDetail.userId === uid;
+  };
+
+  const handleDeletePost = async () => {
+    const res = await deletePostAPI(postDetail._id);
+    if (res?.data) {
+      notification.success({ message: "Xóa bài viết thành công" });
+      handleClose();
+    } else {
+      notification.error({
+        message: "Lỗi xóa bài viết",
+        description: JSON.stringify(res?.message || "Có lỗi xảy ra"),
+      });
+    }
+  };
+
   const formatDate = (date) => {
     if (!date) return "";
     return new Date(date).toLocaleString("vi-VN");
@@ -191,7 +163,7 @@ const handleDeletePost = async () => {
   const handleClose = () => {
     setDataDetail(null);
     setPostDetail(null);
-    setDishDetail(null);
+    setFoodInfo(null);
     setIsDetailOpen(false);
     setComments([]);
     setCommentContent("");
@@ -199,192 +171,202 @@ const handleDeletePost = async () => {
 
   return (
     <>
-      <Drawer
-        width={"50vw"}
-        title="Chi tiết bài viết"
-        onClose={handleClose}
+      <Modal
+        title={null}
         open={isDetailOpen}
+        onCancel={handleClose}
+        footer={null}
+        centered
+        width={640}
+        style={{ maxWidth: "95vw" }}
+        bodyStyle={{ maxHeight: "80vh", overflowY: "auto", padding: "20px 24px" }}
       >
         {loadingPost ? (
           <div style={{ textAlign: "center", padding: "40px" }}>
             <Spin />
           </div>
         ) : postDetail ? (
-          <>
-            {loadingDish ? (
-              <div style={{ textAlign: "center", padding: "20px" }}>
-                <Spin size="small" />
-              </div>
-            ) : dishDetail ? (
-              <div
-                style={{
-                  display: "flex",
-                  gap: 16,
-                  padding: 16,
-                  marginBottom: 20,
-                  background: "#fafafa",
-                  border: "1px solid #eee",
-                  borderRadius: 8,
-                }}
-              >
-                {dishDetail.image && (
-                  <img
-                    src={
-                      dishDetail.image?.startsWith("http")
-                        ? dishDetail.image
-                        : `${import.meta.env.VITE_BACKEND_URL}/images/${dishDetail.image}`
-                    }
-                    alt={dishDetail.name}
-                    style={{
-                      width: 90,
-                      height: 90,
-                      objectFit: "cover",
-                      borderRadius: 8,
-                    }}
-                  />
-                )}
-                <div>
-                  <h4 style={{ margin: 0 }}>{dishDetail.name}</h4>
-                  <p style={{ margin: "4px 0", color: "#666" }}>
-                    {dishDetail.description}
-                  </p>
-                  <div style={{ fontWeight: "bold", color: "#d4380d" }}>
-                    {formatPrice(dishDetail.price)}
-                  </div>
-                </div>
-              </div>
-            ) : null}
-{/* 
-            <p>
-              <strong>ID:</strong> {postDetail._id}
-            </p> */}
-             <p>
-  <strong>Món ăn:</strong> {dishDetail?.name || "Không tìm thấy món ăn"}
-</p>
-            <p>
-              <strong>Tiêu đề:</strong> {postDetail.title}
-            </p>
-            <p>
-              <strong>Tác giả:</strong> {postDetail.author}
-            </p>
-            <p>
-              <strong>Ngày tạo:</strong> {formatDate(postDetail.createdAt)}
-            </p>
-           
-
-            <p>
-              <strong>Nội dung:</strong>
-            </p>
-            <p style={{ whiteSpace: "pre-wrap" }}>{postDetail.content}</p>
-
-            {postDetail.image && (
-              <>
-                <p>
-                  <strong>Ảnh:</strong>
-                </p>
+          <div className="post-detail-container">
+            {/* HEADER: avatar + author + edit/delete */}
+            <div className="post-header">
+              {postDetail.avatar ? (
                 <img
-                  src={postDetail.image?.startsWith('http') ? postDetail.image : `${import.meta.env.VITE_BACKEND_URL}/images/${postDetail.image}`}
-                  alt=""
-                  style={{
-                    maxWidth: "100%",
-                    maxHeight: "300px",
-                    objectFit: "contain",
-                    borderRadius: "8px",
-                    marginBottom: "20px", 
-                  }}
+                  src={
+                    postDetail.avatar?.startsWith("http")
+                      ? postDetail.avatar
+                      : `${import.meta.env.VITE_BACKEND_URL}/images/avatar/${postDetail.avatar}`
+                  }
+                  alt={postDetail.author}
+                  className="post-avatar"
                 />
-              </>
-            )}
+              ) : (
+                <div className="comment-avatar-fallback" style={{ width: 48, height: 48, fontSize: 18 }}>
+                  {(postDetail.author || "A")[0].toUpperCase()}
+                </div>
+              )}
+              <div className="post-author-section">
+                <span className="post-author-name">{postDetail.author || "Anonymous"}</span>
+              </div>
 
-            <RatingStar postId={postDetail.foodId} />
-
-            <hr />
-            <h4>Bình luận ({comments.length})</h4>
-
-            <div style={{ marginBottom: "20px" }}>
-              <TextArea
-                rows={3}
-                placeholder="Viết bình luận..."
-                value={commentContent}
-                onChange={(e) => setCommentContent(e.target.value)}
-              />
-              <Button
-                type="primary"
-                style={{ marginTop: "10px" }}
-                onClick={handleAddComment}
-                loading={submittingComment}
-              >
-                Gửi bình luận
-              </Button>
+              {canDeletePost() && (
+                <div style={{ display: "flex", gap: 6 }}>
+                  <Button
+                    size="small"
+                    icon={<EditOutlined />}
+                    onClick={() => {
+                      setDataUpdatePost(postDetail);
+                      setIsModalUpdatePostOpen(true);
+                    }}
+                  >
+                    Sửa
+                  </Button>
+                  <Popconfirm
+                    title="Xóa bài viết"
+                    description="Bạn chắc chắn muốn xóa bài viết này?"
+                    onConfirm={handleDeletePost}
+                    okText="Xóa"
+                    cancelText="Hủy"
+                  >
+                    <Button size="small" danger icon={<DeleteOutlined />}>
+                      Xóa
+                    </Button>
+                  </Popconfirm>
+                </div>
+              )}
             </div>
 
-            {loadingComments ? (
-              <div style={{ textAlign: "center", padding: "20px" }}>
-                <Spin />
-              </div>
-            ) : comments.length === 0 ? (
-              <Empty description="Chưa có bình luận nào" />
-            ) : (
-              <List
-                itemLayout="vertical"
-                dataSource={comments}
-                renderItem={(item) => (
-                  <List.Item
-                    actions={[
-                      <EditOutlined
-                        key="edit"
-                        onClick={() => {
-                          setDataUpdateComment(item);
-                          setIsModalUpdateCommentOpen(true);
-                        }}
-                        style={{ color: "orange", cursor: "pointer" }}
-                      />,
-                      <Popconfirm
-                        key="delete"
-                        title="Xóa bình luận"
-                        description="Bạn chắc chắn xóa bình luận này?"
-                        onConfirm={() => handleDeleteComment(item._id)}
-                        okText="Có"
-                        cancelText="Không"
-                      >
-                        <DeleteOutlined
-                          style={{ color: "red", cursor: "pointer" }}
-                        />
-                      </Popconfirm>,
-                    ]}
-                  >
-                    <List.Item.Meta
-                      avatar={
-                        item.avatar ? (
-                          <img
-                            src={item.avatar?.startsWith('http') ? item.avatar : `${import.meta.env.VITE_BACKEND_URL}/images/avatar/${item.avatar}`}
-                            alt={item.user}
-                            style={{ width: 36, height: 36, borderRadius: "50%", objectFit: "cover" }}
-                          />
-                        ) : (
-                          <div style={{
-                            width: 36, height: 36, borderRadius: "50%",
-                            background: "#1677ff", color: "#fff",
-                            display: "flex", alignItems: "center", justifyContent: "center",
-                            fontWeight: "bold", fontSize: 16,
-                          }}>
-                            {(item.user || "A")[0].toUpperCase()}
-                          </div>
-                        )
-                      }
-                      title={item.user || "Anonymous"}
-                      description={formatDate(item.createdAt)}
-                    />
-                    <p>{item.content}</p>
-                  </List.Item>
-                )}
+            {/* FOOD BADGE - nổi bật món ăn được đánh giá */}
+   
+
+            {/* TITLE + DATETIME + CONTENT + IMAGE */}
+            <h2 className="post-title">Đánh giá: {postDetail.title}</h2>
+            <div className="post-datetime">
+            🕒<strong>{formatDate(postDetail.createdAt)}</strong>
+            </div>
+            <br />
+            <p className="post-content">{postDetail.content}</p>
+
+            {postDetail.image && (
+              <img
+                src={
+                  postDetail.image?.startsWith("http")
+                    ? postDetail.image
+                    : `${import.meta.env.VITE_BACKEND_URL}/images/${postDetail.image}`
+                }
+                alt=""
+                className="post-image"
               />
             )}
-          </>
+
+            <hr className="divider" />
+
+            {/* COMMENTS */}
+            <div className="comments-section">
+              <div className="comments-header">
+                Bình luận
+                <span className="comments-count">{comments.length}</span>
+              </div>
+
+              <div className="comment-input-section">
+                {user?.avatar ? (
+                  <img
+                    src={
+                      user.avatar?.startsWith("http")
+                        ? user.avatar
+                        : `${import.meta.env.VITE_BACKEND_URL}/images/avatar/${user.avatar}`
+                    }
+                    alt=""
+                    className="comment-input-avatar"
+                  />
+                ) : (
+                  <div className="comment-avatar-fallback">
+                    {(user?.fullName || "A")[0].toUpperCase()}
+                  </div>
+                )}
+                <div className="comment-input-wrapper">
+                  <TextArea
+                    rows={2}
+                    placeholder="Viết bình luận..."
+                    value={commentContent}
+                    onChange={(e) => setCommentContent(e.target.value)}
+                  />
+                  <Button
+                    type="primary"
+                    className="comment-button"
+                    onClick={handleAddComment}
+                    loading={submittingComment}
+                  >
+                    Gửi
+                  </Button>
+                </div>
+              </div>
+
+              {loadingComments ? (
+                <div className="comments-loading">
+                  <Spin />
+                </div>
+              ) : comments.length === 0 ? (
+                <div className="empty-state">
+                  <Empty description={<span className="empty-state-text">Chưa có bình luận nào</span>} />
+                </div>
+              ) : (
+                <div className="comments-list">
+                  {comments.map((item) => (
+                    <div className="comment-item" key={item._id}>
+                      {item.avatar ? (
+                        <img
+                          src={
+                            item.avatar?.startsWith("http")
+                              ? item.avatar
+                              : `${import.meta.env.VITE_BACKEND_URL}/images/avatar/${item.avatar}`
+                          }
+                          alt={item.user}
+                          className="comment-avatar"
+                        />
+                      ) : (
+                        <div className="comment-avatar-fallback">
+                          {(item.user || "A")[0].toUpperCase()}
+                        </div>
+                      )}
+                      <div className="comment-body">
+                        <div className="comment-bubble">
+                          <div className="comment-author-name">{item.user || "Anonymous"}</div>
+                          <div className="comment-text">{item.content}</div>
+                        </div>
+                        <div className="comment-actions">
+                          <span className="comment-time">{formatDate(item.createdAt)}</span>
+                          <span
+                            className="comment-action-btn"
+                            onClick={() => {
+                              setDataUpdateComment(item);
+                              setIsModalUpdateCommentOpen(true);
+                            }}
+                          >
+                            <EditOutlined /> Sửa
+                          </span>
+                          <Popconfirm
+                            title="Xóa bình luận"
+                            description="Bạn chắc chắn xóa bình luận này?"
+                            onConfirm={() => handleDeleteComment(item._id)}
+                            okText="Có"
+                            cancelText="Không"
+                          >
+                            <span className="comment-action-btn danger">
+                              <DeleteOutlined /> Xóa
+                            </span>
+                          </Popconfirm>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
         ) : (
-          <p>Không có dữ liệu</p>
+          <p className="no-data">Không có dữ liệu</p>
         )}
-      </Drawer>
+      </Modal>
 
       <UpdateCommentModal
         isModalUpdateOpen={isModalUpdateCommentOpen}
@@ -393,6 +375,16 @@ const handleDeletePost = async () => {
         setDataUpdate={setDataUpdateComment}
         loadComments={loadComments}
         postId={postDetail?._id}
+      />
+
+      <UpdatePostModal
+        isModalUpdateOpen={isModalUpdatePostOpen}
+        setIsModalUpdateOpen={setIsModalUpdatePostOpen}
+        dataUpdate={dataUpdatePost}
+        setDataUpdate={setDataUpdatePost}
+        loadPost={async () => {
+          await loadPostDetail(postDetail._id);
+        }}
       />
     </>
   );

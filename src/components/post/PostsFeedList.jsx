@@ -1,9 +1,14 @@
 import { Empty, Spin, Popconfirm, notification } from "antd";
-import { DeleteOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { useState } from "react";
 import { deletePostAPI } from "../../services/api.services";
 import RatingDisplay from "./RatingDisplay";
+import UpdatePostModal from "./updatePost.modal";
 
 const PostsFeedList = ({ posts, onPostClick, loading, currentUser, onPostDeleted }) => {
+  const [dataUpdate, setDataUpdate] = useState(null);
+  const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false);
+
   const formatDate = (date) => {
     if (!date) return "";
     return new Date(date).toLocaleDateString("vi-VN");
@@ -15,6 +20,12 @@ const PostsFeedList = ({ posts, onPostClick, loading, currentUser, onPostDeleted
   };
 
   const canDelete = (post) => {
+    if (!currentUser) return false;
+    const uid = currentUser._id || currentUser.id;
+    return currentUser.role === "ADMIN" || post.userId === uid;
+  };
+
+  const canEdit = (post) => {
     if (!currentUser) return false;
     const uid = currentUser._id || currentUser.id;
     return currentUser.role === "ADMIN" || post.userId === uid;
@@ -53,26 +64,52 @@ const PostsFeedList = ({ posts, onPostClick, loading, currentUser, onPostDeleted
           className="post-feed-card"
           onClick={() => onPostClick(post)}
         >
-          {canDelete(post) && (
-            <Popconfirm
-              title="Xóa bài viết"
-              description="Bạn chắc chắn muốn xóa bài viết này?"
-              onConfirm={(e) => {
-                e?.stopPropagation();
-                handleDelete(post._id);
-              }}
-              onCancel={(e) => e?.stopPropagation()}
-              okText="Xóa"
-              cancelText="Hủy"
-            >
+          <div
+            style={{
+              position: "absolute",
+              top: 14,
+              right: 14,
+              display: "flex",
+              gap: 8,
+              zIndex: 2,
+            }}
+          >
+            {canEdit(post) && (
               <div
                 className="post-card-delete-btn"
-                onClick={(e) => e.stopPropagation()}
+                style={{ color: "#faad14", position: "static" }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setDataUpdate(post);
+                  setIsModalUpdateOpen(true);
+                }}
               >
-                <DeleteOutlined />
+                <EditOutlined />
               </div>
-            </Popconfirm>
-          )}
+            )}
+
+            {canDelete(post) && (
+              <Popconfirm
+                title="Xóa bài viết"
+                description="Bạn chắc chắn muốn xóa bài viết này?"
+                onConfirm={(e) => {
+                  e?.stopPropagation();
+                  handleDelete(post._id);
+                }}
+                onCancel={(e) => e?.stopPropagation()}
+                okText="Xóa"
+                cancelText="Hủy"
+              >
+                <div
+                  className="post-card-delete-btn"
+                  style={{ position: "static" }}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <DeleteOutlined />
+                </div>
+              </Popconfirm>
+            )}
+          </div>
 
           {post.image && (
             <img
@@ -101,6 +138,14 @@ const PostsFeedList = ({ posts, onPostClick, loading, currentUser, onPostDeleted
           </div>
         </div>
       ))}
+
+      <UpdatePostModal
+        isModalUpdateOpen={isModalUpdateOpen}
+        setIsModalUpdateOpen={setIsModalUpdateOpen}
+        dataUpdate={dataUpdate}
+        setDataUpdate={setDataUpdate}
+        loadPost={onPostDeleted}
+      />
     </div>
   );
 };

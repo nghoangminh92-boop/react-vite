@@ -131,9 +131,9 @@ const PostForm = (props) => {
   };
 
   return (
-    <div className="post-form">
+    <div className="post-form" >
       <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <h3>Danh sách bài viết</h3>
+        <h3 style={{ marginRight:"10px" }} >Danh sách bài viết</h3>
         <Button onClick={() => setIsModalOpen(true)} type="primary">
           Tạo bài viết
         </Button>

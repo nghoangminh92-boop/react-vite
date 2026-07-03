@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Drawer, Spin, Rate, Empty } from "antd";
+import { Modal, Spin, Empty } from "antd";
 import {
   fetchDishByIdAPI,
   fetchPostsByFoodAPI,
@@ -42,29 +42,26 @@ const FoodDetailDrawer = ({ foodId, isOpen, onClose }) => {
     setLoadingDish(false);
   };
 
- const loadPosts = async (id) => {
-  setLoadingPosts(true);
-  try {
-    const res = await fetchPostsByFoodAPI(id);
-    console.log("DEBUG res:", res);
-    let list = [];
-    if (Array.isArray(res?.data)) {
-      list = res.data;
-    } else if (Array.isArray(res?.data?.result)) {
-      list = res.data.result;
-    } else if (Array.isArray(res?.data?.data?.result)) {
-      list = res.data.data.result;
-    } else if (Array.isArray(res?.data?.data)) {
-      list = res.data.data;
+  const loadPosts = async (id) => {
+    setLoadingPosts(true);
+    try {
+      const res = await fetchPostsByFoodAPI(id);
+      let list = [];
+      if (Array.isArray(res?.data)) {
+        list = res.data;
+      } else if (Array.isArray(res?.data?.result)) {
+        list = res.data.result;
+      } else if (Array.isArray(res?.data?.data?.result)) {
+        list = res.data.data.result;
+      } else if (Array.isArray(res?.data?.data)) {
+        list = res.data.data;
+      }
+      setPosts(list);
+    } catch (error) {
+      setPosts([]);
     }
-    console.log("DEBUG list:", list);
-    setPosts(list);
-  } catch (error) {
-    console.log("DEBUG error:", error);
-    setPosts([]);
-  }
-  setLoadingPosts(false);
-};
+    setLoadingPosts(false);
+  };
 
   const handleClose = () => {
     setDish(null);
@@ -79,11 +76,15 @@ const FoodDetailDrawer = ({ foodId, isOpen, onClose }) => {
 
   return (
     <>
-      <Drawer
-        width={"55vw"}
+      <Modal
         title="Chi tiết món ăn"
         open={isOpen}
-        onClose={handleClose}
+        onCancel={handleClose}
+        footer={null}
+        centered
+        width={700}
+        style={{ maxWidth: "95vw" }}
+        bodyStyle={{ maxHeight: "75vh", overflowY: "auto" }}
       >
         {loadingDish ? (
           <div style={{ textAlign: "center", padding: "40px" }}>
@@ -91,7 +92,14 @@ const FoodDetailDrawer = ({ foodId, isOpen, onClose }) => {
           </div>
         ) : dish ? (
           <>
-            <div style={{ display: "flex", gap: 20, marginBottom: 24 }}>
+            <div
+              style={{
+                display: "flex",
+                gap: 20,
+                marginBottom: 24,
+                flexWrap: "wrap",
+              }}
+            >
               {dish.image && (
                 <img
                   src={dish.image}
@@ -104,7 +112,7 @@ const FoodDetailDrawer = ({ foodId, isOpen, onClose }) => {
                   }}
                 />
               )}
-              <div>
+              <div style={{ flex: 1, minWidth: 200 }}>
                 <h2 style={{ margin: 0 }}>{dish.name}</h2>
                 <p style={{ color: "#666", margin: "8px 0" }}>
                   {dish.description}
@@ -144,7 +152,7 @@ const FoodDetailDrawer = ({ foodId, isOpen, onClose }) => {
         ) : (
           <p>Không tìm thấy món ăn</p>
         )}
-      </Drawer>
+      </Modal>
 
       <PostDetail
         dataDetail={dataDetail}

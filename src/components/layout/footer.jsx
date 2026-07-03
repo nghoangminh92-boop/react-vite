@@ -3,7 +3,7 @@ const Footer =()=>{
 
     return (
         <div className="footer">
-  <p>React Vite - @renit</p>
+  <p>VN Team</p>
 </div>
 
     )
