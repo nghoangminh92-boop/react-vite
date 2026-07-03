@@ -138,7 +138,7 @@ const UpdatePostModal = (props) => {
 
         <div>
           <span>Tác giả</span>
-          <Input value={author} onChange={(e) => setAuthor(e.target.value)} />
+          <Input value={author} disabled />
         </div>
 
         <div>

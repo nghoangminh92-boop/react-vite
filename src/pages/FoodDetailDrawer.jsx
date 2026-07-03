@@ -15,7 +15,14 @@ const formatPrice = (price) => {
   }).format(price);
 };
 
-const FoodDetailDrawer = ({ foodId, isOpen, onClose }) => {
+const FoodDetailDrawer = ({
+  foodId,
+  isOpen,
+  onClose,
+  currentUser,
+  onRatingChanged,
+  refreshKey,
+}) => {
   const [dish, setDish] = useState(null);
   const [posts, setPosts] = useState([]);
   const [loadingDish, setLoadingDish] = useState(false);
@@ -72,6 +79,12 @@ const FoodDetailDrawer = ({ foodId, isOpen, onClose }) => {
   const handlePostClick = (post) => {
     setDataDetail(post);
     setIsPostDetailOpen(true);
+  };
+
+  const handleLocalRatingChanged = (changedFoodId) => {
+    loadDish(changedFoodId);
+    loadPosts(changedFoodId);
+    onRatingChanged?.(changedFoodId);
   };
 
   return (
@@ -146,6 +159,9 @@ const FoodDetailDrawer = ({ foodId, isOpen, onClose }) => {
                 posts={posts}
                 onPostClick={handlePostClick}
                 loading={false}
+                currentUser={currentUser}
+                onPostDeleted={() => loadPosts(foodId)}
+                refreshKey={refreshKey}
               />
             )}
           </>
@@ -159,6 +175,7 @@ const FoodDetailDrawer = ({ foodId, isOpen, onClose }) => {
         setDataDetail={setDataDetail}
         isDetailOpen={isPostDetailOpen}
         setIsDetailOpen={setIsPostDetailOpen}
+        onRatingChanged={handleLocalRatingChanged}
       />
     </>
   );

@@ -6,6 +6,7 @@ import {
   Spin,
   Popconfirm,
   notification,
+  Rate,
 } from "antd";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { useContext, useEffect, useState } from "react";
@@ -17,11 +18,13 @@ import {
   fetchCommentsByPostAPI,
   fetchPostByIdAPI,
   fetchDishByIdAPI,
+  fetchPostRatingAPI,
+  fetchUserRatingAPI,
+  ratePostAPI,
 } from "../../services/api.services";
 import UpdateCommentModal from "./updateComment.modal";
 import UpdatePostModal from "./updatePost.modal";
 import "./postDetail.css";
-
 const { TextArea } = Input;
 
 const normalizeListData = (res) => {
@@ -33,8 +36,12 @@ const normalizeListData = (res) => {
 };
 
 const PostDetail = (props) => {
-  const { dataDetail, setDataDetail, isDetailOpen, setIsDetailOpen } = props;
+  const { dataDetail, setDataDetail, isDetailOpen, setIsDetailOpen,onRatingChanged } = props;
   const { user } = useContext(AuthContext);
+
+  const [foodRating, setFoodRating] = useState(null);
+  const [userStar, setUserStar] = useState(0);
+  const [submittingRating, setSubmittingRating] = useState(false);
 
   const [postDetail, setPostDetail] = useState(null);
   const [foodInfo, setFoodInfo] = useState(null);
@@ -78,6 +85,58 @@ const PostDetail = (props) => {
       setFoodInfo(res.data);
     } else {
       setFoodInfo(null);
+    }
+
+    const resRating = await fetchPostRatingAPI(foodId);
+    if (resRating?.data) {
+      setFoodRating(resRating.data);
+    } else {
+      setFoodRating(null);
+    }
+
+    if (user) {
+      const resUserRating = await fetchUserRatingAPI(foodId);
+      if (resUserRating?.data?.star) {
+        setUserStar(resUserRating.data.star);
+      } else {
+        setUserStar(0);
+      }
+    } else {
+      setUserStar(0);
+    }
+  };
+
+ const handleRateFood = async (value) => {
+    if (!user) {
+      notification.warning({
+        message: "Cần đăng nhập",
+        description: "Vui lòng đăng nhập để đánh giá món ăn",
+      });
+      return;
+    }
+    if (!postDetail?.foodId) return;
+
+    setSubmittingRating(true);
+    try {
+      const res = await ratePostAPI(postDetail.foodId, value);
+      if (res?.data || (res?.statusCode && res.statusCode < 400)) {
+        setUserStar(value);
+        notification.success({ message: "Đánh giá thành công" });
+        await loadFoodInfo(postDetail.foodId);
+        onRatingChanged?.(postDetail.foodId); // 👈 báo lên component cha
+      } else {
+        notification.error({
+          message: "Lỗi đánh giá",
+          description: JSON.stringify(res?.message || "Có lỗi xảy ra"),
+        });
+      }
+    } catch (error) {
+      notification.error({
+        message: "Lỗi đánh giá",
+        description: "Có lỗi xảy ra, vui lòng thử lại",
+      });
+    } finally {
+      setSubmittingRating(false);
     }
   };
 
@@ -164,6 +223,8 @@ const PostDetail = (props) => {
     setDataDetail(null);
     setPostDetail(null);
     setFoodInfo(null);
+    setFoodRating(null);
+    setUserStar(0);
     setIsDetailOpen(false);
     setComments([]);
     setCommentContent("");
@@ -235,13 +296,38 @@ const PostDetail = (props) => {
               )}
             </div>
 
-            {/* FOOD BADGE - nổi bật món ăn được đánh giá */}
-   
+            {/* FOOD REVIEW CARD - thiết kế mới */}
+            {foodInfo && (
+              <div className="food-review-card">
+                <div className="food-review-top">
+                  <span className="food-review-icon">🍜</span>
+                  <div className="food-review-info">
+                    <span className="food-review-label">Đánh giá món</span>
+                    <span className="food-review-name">{foodInfo.name}</span>
+                  </div>
+                  {foodRating && foodRating.total > 0 && (
+                    <div className="food-review-avg">
+                      <span className="food-review-avg-star">⭐ {foodRating.average}</span>
+                      <span className="food-review-avg-count">({foodRating.total} đánh giá)</span>
+                    </div>
+                  )}
+                </div>
+
+                <div className="food-review-bottom">
+                  <span className="food-review-your-label">Đánh giá của bạn</span>
+                  <Rate
+                    value={userStar}
+                    onChange={handleRateFood}
+                    disabled={submittingRating}
+                    className="food-review-rate"
+                  />
+                </div>
+              </div>
+            )}
 
             {/* TITLE + DATETIME + CONTENT + IMAGE */}
-            <h2 className="post-title">Đánh giá: {postDetail.title}</h2>
             <div className="post-datetime">
-            🕒<strong>{formatDate(postDetail.createdAt)}</strong>
+              🕒<strong>{formatDate(postDetail.createdAt)}</strong>
             </div>
             <br />
             <p className="post-content">{postDetail.content}</p>

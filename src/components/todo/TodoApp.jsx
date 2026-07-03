@@ -51,6 +51,8 @@ const TodoApp = () => {
   const [selectedFoodId, setSelectedFoodId] = useState(null);
   const [isFoodDrawerOpen, setIsFoodDrawerOpen] = useState(false);
 
+  const [ratingRefreshKey, setRatingRefreshKey] = useState(0);
+
   useEffect(() => {
     loadPost();
     loadMenu();
@@ -126,6 +128,11 @@ const TodoApp = () => {
     setIsFoodDrawerOpen(true);
   };
 
+  const handleRatingChanged = () => {
+    setRatingRefreshKey((k) => k + 1);
+    loadMenu();
+  };
+
   return (
     <div className="home-container">
 
@@ -155,7 +162,7 @@ const TodoApp = () => {
                 <h3>{dish.name}</h3>
                 {dish.total > 0 ? (
                   <p className="rating">
-                    ⭐ {dish.average.toFixed(1)} ({dish.total} đánh giá)
+                    ⭐ {(dish.average || 0).toFixed(1)} ({dish.total} đánh giá)
                   </p>
                 ) : (
                   <p className="rating">Chưa có đánh giá</p>
@@ -175,13 +182,14 @@ const TodoApp = () => {
           {user?.id && <PostForm loadPost={() => loadPost(1)} />}
         </div>
 
-       <PostsFeedList
-  posts={dataPosts}
-  onPostClick={handlePostClick}
-  loading={loading && dataPosts.length === 0}
-  currentUser={user}
-  onPostDeleted={() => loadPost(1)}
-/>
+        <PostsFeedList
+          posts={dataPosts}
+          onPostClick={handlePostClick}
+          loading={loading && dataPosts.length === 0}
+          currentUser={user}
+          onPostDeleted={() => loadPost(1)}
+          refreshKey={ratingRefreshKey}
+        />
 
         {dataPosts.length > 0 && dataPosts.length < total && (
           <div className="load-more-btn">
@@ -198,6 +206,7 @@ const TodoApp = () => {
         setDataDetail={setDataDetail}
         isDetailOpen={isDetailOpen}
         setIsDetailOpen={setIsDetailOpen}
+        onRatingChanged={handleRatingChanged}
       />
 
       {/* FOOD DETAIL DRAWER */}
@@ -205,6 +214,9 @@ const TodoApp = () => {
         foodId={selectedFoodId}
         isOpen={isFoodDrawerOpen}
         onClose={() => setIsFoodDrawerOpen(false)}
+        currentUser={user}
+        onRatingChanged={handleRatingChanged}
+        refreshKey={ratingRefreshKey}
       />
     </div>
   );

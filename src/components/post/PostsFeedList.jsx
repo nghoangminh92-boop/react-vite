@@ -5,7 +5,7 @@ import { deletePostAPI } from "../../services/api.services";
 import RatingDisplay from "./RatingDisplay";
 import UpdatePostModal from "./updatePost.modal";
 
-const PostsFeedList = ({ posts, onPostClick, loading, currentUser, onPostDeleted }) => {
+const PostsFeedList = ({ posts, onPostClick, loading, currentUser, onPostDeleted,refreshKey }) => {
   const [dataUpdate, setDataUpdate] = useState(null);
   const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false);
 
@@ -134,7 +134,7 @@ const PostsFeedList = ({ posts, onPostClick, loading, currentUser, onPostDeleted
               </div>
               <span className="post-card-date">{formatDate(post.createdAt)}</span>
             </div>
-            <RatingDisplay postId={post.foodId} />
+            <RatingDisplay postId={post.foodId} refreshKey={refreshKey} />
           </div>
         </div>
       ))}
@@ -148,6 +148,7 @@ const PostsFeedList = ({ posts, onPostClick, loading, currentUser, onPostDeleted
       />
     </div>
   );
+  
 };
 
-export default PostsFeedList;
+export default PostsFeedList; 
