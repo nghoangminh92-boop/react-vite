@@ -139,13 +139,61 @@
   padding: 0 24px;
 }
 
+.food-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.food-section-header .section-title {
+  margin-bottom: 0;
+}
+
+.food-scroll-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.food-scroll-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-card);
+  color: var(--color-primary);
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-sm);
+  transition: background 0.2s, color 0.2s, transform 0.15s;
+}
+
+.food-scroll-btn:hover {
+  background: var(--color-primary);
+  color: #fff;
+  transform: scale(1.05);
+}
+
 .food-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 20px;
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  gap: 16px;
+  padding-bottom: 6px;
+  scrollbar-width: none;
+}
+
+.food-list::-webkit-scrollbar {
+  display: none;
 }
 
 .food-card {
+  flex: 0 0 auto;
+  width: 190px;
+  scroll-snap-align: start;
   background: var(--color-bg-card);
   border-radius: var(--radius-md);
   padding: 12px;
@@ -326,11 +374,6 @@
     padding-right: 16px;
   }
 
-  .food-list {
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 14px;
-  }
-
   .home-banner {
     height: 260px;
   }
@@ -387,11 +430,11 @@
   }
 
   .food-list {
-    grid-template-columns: repeat(2, 1fr);
     gap: 10px;
   }
 
   .food-card {
+    width: 130px;
     padding: 8px;
   }
 
@@ -405,6 +448,12 @@
   }
 
   .food-card .rating {
+    font-size: 11px;
+  }
+
+  .food-scroll-btn {
+    width: 28px;
+    height: 28px;
     font-size: 11px;
   }
 
@@ -456,8 +505,11 @@
 /* ============ RESPONSIVE - SMALL MOBILE (<= 380px) ============ */
 @media (max-width: 380px) {
   .food-list {
-    grid-template-columns: repeat(2, 1fr);
     gap: 8px;
+  }
+
+  .food-card {
+    width: 115px;
   }
 
   .banner-text h1 {

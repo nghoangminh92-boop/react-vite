@@ -1,8 +1,9 @@
 import "./todo.css";
 import banner from "../../assets/banner.jpg";
 import ramen1 from "../../assets/ramen1.jpg";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Button, notification } from "antd";
+import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 import PostForm from "../post/post.form";
 import PostsFeedList from "../post/PostsFeedList";
 import PostDetail from "../post/post.detail";
@@ -52,6 +53,8 @@ const TodoApp = () => {
   const [isFoodDrawerOpen, setIsFoodDrawerOpen] = useState(false);
 
   const [ratingRefreshKey, setRatingRefreshKey] = useState(0);
+
+  const foodListRef = useRef(null);
 
   useEffect(() => {
     loadPost();
@@ -133,6 +136,15 @@ const TodoApp = () => {
     loadMenu();
   };
 
+  const scrollFoodList = (direction) => {
+    if (!foodListRef.current) return;
+    const scrollAmount = 240;
+    foodListRef.current.scrollBy({
+      left: direction === "left" ? -scrollAmount : scrollAmount,
+      behavior: "smooth",
+    });
+  };
+
   return (
     <div className="home-container">
 
@@ -147,16 +159,35 @@ const TodoApp = () => {
 
       {/* FOOD LIST */}
       <div className="food-section">
-        <h2 className="section-title">おすすめメニュー</h2>
+        <div className="food-section-header">
+          <h2 className="section-title">おすすめメニュー</h2>
+          {dataMenu.length > 4 && (
+            <div className="food-scroll-controls">
+              <button
+                className="food-scroll-btn"
+                onClick={() => scrollFoodList("left")}
+                aria-label="Lướt trái"
+              >
+                <LeftOutlined />
+              </button>
+              <button
+                className="food-scroll-btn"
+                onClick={() => scrollFoodList("right")}
+                aria-label="Lướt phải"
+              >
+                <RightOutlined />
+              </button>
+            </div>
+          )}
+        </div>
 
-        <div className="food-list">
+        <div className="food-list" ref={foodListRef}>
           {dataMenu.length > 0 ? (
             dataMenu.map((dish) => (
               <div
                 className="food-card"
                 key={dish._id}
                 onClick={() => handleFoodClick(dish._id)}
-                style={{ cursor: "pointer" }}
               >
                 <img src={dish.image || ramen1} alt={dish.name} />
                 <h3>{dish.name}</h3>
