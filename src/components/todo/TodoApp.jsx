@@ -128,14 +128,6 @@ const TodoApp = () => {
 
   return (
     <div className="home-container">
-      {/* HEADER */}
-      <div className="home-header">
-        <div className="logo">🍜 Food Review</div>
-        <div className="nav">
-          <span>Menu</span>
-          <span>Community</span>
-        </div>
-      </div>
 
       {/* BANNER */}
       <div className="home-banner">
