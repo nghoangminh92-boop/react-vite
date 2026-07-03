@@ -36,7 +36,7 @@ const normalizeListData = (res) => {
 };
 
 const PostDetail = (props) => {
-  const { dataDetail, setDataDetail, isDetailOpen, setIsDetailOpen,onRatingChanged } = props;
+  const { dataDetail, setDataDetail, isDetailOpen, setIsDetailOpen, onRatingChanged } = props;
   const { user } = useContext(AuthContext);
 
   const [foodRating, setFoodRating] = useState(null);
@@ -106,11 +106,11 @@ const PostDetail = (props) => {
     }
   };
 
- const handleRateFood = async (value) => {
+  const handleRateFood = async (value) => {
     if (!user) {
       notification.warning({
-        message: "Cần đăng nhập",
-        description: "Vui lòng đăng nhập để đánh giá món ăn",
+        message: "ログインが必要",
+        description: "料理を評価するにはログインしてください",
       });
       return;
     }
@@ -121,19 +121,19 @@ const PostDetail = (props) => {
       const res = await ratePostAPI(postDetail.foodId, value);
       if (res?.data || (res?.statusCode && res.statusCode < 400)) {
         setUserStar(value);
-        notification.success({ message: "Đánh giá thành công" });
+        notification.success({ message: "評価しました" });
         await loadFoodInfo(postDetail.foodId);
-        onRatingChanged?.(postDetail.foodId); // 👈 báo lên component cha
+        onRatingChanged?.(postDetail.foodId);
       } else {
         notification.error({
-          message: "Lỗi đánh giá",
-          description: JSON.stringify(res?.message || "Có lỗi xảy ra"),
+          message: "評価エラー",
+          description: JSON.stringify(res?.message || "エラーが発生しました"),
         });
       }
     } catch (error) {
       notification.error({
-        message: "Lỗi đánh giá",
-        description: "Có lỗi xảy ra, vui lòng thử lại",
+        message: "評価エラー",
+        description: "エラーが発生しました。もう一度お試しください",
       });
     } finally {
       setSubmittingRating(false);
@@ -150,8 +150,8 @@ const PostDetail = (props) => {
   const handleAddComment = async () => {
     if (!commentContent.trim()) {
       notification.warning({
-        message: "Thiếu nội dung",
-        description: "Vui lòng nhập nội dung bình luận",
+        message: "内容が必要です",
+        description: "コメント内容を入力してください",
       });
       return;
     }
@@ -166,14 +166,14 @@ const PostDetail = (props) => {
 
     if (res.data) {
       notification.success({
-        message: "Bình luận",
-        description: "Thêm bình luận thành công",
+        message: "コメント",
+        description: "コメントを追加しました",
       });
       setCommentContent("");
       await loadComments(postDetail._id);
     } else {
       notification.error({
-        message: "Error create comment",
+        message: "コメント追加エラー",
         description: JSON.stringify(res.message),
       });
     }
@@ -183,13 +183,13 @@ const PostDetail = (props) => {
     const res = await deleteCommentAPI(id);
     if (res.data) {
       notification.success({
-        message: "Xóa bình luận",
-        description: "Xóa bình luận thành công",
+        message: "コメントを削除",
+        description: "コメントを削除しました",
       });
       await loadComments(postDetail._id);
     } else {
       notification.error({
-        message: "Error delete comment",
+        message: "コメント削除エラー",
         description: JSON.stringify(res.message),
       });
     }
@@ -204,19 +204,19 @@ const PostDetail = (props) => {
   const handleDeletePost = async () => {
     const res = await deletePostAPI(postDetail._id);
     if (res?.data) {
-      notification.success({ message: "Xóa bài viết thành công" });
+      notification.success({ message: "投稿を削除しました" });
       handleClose();
     } else {
       notification.error({
-        message: "Lỗi xóa bài viết",
-        description: JSON.stringify(res?.message || "Có lỗi xảy ra"),
+        message: "投稿削除エラー",
+        description: JSON.stringify(res?.message || "エラーが発生しました"),
       });
     }
   };
 
   const formatDate = (date) => {
     if (!date) return "";
-    return new Date(date).toLocaleString("vi-VN");
+    return new Date(date).toLocaleString("ja-JP");
   };
 
   const handleClose = () => {
@@ -248,7 +248,6 @@ const PostDetail = (props) => {
           </div>
         ) : postDetail ? (
           <div className="post-detail-container">
-            {/* HEADER: avatar + author + edit/delete */}
             <div className="post-header">
               {postDetail.avatar ? (
                 <img
@@ -279,42 +278,41 @@ const PostDetail = (props) => {
                       setIsModalUpdatePostOpen(true);
                     }}
                   >
-                    Sửa
+                    編集
                   </Button>
                   <Popconfirm
-                    title="Xóa bài viết"
-                    description="Bạn chắc chắn muốn xóa bài viết này?"
+                    title="投稿を削除"
+                    description="この投稿を削除しますか？"
                     onConfirm={handleDeletePost}
-                    okText="Xóa"
-                    cancelText="Hủy"
+                    okText="削除"
+                    cancelText="キャンセル"
                   >
                     <Button size="small" danger icon={<DeleteOutlined />}>
-                      Xóa
+                      削除
                     </Button>
                   </Popconfirm>
                 </div>
               )}
             </div>
 
-            {/* FOOD REVIEW CARD - thiết kế mới */}
             {foodInfo && (
               <div className="food-review-card">
                 <div className="food-review-top">
                   <span className="food-review-icon">🍜</span>
                   <div className="food-review-info">
-                    <span className="food-review-label">Đánh giá món</span>
+                    <span className="food-review-label">料理を評価</span>
                     <span className="food-review-name">{foodInfo.name}</span>
                   </div>
                   {foodRating && foodRating.total > 0 && (
                     <div className="food-review-avg">
                       <span className="food-review-avg-star">⭐ {foodRating.average}</span>
-                      <span className="food-review-avg-count">({foodRating.total} đánh giá)</span>
+                      <span className="food-review-avg-count">({foodRating.total}件の評価)</span>
                     </div>
                   )}
                 </div>
 
                 <div className="food-review-bottom">
-                  <span className="food-review-your-label">Đánh giá của bạn</span>
+                  <span className="food-review-your-label">あなたの評価</span>
                   <Rate
                     value={userStar}
                     onChange={handleRateFood}
@@ -325,7 +323,6 @@ const PostDetail = (props) => {
               </div>
             )}
 
-            {/* TITLE + DATETIME + CONTENT + IMAGE */}
             <div className="post-datetime">
               🕒<strong>{formatDate(postDetail.createdAt)}</strong>
             </div>
@@ -346,10 +343,9 @@ const PostDetail = (props) => {
 
             <hr className="divider" />
 
-            {/* COMMENTS */}
             <div className="comments-section">
               <div className="comments-header">
-                Bình luận
+                コメント
                 <span className="comments-count">{comments.length}</span>
               </div>
 
@@ -372,7 +368,7 @@ const PostDetail = (props) => {
                 <div className="comment-input-wrapper">
                   <TextArea
                     rows={2}
-                    placeholder="Viết bình luận..."
+                    placeholder="コメントを入力..."
                     value={commentContent}
                     onChange={(e) => setCommentContent(e.target.value)}
                   />
@@ -382,7 +378,7 @@ const PostDetail = (props) => {
                     onClick={handleAddComment}
                     loading={submittingComment}
                   >
-                    Gửi
+                    送信
                   </Button>
                 </div>
               </div>
@@ -393,7 +389,7 @@ const PostDetail = (props) => {
                 </div>
               ) : comments.length === 0 ? (
                 <div className="empty-state">
-                  <Empty description={<span className="empty-state-text">Chưa có bình luận nào</span>} />
+                  <Empty description={<span className="empty-state-text">まだコメントがありません</span>} />
                 </div>
               ) : (
                 <div className="comments-list">
@@ -428,17 +424,17 @@ const PostDetail = (props) => {
                               setIsModalUpdateCommentOpen(true);
                             }}
                           >
-                            <EditOutlined /> Sửa
+                            <EditOutlined /> 編集
                           </span>
                           <Popconfirm
-                            title="Xóa bình luận"
-                            description="Bạn chắc chắn xóa bình luận này?"
+                            title="コメントを削除"
+                            description="このコメントを削除しますか？"
                             onConfirm={() => handleDeleteComment(item._id)}
-                            okText="Có"
-                            cancelText="Không"
+                            okText="はい"
+                            cancelText="いいえ"
                           >
                             <span className="comment-action-btn danger">
-                              <DeleteOutlined /> Xóa
+                              <DeleteOutlined /> 削除
                             </span>
                           </Popconfirm>
                         </div>
@@ -450,7 +446,7 @@ const PostDetail = (props) => {
             </div>
           </div>
         ) : (
-          <p className="no-data">Không có dữ liệu</p>
+          <p className="no-data">データがありません</p>
         )}
       </Modal>
 

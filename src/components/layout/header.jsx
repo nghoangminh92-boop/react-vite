@@ -10,7 +10,7 @@ import {
   DownOutlined,
 } from '@ant-design/icons';
 import { Dropdown, message, Avatar } from 'antd';
-import { useContext, useState, useRef, useEffect } from 'react';
+import { useContext, useState } from 'react';
 import { AuthContext } from '../context/auth.context';
 import { logoutAPI } from '../../services/api.services';
 import './header.css';
@@ -28,18 +28,18 @@ const Header = () => {
       setUser({
         email: '', phone: '', fullName: '', role: '', avatar: '', id: '',
       });
-      message.success('Đăng xuất thành công');
+      message.success('ログアウトしました');
       navigate('/');
     }
   };
 
   const navLinks = [
-    { key: 'home', to: '/', label: 'Trang chủ', icon: <HomeOutlined /> },
+    { key: 'home', to: '/', label: 'ホーム', icon: <HomeOutlined /> },
     ...(user.role === 'ADMIN'
       ? [
-          { key: 'dishes', to: '/dishes', label: 'Món ăn', icon: <AuditOutlined /> },
-          { key: 'posts', to: '/posts', label: 'Bài viết', icon: <FileTextOutlined /> },
-          { key: 'users', to: '/users', label: 'Người dùng', icon: <UsergroupAddOutlined /> },
+          { key: 'dishes', to: '/dishes', label: '料理', icon: <AuditOutlined /> },
+          { key: 'posts', to: '/posts', label: '投稿', icon: <FileTextOutlined /> },
+          { key: 'users', to: '/users', label: 'ユーザー', icon: <UsergroupAddOutlined /> },
         ]
       : []),
   ];
@@ -48,14 +48,14 @@ const Header = () => {
     items: [
       {
         key: 'profile',
-        label: 'Cài đặt Profile',
+        label: 'プロフィール設定',
         icon: <UserOutlined />,
         onClick: () => navigate('/profile'),
       },
       { type: 'divider' },
       {
         key: 'logout',
-        label: 'Đăng xuất',
+        label: 'ログアウト',
         icon: <LogoutOutlined />,
         danger: true,
         onClick: handleLogout,
@@ -71,7 +71,7 @@ const Header = () => {
         {/* LOGO */}
         <Link to="/" className="app-logo">
           <span className="app-logo-icon">🍜</span>
-          <span className="app-logo-text">Food Review</span>
+          <span className="app-logo-text">フードレビュー</span>
         </Link>
 
         {/* NAV LINKS - desktop */}
@@ -94,7 +94,14 @@ const Header = () => {
             <Dropdown menu={userMenuItems} trigger={['click']} placement="bottomRight">
               <div className="app-user-chip">
                 {user.avatar ? (
-                  <Avatar src={user.avatar?.startsWith('http') ? user.avatar : `${import.meta.env.VITE_BACKEND_URL}/images/avatar/${user.avatar}`} size={34} />
+                  <Avatar
+                    src={
+                      user.avatar?.startsWith('http')
+                        ? user.avatar
+                        : `${import.meta.env.VITE_BACKEND_URL}/images/avatar/${user.avatar}`
+                    }
+                    size={34}
+                  />
                 ) : (
                   <Avatar size={34} className="app-user-avatar-fallback">
                     {(user.fullName || 'A')[0].toUpperCase()}
@@ -107,7 +114,7 @@ const Header = () => {
           ) : (
             <Link to="/login" className="app-login-btn">
               <LoginOutlined />
-              <span>Đăng nhập</span>
+              <span>ログイン</span>
             </Link>
           )}
 
@@ -115,7 +122,7 @@ const Header = () => {
           <button
             className={`app-hamburger ${mobileOpen ? 'open' : ''}`}
             onClick={() => setMobileOpen(!mobileOpen)}
-            aria-label="Menu"
+            aria-label="メニュー"
           >
             <span></span>
             <span></span>

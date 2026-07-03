@@ -71,7 +71,7 @@ const TodoApp = () => {
         setDataMenu([]);
       }
     } catch (error) {
-      console.error("Lỗi khi tải menu:", error);
+      console.error("メニューの読み込みエラー:", error);
       setDataMenu([]);
     }
   };
@@ -83,7 +83,7 @@ const TodoApp = () => {
 
       if (res?.statusCode && res.statusCode >= 400) {
         notification.error({
-          message: "Lỗi tải bài viết",
+          message: "投稿の読み込みエラー",
           description: JSON.stringify(res.message),
         });
         if (page === 1) setDataPosts([]);
@@ -108,8 +108,8 @@ const TodoApp = () => {
       setTotal(totalCount);
     } catch (error) {
       notification.error({
-        message: "Lỗi kết nối",
-        description: "Không thể kết nối backend. Hãy kiểm tra server đang chạy tại port 8080.",
+        message: "接続エラー",
+        description: "バックエンドに接続できません。サーバーを確認してください。",
       });
       if (page === 1) setDataPosts([]);
     } finally {
@@ -166,14 +166,14 @@ const TodoApp = () => {
               <button
                 className="food-scroll-btn"
                 onClick={() => scrollFoodList("left")}
-                aria-label="Lướt trái"
+                aria-label="左にスクロール"
               >
                 <LeftOutlined />
               </button>
               <button
                 className="food-scroll-btn"
                 onClick={() => scrollFoodList("right")}
-                aria-label="Lướt phải"
+                aria-label="右にスクロール"
               >
                 <RightOutlined />
               </button>
@@ -193,15 +193,15 @@ const TodoApp = () => {
                 <h3>{dish.name}</h3>
                 {dish.total > 0 ? (
                   <p className="rating">
-                    ⭐ {(dish.average || 0).toFixed(1)} ({dish.total} đánh giá)
+                    ⭐ {(dish.average || 0).toFixed(1)} ({dish.total}件の評価)
                   </p>
                 ) : (
-                  <p className="rating">Chưa có đánh giá</p>
+                  <p className="rating">まだ評価がありません</p>
                 )}
               </div>
             ))
           ) : (
-            <p>Chưa có món ăn nào</p>
+            <p>料理がありません</p>
           )}
         </div>
       </div>
@@ -209,7 +209,7 @@ const TodoApp = () => {
       {/* POSTS FEED SECTION */}
       <div className="posts-section">
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
-          <h2 className="section-title">Bài viết mới nhất</h2>
+          <h2 className="section-title">最新の投稿</h2>
           {user?.id && <PostForm loadPost={() => loadPost(1)} />}
         </div>
 
@@ -225,7 +225,7 @@ const TodoApp = () => {
         {dataPosts.length > 0 && dataPosts.length < total && (
           <div className="load-more-btn">
             <Button type="primary" size="large" onClick={handleLoadMore} loading={loading}>
-              Xem thêm bài viết
+              もっと見る
             </Button>
           </div>
         )}

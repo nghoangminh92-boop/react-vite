@@ -219,7 +219,7 @@
   }
 
   .app-hamburger {
-    display: flex;
+    display: flex;  
   }
 
   .app-mobile-nav {
@@ -233,7 +233,9 @@
   .app-login-btn span {
     display: none;
   }
-
+ .app-login-btn > span {
+    display: inline-block !important;
+  }
   .app-login-btn {
     padding: 8px 12px;
   }

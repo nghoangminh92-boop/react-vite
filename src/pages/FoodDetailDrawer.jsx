@@ -90,7 +90,7 @@ const FoodDetailDrawer = ({
   return (
     <>
       <Modal
-        title="Chi tiết món ăn"
+        title="料理の詳細"
         open={isOpen}
         onCancel={handleClose}
         footer={null}
@@ -145,7 +145,7 @@ const FoodDetailDrawer = ({
 
             <hr />
             <h3 style={{ margin: "20px 0 12px" }}>
-              Bài viết đánh giá món này ({posts.length})
+              この料理のレビュー投稿 ({posts.length}件)
             </h3>
 
             {loadingPosts ? (
@@ -153,7 +153,7 @@ const FoodDetailDrawer = ({
                 <Spin />
               </div>
             ) : posts.length === 0 ? (
-              <Empty description="Chưa có bài viết nào đánh giá món này" />
+              <Empty description="この料理のレビューがまだありません" />
             ) : (
               <PostsFeedList
                 posts={posts}
@@ -166,7 +166,7 @@ const FoodDetailDrawer = ({
             )}
           </>
         ) : (
-          <p>Không tìm thấy món ăn</p>
+          <p>料理が見つかりません</p>
         )}
       </Modal>
 

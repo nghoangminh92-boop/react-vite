@@ -39,7 +39,7 @@ const PostForm = (props) => {
         list.map((dish) => ({ label: dish.name, value: dish._id }))
       );
     } catch (error) {
-      console.error("Lỗi khi tải danh sách món ăn:", error);
+      console.error("料理リストの読み込みエラー:", error);
       setDishOptions([]);
     }
   };
@@ -57,19 +57,19 @@ const PostForm = (props) => {
 
   const handleSubmitBtn = async () => {
     if (!selectedFoodId) {
-      notification.warning({ message: "Thiếu món ăn", description: "Vui lòng chọn món ăn muốn đánh giá" });
+      notification.warning({ message: "料理が未選択", description: "評価する料理を選んでください" });
       return;
     }
     if (!title.trim()) {
-      notification.warning({ message: "Thiếu tiêu đề", description: "Vui lòng nhập tiêu đề bài viết" });
+      notification.warning({ message: "タイトルが必要", description: "投稿のタイトルを入力してください" });
       return;
     }
     if (!content.trim()) {
-      notification.warning({ message: "Thiếu nội dung", description: "Vui lòng nhập nội dung bài viết" });
+      notification.warning({ message: "内容が必要", description: "投稿の内容を入力してください" });
       return;
     }
     if (!star) {
-      notification.warning({ message: "Thiếu đánh giá", description: "Vui lòng chấm sao cho món ăn" });
+      notification.warning({ message: "評価が必要", description: "料理にスターをつけてください" });
       return;
     }
 
@@ -81,7 +81,7 @@ const PostForm = (props) => {
         if (resUpload.data) {
           imageName = resUpload.data.url;
         } else {
-          notification.error({ message: "Error upload file", description: JSON.stringify(resUpload.message) });
+          notification.error({ message: "アップロードエラー", description: JSON.stringify(resUpload.message) });
           return;
         }
       }
@@ -95,27 +95,26 @@ const PostForm = (props) => {
       );
 
       if (res.data) {
-        // Gửi đánh giá kèm theo ngay sau khi tạo bài viết thành công
         try {
           await ratePostAPI(selectedFoodId, star);
         } catch (rateError) {
           notification.warning({
-            message: "Tạo bài viết thành công",
-            description: "Nhưng gửi đánh giá thất bại, bạn có thể đánh giá lại trong chi tiết bài viết.",
+            message: "投稿を作成しました",
+            description: "ただし評価の送信に失敗しました。投稿詳細から再度評価できます。",
           });
           resetAndCloseModal();
           await loadPost();
           return;
         }
 
-        notification.success({ message: "Tạo bài viết", description: "Tạo bài viết và đánh giá thành công" });
+        notification.success({ message: "投稿を作成", description: "投稿と評価を送信しました" });
         resetAndCloseModal();
         await loadPost();
       } else {
-        notification.error({ message: "Error create post", description: JSON.stringify(res.message) });
+        notification.error({ message: "投稿作成エラー", description: JSON.stringify(res.message) });
       }
     } catch (error) {
-      notification.error({ message: "Lỗi tạo bài viết", description: "Bạn cần đăng nhập và có token hợp lệ." });
+      notification.error({ message: "投稿作成エラー", description: "ログインして有効なトークンが必要です。" });
     }
   };
 
@@ -131,30 +130,30 @@ const PostForm = (props) => {
   };
 
   return (
-    <div className="post-form" >
+    <div className="post-form">
       <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <h3 style={{ marginRight:"10px" }} >Danh sách bài viết</h3>
+        <h3 style={{ marginRight: "10px" }}>投稿一覧</h3>
         <Button onClick={() => setIsModalOpen(true)} type="primary">
-          Tạo bài viết
+          投稿を作成
         </Button>
       </div>
 
       <Modal
-        title="Tạo bài viết mới"
+        title="新しい投稿を作成"
         open={isModalOpen}
         onOk={handleSubmitBtn}
         onCancel={resetAndCloseModal}
         maskClosable={false}
-        okText="TẠO"
-        cancelText="HỦY"
+        okText="作成"
+        cancelText="キャンセル"
         width={600}
       >
         <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
           <div>
-            <span>Món ăn đánh giá</span>
+            <span>評価する料理</span>
             <Select
               style={{ width: "100%", marginTop: "5px" }}
-              placeholder="Chọn món ăn"
+              placeholder="料理を選択"
               options={dishOptions}
               value={selectedFoodId}
               onChange={(value) => setSelectedFoodId(value)}
@@ -166,24 +165,24 @@ const PostForm = (props) => {
           </div>
 
           <div>
-            <span>Chấm sao đánh giá</span>
+            <span>スター評価</span>
             <div style={{ marginTop: "5px" }}>
               <Rate value={star} onChange={(value) => setStar(value)} />
             </div>
           </div>
 
           <div>
-            <span>Tiêu đề</span>
+            <span>タイトル</span>
             <Input value={title} onChange={(e) => setTitle(e.target.value)} />
           </div>
           <div>
-            <span>Nội dung</span>
+            <span>内容</span>
             <TextArea rows={4} value={content} onChange={(e) => setContent(e.target.value)} />
           </div>
           <div>
-            <span>Ảnh bài viết</span>
+            <span>投稿画像</span>
             <div style={{ marginTop: "10px" }}>
-              <Button onClick={() => fileInputRef.current?.click()}>Chọn ảnh</Button>
+              <Button onClick={() => fileInputRef.current?.click()}>画像を選択</Button>
               <input
                 type="file"
                 hidden

@@ -7,35 +7,33 @@ import { AuthContext } from "../components/context/auth.context";
 
 const LoginPage = () => {
   const [form] = Form.useForm();
-  const [loading, setLoading]= useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const {setUser} = useContext(AuthContext);
-  
+  const { setUser } = useContext(AuthContext);
 
-const onFinish = async (values) => {
-  setLoading(true);
-  try {
-    const res = await loginUserAPI(values.email, values.password);
-
-    if (res.data) {
-      message.success("Đăng nhập thành công");
-      localStorage.setItem("access_token", res.data.access_token);
-      setUser(res.data.user);
-      navigate("/");
-    } else {
+  const onFinish = async (values) => {
+    setLoading(true);
+    try {
+      const res = await loginUserAPI(values.email, values.password);
+      if (res.data) {
+        message.success("ログイン成功");
+        localStorage.setItem("access_token", res.data.access_token);
+        setUser(res.data.user);
+        navigate("/");
+      } else {
+        notification.error({
+          message: "ログインエラー",
+          description: JSON.stringify(res.message),
+        });
+      }
+    } catch (error) {
       notification.error({
-        message: "Error login",
-        description: JSON.stringify(res.message),
+        message: "ネットワークエラー",
+        description: error.message,
       });
     }
-  } catch (error) {
-    notification.error({
-      message: "Network Error",
-      description: error.message,
-    });
-  }
-  setLoading(false);
-};
+    setLoading(false);
+  };
 
   return (
     <Row justify="center" style={{ margin: "30px" }}>
@@ -51,10 +49,10 @@ const onFinish = async (values) => {
           }}
         >
           <legend style={{ padding: "0 10px", fontWeight: 600 }}>
-            Đăng nhập
+            ログイン
           </legend>
 
-          {/* ⭐ LOGO KHÔNG ĐỔ BÓNG */}
+          {/* LOGO */}
           <div
             style={{
               width: "100%",
@@ -69,34 +67,37 @@ const onFinish = async (values) => {
               style={{
                 width: 90,
                 height: 90,
-                borderRadius: "50%",   // logo tròn
+                borderRadius: "50%",
                 objectFit: "cover",
-                boxShadow: "none",     // ⭐ bỏ đổ bóng
-                border: "none",        // ⭐ bỏ khung
+                boxShadow: "none",
+                border: "none",
               }}
             />
           </div>
 
           <Form form={form} layout="vertical" onFinish={onFinish}>
             <Form.Item
-              label="Email"
+              label="メールアドレス"
               name="email"
               rules={[
-                { required: true, message: "Email is required" },
-                { type: "email", message: "Email is not valid" },
+                { required: true, message: "メールアドレスは必須です" },
+                { type: "email", message: "メールアドレスが正しくありません" },
               ]}
             >
               <Input placeholder="example@gmail.com" />
             </Form.Item>
 
             <Form.Item
-              label="Password"
+              label="パスワード"
               name="password"
-              rules={[{ required: true, message: "Password is required" }]}
+              rules={[{ required: true, message: "パスワードは必須です" }]}
             >
-              <Input.Password placeholder="Enter password" onKeyDown={(event)=>{
-                if(event.key==='enter') form.submit;
-              }} />
+              <Input.Password
+                placeholder="パスワードを入力"
+                onKeyDown={(event) => {
+                  if (event.key === "enter") form.submit;
+                }}
+              />
             </Form.Item>
 
             <Form.Item>
@@ -108,21 +109,25 @@ const onFinish = async (values) => {
                   marginTop: "10px",
                 }}
               >
-                <Button 
-                loading={loading}
-                type="primary" htmlType="submit" icon={<ArrowRightOutlined />}>
-                  Login
+                <Button
+                  loading={loading}
+                  type="primary"
+                  htmlType="submit"
+                  icon={<ArrowRightOutlined />}
+                >
+                  ログイン
                 </Button>
-                
+
                 <Link to={"/"} style={{ fontWeight: 500 }}>
-                  Go to homepage <ArrowRightOutlined />
+                  ホームへ戻る <ArrowRightOutlined />
                 </Link>
               </div>
             </Form.Item>
 
             <Divider>
               <div style={{ textAlign: "center" }}>
-                Chưa có tài khoản? <Link to={"/register"}>Đăng ký tại đây</Link>
+                アカウントがありませんか？{" "}
+                <Link to={"/register"}>新規登録はこちら</Link>
               </div>
             </Divider>
           </Form>

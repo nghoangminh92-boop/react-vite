@@ -45,12 +45,12 @@ const MenuPage = () => {
   }
 
   if (menu.length === 0) {
-    return <Empty description="Chưa có món ăn nào" style={{ marginTop: 60 }} />;
+    return <Empty description="料理がありません" style={{ marginTop: 60 }} />;
   }
 
   return (
     <div style={{ maxWidth: 900, margin: "0 auto", padding: "24px 16px" }}>
-      <h2 style={{ marginBottom: 24 }}>Menu quán - Xếp hạng theo đánh giá</h2>
+      <h2 style={{ marginBottom: 24 }}>メニュー一覧 - 評価ランキング</h2>
 
       {menu.map((item, index) => (
         <div
@@ -114,13 +114,13 @@ const MenuPage = () => {
               <Rate disabled allowHalf value={item.average} style={{ fontSize: 14 }} />
               <span style={{ fontSize: 13, color: "#888" }}>
                 {item.average > 0
-                  ? `${item.average} (${item.total} đánh giá)`
-                  : "Chưa có đánh giá"}
+                  ? `${item.average} (${item.total} 件の評価)`
+                  : "まだ評価がありません"}
               </span>
 
               {index < 3 && item.total > 0 && (
                 <Tag color={index === 0 ? "gold" : index === 1 ? "silver" : "orange"}>
-                  Top {index + 1}
+                  トップ {index + 1}
                 </Tag>
               )}
             </div>
