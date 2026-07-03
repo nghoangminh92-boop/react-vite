@@ -195,12 +195,20 @@ const deleteDishAPI = (id) => {
   const URL_BACKEND = `/api/v1/food/${id}`;
   return axios.delete(URL_BACKEND);
 };
+
+
+const fetchPostsByFoodAPI = (foodId) => {
+  const URL_BACKEND = `/api/v1/post/food/${foodId}`;
+  return axios.get(URL_BACKEND);
+};
+
+
 export {
     createUserAPI,updateUserAPI,fetchAllUserAPI,
     deleteUserAPI,handleUpdateFile,updateUserAvatarAPI,
     registerUserAPI,loginUserAPI,getAccountAPI,logoutAPI,
     fetchAllFoodAPI,
-    createPostAPI,fetchAllPostAPI,fetchPostByIdAPI,
+    createPostAPI,fetchAllPostAPI,fetchPostByIdAPI,fetchPostsByFoodAPI,
     updatePostAPI,deletePostAPI,
     createCommentAPI,fetchCommentsByPostAPI,updateCommentAPI,deleteCommentAPI,
     ratePostAPI,fetchPostRatingAPI,fetchUserRatingAPI,

@@ -1,7 +1,12 @@
-import { Button, Input, Modal, notification, Select } from "antd";
+import { Button, Input, Modal, notification, Select, Rate } from "antd";
 import { useContext, useEffect, useRef, useState } from "react";
 import { AuthContext } from "../context/auth.context";
-import { createPostAPI, handleUpdateFile, fetchAllDishAPI } from "../../services/api.services";
+import {
+  createPostAPI,
+  handleUpdateFile,
+  fetchAllDishAPI,
+  ratePostAPI,
+} from "../../services/api.services";
 
 const { TextArea } = Input;
 
@@ -18,6 +23,7 @@ const PostForm = (props) => {
 
   const [dishOptions, setDishOptions] = useState([]);
   const [selectedFoodId, setSelectedFoodId] = useState(null);
+  const [star, setStar] = useState(0);
 
   useEffect(() => {
     if (isModalOpen) {
@@ -62,6 +68,10 @@ const PostForm = (props) => {
       notification.warning({ message: "Thiếu nội dung", description: "Vui lòng nhập nội dung bài viết" });
       return;
     }
+    if (!star) {
+      notification.warning({ message: "Thiếu đánh giá", description: "Vui lòng chấm sao cho món ăn" });
+      return;
+    }
 
     let imageName = "";
 
@@ -85,7 +95,20 @@ const PostForm = (props) => {
       );
 
       if (res.data) {
-        notification.success({ message: "Create post", description: "Tạo bài viết thành công" });
+        // Gửi đánh giá kèm theo ngay sau khi tạo bài viết thành công
+        try {
+          await ratePostAPI(selectedFoodId, star);
+        } catch (rateError) {
+          notification.warning({
+            message: "Tạo bài viết thành công",
+            description: "Nhưng gửi đánh giá thất bại, bạn có thể đánh giá lại trong chi tiết bài viết.",
+          });
+          resetAndCloseModal();
+          await loadPost();
+          return;
+        }
+
+        notification.success({ message: "Tạo bài viết", description: "Tạo bài viết và đánh giá thành công" });
         resetAndCloseModal();
         await loadPost();
       } else {
@@ -103,6 +126,7 @@ const PostForm = (props) => {
     setSelectedFile(null);
     setPreview(null);
     setSelectedFoodId(null);
+    setStar(0);
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
@@ -140,6 +164,14 @@ const PostForm = (props) => {
               }
             />
           </div>
+
+          <div>
+            <span>Chấm sao đánh giá</span>
+            <div style={{ marginTop: "5px" }}>
+              <Rate value={star} onChange={(value) => setStar(value)} />
+            </div>
+          </div>
+
           <div>
             <span>Tiêu đề</span>
             <Input value={title} onChange={(e) => setTitle(e.target.value)} />

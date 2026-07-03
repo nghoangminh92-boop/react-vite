@@ -1,61 +1,67 @@
 import { useEffect, useState } from "react";
-import { fetchAllFoodAPI } from "../../services/api.services";
+import { fetchAllDishAPI, deleteDishAPI } from "../../services/api.services";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { Button, Popconfirm, Table } from "antd";
+import { Button, notification, Popconfirm, Table } from "antd";
 import FoodDetail from "./food.detail";
 
 const FoodTable = () => {
   const [dataFood, setDataFood] = useState([]);
-  const [current, setCurrent] = useState(1);
-  const [pageSize, setPageSize] = useState(5);
-  const [total, setTotal] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   const [dataDetail, setDataDetail] = useState(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
 
   const [dataUpdate, setDataUpdate] = useState(null);
   const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false);
-
+  const [isModalCreateOpen, setIsModalCreateOpen] = useState(false);
 
   useEffect(() => {
     loadFood();
-  }, [current, pageSize]);
+  }, []);
 
   const loadFood = async () => {
-    const res = await fetchAllFoodAPI(current, pageSize);
+    setLoading(true);
+    const res = await fetchAllDishAPI();
+    if (res?.data) {
+      setDataFood(res.data);
+    }
+    setLoading(false);
+  };
+
+  const handleDeleteFood = async (id) => {
+    const res = await deleteDishAPI(id);
     if (res.data) {
-      setDataFood(res.data.result);
-      setCurrent(res.data.meta.current);
-      setPageSize(res.data.meta.pageSize);
-      setTotal(res.data.meta.total);
+      notification.success({
+        message: "Xóa món ăn",
+        description: "Xóa món ăn thành công",
+      });
+      await loadFood();
+    } else {
+      notification.error({
+        message: "Lỗi xóa món ăn",
+        description: JSON.stringify(res.message),
+      });
     }
   };
 
-  const handleDeleteFood = async (id) => {};
-
-  const onChange = (pagination) => {
-    if (pagination.current !== current) {
-      setCurrent(pagination.current);
-    }
-    if (pagination.pageSize !== pageSize) {
-      setPageSize(pagination.pageSize);
-    }
+  const formatPrice = (price) => {
+    if (price == null) return "";
+    return price.toLocaleString("vi-VN") + " đ";
   };
 
   const columns = [
     {
-      title: "番号",
-      render: (_, __, index) => (
-        <>{index + 1 + (current - 1) * pageSize}</>
-      ),
+      title: "STT",
+      render: (_, __, index) => <>{index + 1}</>,
     },
     {
       title: "ID",
       dataIndex: "_id",
       render: (_, record) => (
-        <a
-          href="#"
-          onClick={() => {
+        
+          <a href="#"
+          onClick={(e) => {
+            e.preventDefault();
             setDataDetail(record);
             setIsDetailOpen(true);
           }}
@@ -65,30 +71,35 @@ const FoodTable = () => {
       ),
     },
     {
-      title: "タイトル",
-      dataIndex: "mainText",
+      title: "Tên món",
+      dataIndex: "name",
     },
     {
-      title: "価格",
+      title: "Giá",
       dataIndex: "price",
-      render: (text) => {
-        if (text)
-          return new Intl.NumberFormat("ja-JP", {
-            style: "currency",
-            currency: "JPY",
-          }).format(text);
-      },
+      render: (text) => formatPrice(text),
     },
     {
-      title: "数量",
-      dataIndex: "quantity",
+      title: "Mô tả",
+      dataIndex: "description",
+      ellipsis: true,
     },
     {
-      title: "カテゴリー",
-      dataIndex: "category",
+      title: "Ảnh",
+      dataIndex: "image",
+      render: (image) =>
+        image ? (
+          <img
+            src={image?.startsWith("http") ? image : `${import.meta.env.VITE_BACKEND_URL}/images/${image}`}
+            alt=""
+            style={{ width: 60, height: 40, objectFit: "cover", borderRadius: 4 }}
+          />
+        ) : (
+          "-"
+        ),
     },
     {
-      title: "操作",
+      title: "Thao tác",
       key: "action",
       render: (_, record) => (
         <div style={{ display: "flex", gap: "20px" }}>
@@ -101,11 +112,11 @@ const FoodTable = () => {
           />
 
           <Popconfirm
-            title="削除確認"
-            description="このデータを削除してもよろしいですか？"
+            title="Xóa món ăn"
+            description="Bạn chắc chắn xóa món ăn này?"
             onConfirm={() => handleDeleteFood(record._id)}
-            okText="はい"
-            cancelText="いいえ"
+            okText="Có"
+            cancelText="Không"
             placement="left"
           >
             <DeleteOutlined style={{ cursor: "pointer", color: "red" }} />
@@ -114,41 +125,37 @@ const FoodTable = () => {
       ),
     },
   ];
-return (
-  <>
-    <div
-      style={{
-        marginTop: "10px",
-        display: "flex",
-        justifyContent: "space-between",
-      }}
-    >
-      <h3>Table Food</h3>
-      <Button type="primary">Create Food</Button>
-    </div>
 
-    <Table
-      columns={columns}
-      dataSource={dataFood}
-      rowKey={"_id"}
-      pagination={{
-        current,
-        pageSize,
-        total,
-        showSizeChanger: true,
-      }}
-      onChange={onChange}
-    />
+  return (
+    <>
+      <div
+        style={{
+          marginTop: "10px",
+          display: "flex",
+          justifyContent: "space-between",
+        }}
+      >
+        <h3>Danh sách món ăn</h3>
+        <Button type="primary" onClick={() => setIsModalCreateOpen(true)}>
+          Thêm món ăn
+        </Button>
+      </div>
 
-    <FoodDetail
-          dataDetail={dataDetail}
-          setDataDetail={setDataDetail}
-          isDetailOpen={isDetailOpen}
-          setIsDetailOpen={setIsDetailOpen}
-    />
+      <Table
+        columns={columns}
+        dataSource={dataFood}
+        rowKey={"_id"}
+        loading={loading}
+      />
 
-  </>
-);
+      <FoodDetail
+        dataDetail={dataDetail}
+        setDataDetail={setDataDetail}
+        isDetailOpen={isDetailOpen}
+        setIsDetailOpen={setIsDetailOpen}
+      />
+    </>
+  );
 };
 
 export default FoodTable;

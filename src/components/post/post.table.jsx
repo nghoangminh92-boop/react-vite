@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { deletePostAPI } from "../../services/api.services";
 import PostDetail from "./post.detail";
 import UpdatePostModal from "./updatePost.modal";
+import RatingDisplay from "./RatingDisplay";
 
 const PostTable = (props) => {
   const {
@@ -71,22 +72,22 @@ const PostTable = (props) => {
       title: "STT",
       render: (_, __, index) => <>{index + 1 + (current - 1) * pageSize}</>,
     },
-    {
-      title: "ID",
-      dataIndex: "_id",
-      render: (_, record) => (
-        <a
-          href="#"
-          onClick={(e) => {
-            e.preventDefault();
-            setDataDetail(record);
-            setIsDetailOpen(true);
-          }}
-        >
-          {record._id}
-        </a>
-      ),
-    },
+{
+  title: "ID",
+  dataIndex: "_id",
+  render: (_, record) => (
+    
+      <a href="#"
+      onClick={(e) => {
+        e.preventDefault();
+        setDataDetail(record);
+        setIsDetailOpen(true);
+      }}
+    >
+      {record._id}
+    </a>
+  ),
+},
     {
       title: "Tiêu đề",
       dataIndex: "title",
@@ -110,6 +111,12 @@ const PostTable = (props) => {
         ) : (
           "-"
         ),
+    },
+    {
+      title: "Đánh giá",
+      key: "rating",
+      render: (_, record) =>
+        record.foodId ? <RatingDisplay postId={record.foodId} /> : "-",
     },
     {
       title: "Tác giả",

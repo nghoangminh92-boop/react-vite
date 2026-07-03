@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
 import { Empty, Spin, Rate, Tag } from "antd";
 import { fetchMenuAPI } from "../services/api.services";
+import FoodDetailDrawer from "./FoodDetailDrawer";
 
 const MenuPage = () => {
   const [menu, setMenu] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const [selectedFoodId, setSelectedFoodId] = useState(null);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   useEffect(() => {
     loadMenu();
@@ -27,6 +31,11 @@ const MenuPage = () => {
     }).format(price);
   };
 
+  const handleFoodClick = (foodId) => {
+    setSelectedFoodId(foodId);
+    setIsDrawerOpen(true);
+  };
+
   if (loading) {
     return (
       <div style={{ textAlign: "center", padding: "60px" }}>
@@ -46,6 +55,7 @@ const MenuPage = () => {
       {menu.map((item, index) => (
         <div
           key={item._id}
+          onClick={() => handleFoodClick(item._id)}
           style={{
             display: "flex",
             gap: 16,
@@ -54,6 +64,7 @@ const MenuPage = () => {
             border: "1px solid #eee",
             borderRadius: 8,
             alignItems: "center",
+            cursor: "pointer",
           }}
         >
           <div
@@ -116,6 +127,12 @@ const MenuPage = () => {
           </div>
         </div>
       ))}
+
+      <FoodDetailDrawer
+        foodId={selectedFoodId}
+        isOpen={isDrawerOpen}
+        onClose={() => setIsDrawerOpen(false)}
+      />
     </div>
   );
 };

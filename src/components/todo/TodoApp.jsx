@@ -6,6 +6,7 @@ import { Button, notification } from "antd";
 import PostForm from "../post/post.form";
 import PostsFeedList from "../post/PostsFeedList";
 import PostDetail from "../post/post.detail";
+import FoodDetailDrawer from "../../pages/FoodDetailDrawer";
 import { AuthContext } from "../context/auth.context";
 import { fetchAllPostAPI, fetchMenuAPI } from "../../services/api.services";
 
@@ -39,7 +40,7 @@ const parsePostListResponse = (res, current, pageSize) => {
 const TodoApp = () => {
   const { user } = useContext(AuthContext);
   const [dataPosts, setDataPosts] = useState([]);
-  const [dataMenu, setDataMenu] = useState([]); // 👈 state menu món ăn
+  const [dataMenu, setDataMenu] = useState([]);
   const [current, setCurrent] = useState(1);
   const [pageSize] = useState(10);
   const [total, setTotal] = useState(0);
@@ -47,9 +48,12 @@ const TodoApp = () => {
   const [dataDetail, setDataDetail] = useState(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
 
+  const [selectedFoodId, setSelectedFoodId] = useState(null);
+  const [isFoodDrawerOpen, setIsFoodDrawerOpen] = useState(false);
+
   useEffect(() => {
     loadPost();
-    loadMenu(); // 👈 gọi thêm
+    loadMenu();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -117,6 +121,11 @@ const TodoApp = () => {
     setIsDetailOpen(true);
   };
 
+  const handleFoodClick = (foodId) => {
+    setSelectedFoodId(foodId);
+    setIsFoodDrawerOpen(true);
+  };
+
   return (
     <div className="home-container">
       {/* HEADER */}
@@ -144,7 +153,12 @@ const TodoApp = () => {
         <div className="food-list">
           {dataMenu.length > 0 ? (
             dataMenu.map((dish) => (
-              <div className="food-card" key={dish._id}>
+              <div
+                className="food-card"
+                key={dish._id}
+                onClick={() => handleFoodClick(dish._id)}
+                style={{ cursor: "pointer" }}
+              >
                 <img src={dish.image || ramen1} alt={dish.name} />
                 <h3>{dish.name}</h3>
                 {dish.total > 0 ? (
@@ -190,6 +204,13 @@ const TodoApp = () => {
         setDataDetail={setDataDetail}
         isDetailOpen={isDetailOpen}
         setIsDetailOpen={setIsDetailOpen}
+      />
+
+      {/* FOOD DETAIL DRAWER */}
+      <FoodDetailDrawer
+        foodId={selectedFoodId}
+        isOpen={isFoodDrawerOpen}
+        onClose={() => setIsFoodDrawerOpen(false)}
       />
     </div>
   );

@@ -43,17 +43,16 @@ const RatingStar = (props) => {
   };
 
   const handleRate = async (value) => {
-    if (!isLoggedIn) {
-      notification.warning({
-        message: "Chưa đăng nhập",
-        description: "Bạn cần đăng nhập để đánh giá bài viết",
-      });
-      return;
-    }
-    setSubmitting(true);
+  if (!isLoggedIn) {
+    notification.warning({
+      message: "Chưa đăng nhập",
+      description: "Bạn cần đăng nhập để đánh giá bài viết",
+    });
+    return;
+  }
+  setSubmitting(true);
+  try {
     const res = await ratePostAPI(postId, value);
-    setSubmitting(false);
-
     if (res?.data) {
       setAverage(res.data.average);
       setTotal(res.data.total);
@@ -68,7 +67,15 @@ const RatingStar = (props) => {
         description: JSON.stringify(res?.message || "Đánh giá thất bại"),
       });
     }
-  };
+  } catch (error) {
+    notification.error({
+      message: "Lỗi",
+      description: "Đánh giá thất bại, vui lòng thử lại",
+    });
+  } finally {
+    setSubmitting(false);   // ✅ luôn chạy dù thành công hay lỗi
+  }
+};
 
   if (loading) return <Spin size="small" />;
 

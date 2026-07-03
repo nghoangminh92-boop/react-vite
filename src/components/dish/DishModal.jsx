@@ -23,17 +23,18 @@ const DishModal = (props) => {
   const [imageUrl, setImageUrl] = useState("");
 
   useEffect(() => {
-    if (dataUpdate) {
-      form.setFieldsValue({
-        name: dataUpdate.name,
-        description: dataUpdate.description,
-      });
-      setImageUrl(dataUpdate.image || "");
-    } else {
-      form.resetFields();
-      setImageUrl("");
-    }
-  }, [dataUpdate]);
+  if (dataUpdate) {
+    form.setFieldsValue({
+      name: dataUpdate.name,
+      description: dataUpdate.description,
+      price: dataUpdate.price,
+    });
+    setImageUrl(dataUpdate.image || "");
+  } else {
+    form.resetFields();
+    setImageUrl("");
+  }
+}, [dataUpdate]);
 
   const handleClose = () => {
     setIsModalOpen(false);

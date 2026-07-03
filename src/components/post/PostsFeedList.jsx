@@ -55,7 +55,7 @@ const PostsFeedList = ({ posts, onPostClick, loading }) => {
               </div>
               <span className="post-card-date">{formatDate(post.createdAt)}</span>
             </div>
-            <RatingDisplay postId={post._id} />
+            <RatingDisplay postId={post.foodId} />
           </div>
         </div>
       ))}

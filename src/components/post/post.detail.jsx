@@ -50,7 +50,6 @@ const PostDetail = (props) => {
 
   const [dataUpdateComment, setDataUpdateComment] = useState(null);
   const [isModalUpdateCommentOpen, setIsModalUpdateCommentOpen] = useState(false);
-  const [foodDetail, setFoodDetail] = useState(null);
 
   useEffect(() => {
     if (dataDetail?._id && isDetailOpen) {
