@@ -1,7 +1,9 @@
-import { Empty, Spin } from "antd";
+import { Empty, Spin, Popconfirm, notification } from "antd";
+import { DeleteOutlined } from "@ant-design/icons";
+import { deletePostAPI } from "../../services/api.services";
 import RatingDisplay from "./RatingDisplay";
 
-const PostsFeedList = ({ posts, onPostClick, loading }) => {
+const PostsFeedList = ({ posts, onPostClick, loading, currentUser, onPostDeleted }) => {
   const formatDate = (date) => {
     if (!date) return "";
     return new Date(date).toLocaleDateString("vi-VN");
@@ -10,6 +12,25 @@ const PostsFeedList = ({ posts, onPostClick, loading }) => {
   const truncateText = (text, maxLength = 150) => {
     if (!text) return "";
     return text.length > maxLength ? text.substring(0, maxLength) + "..." : text;
+  };
+
+  const canDelete = (post) => {
+    if (!currentUser) return false;
+    const uid = currentUser._id || currentUser.id;
+    return currentUser.role === "ADMIN" || post.userId === uid;
+  };
+
+  const handleDelete = async (id) => {
+    const res = await deletePostAPI(id);
+    if (res?.data) {
+      notification.success({ message: "Xóa bài viết thành công" });
+      onPostDeleted?.();
+    } else {
+      notification.error({
+        message: "Lỗi xóa bài viết",
+        description: JSON.stringify(res?.message || "Có lỗi xảy ra"),
+      });
+    }
   };
 
   if (loading && posts.length === 0) {
@@ -32,6 +53,27 @@ const PostsFeedList = ({ posts, onPostClick, loading }) => {
           className="post-feed-card"
           onClick={() => onPostClick(post)}
         >
+          {canDelete(post) && (
+            <Popconfirm
+              title="Xóa bài viết"
+              description="Bạn chắc chắn muốn xóa bài viết này?"
+              onConfirm={(e) => {
+                e?.stopPropagation();
+                handleDelete(post._id);
+              }}
+              onCancel={(e) => e?.stopPropagation()}
+              okText="Xóa"
+              cancelText="Hủy"
+            >
+              <div
+                className="post-card-delete-btn"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <DeleteOutlined />
+              </div>
+            </Popconfirm>
+          )}
+
           {post.image && (
             <img
               src={post.image?.startsWith('http') ? post.image : `${import.meta.env.VITE_BACKEND_URL}/images/${post.image}`}

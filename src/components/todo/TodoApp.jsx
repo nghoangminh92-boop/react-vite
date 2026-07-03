@@ -183,11 +183,13 @@ const TodoApp = () => {
           {user?.id && <PostForm loadPost={() => loadPost(1)} />}
         </div>
 
-        <PostsFeedList
-          posts={dataPosts}
-          onPostClick={handlePostClick}
-          loading={loading && dataPosts.length === 0}
-        />
+       <PostsFeedList
+  posts={dataPosts}
+  onPostClick={handlePostClick}
+  loading={loading && dataPosts.length === 0}
+  currentUser={user}
+  onPostDeleted={() => loadPost(1)}
+/>
 
         {dataPosts.length > 0 && dataPosts.length < total && (
           <div className="load-more-btn">

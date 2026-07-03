@@ -20,6 +20,9 @@ import {
 } from "../../services/api.services";
 import UpdateCommentModal from "./updateComment.modal";
 import RatingStar from "./RatingStar";
+
+import { deletePostAPI } from "../../services/api.services";
+
 const { TextArea } = Input;
 
 const normalizeListData = (res) => {
@@ -123,6 +126,24 @@ const PostDetail = (props) => {
       return;
     }
 
+    const canDeletePost = () => {
+  if (!user || !postDetail) return false;
+  const uid = user._id || user.id;
+  return user.role === "ADMIN" || postDetail.userId === uid;
+};
+
+const handleDeletePost = async () => {
+  const res = await deletePostAPI(postDetail._id);
+  if (res?.data) {
+    notification.success({ message: "Xóa bài viết thành công" });
+    handleClose();
+  } else {
+    notification.error({
+      message: "Lỗi xóa bài viết",
+      description: JSON.stringify(res?.message || "Có lỗi xảy ra"),
+    });
+  }
+};
     setSubmittingComment(true);
     const res = await createCommentAPI(
       postDetail._id,
