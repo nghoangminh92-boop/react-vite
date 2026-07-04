@@ -14,6 +14,8 @@ import { useContext, useState } from 'react';
 import { AuthContext } from '../context/auth.context';
 import { logoutAPI } from '../../services/api.services';
 import './header.css';
+import logoMuji from "../../assets/image7.jpg";
+
 
 const Header = () => {
   const { user, setUser } = useContext(AuthContext);
@@ -68,11 +70,12 @@ const Header = () => {
   return (
     <header className="app-header">
       <div className="app-header-inner">
-        {/* LOGO */}
-        <Link to="/" className="app-logo">
-          <span className="app-logo-icon">🍜</span>
-          <span className="app-logo-text">フードレビュー</span>
-        </Link>
+       {/* LOGO */}
+<Link to="/" className="app-logo">
+  <img src={logoMuji} alt="logo" className="app-logo-image" />
+  <span className="app-logo-text">フードレビュー</span>
+</Link>
+
 
         {/* NAV LINKS - desktop */}
         <nav className="app-nav">
