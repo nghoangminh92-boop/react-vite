@@ -74,7 +74,7 @@
   "yes": "Yes",
   "no": "No",
   "on": "on",
-  "posts": "posts",
+  "posts": "Posts",
   "login_required": "Login required",
   "login_required_to_rate": "Please log in to rate this dish",
   "rating_success": "Rated successfully",
@@ -215,6 +215,61 @@
   "total_users": "Total Users",
   "admin_users": "Admin Users",
   "google_login_users": "Google Login Users",
-  "search_user_placeholder": "Search by name or email"
+  "search_user_placeholder": "Search by name or email",
+
+  "contact": "Contact",
+
+  "contact_title": "Contact Us",
+  "contact_subtitle": "Have a question or feedback? Feel free to send us a message.",
+
+  "contact_address_label": "Address",
+  "contact_address_value": "",
+
+  "contact_phone_label": "Phone",
+  "contact_phone_value": "",
+
+  "contact_email_label": "Email",
+  "contact_email_value": "",
+
+  "contact_hours_label": "Working Hours",
+  "contact_hours_value": "",
+
+  "contact_form_title": "Send a Message",
+  "contact_form_name": "Full Name",
+  "contact_form_name_placeholder": "Enter your full name",
+  "contact_form_email": "Email",
+  "contact_form_email_placeholder": "Enter your email",
+  "contact_form_message": "Message",
+  "contact_form_message_placeholder": "What would you like to tell us...",
+  "contact_form_submit": "Send Message",
+  "contact_form_success": "Thank you! Your message has been sent.",
+  "menu_title": "Food Ranking",
+  "no_reviews": "No reviews yet",
+  "top": "Top",
+  "login_success": "Login successful",
+  "login_error": "Login error",
+  "network_error": "Network error",
+  "google_login_error": "Google login error",
+  "google_login_error_desc": "Google login failed",
+  "email_required": "Email is required",
+  "email_invalid": "Invalid email",
+  "password_required": "Password is required",
+  "password_placeholder": "Enter password",
+  "forgot_password": "Forgot password?",
+  "back_to_home": "Back to home",
+  "no_account": "Don't have an account?",
+  "register_here": "Register here",
+  "register_title": "Create Account",
+  "register_subtitle": "Start your new journey",
+  "register_success": "Account registered successfully",
+  "register_error": "Registration error",
+  "full_name_required": "Please enter your full name",
+  "password_rule": "Password must be at least 8 characters, including uppercase, lowercase and a number",
+  "phone_rule": "Phone number must be 9-11 digits",
+  "register_button": "Register",
+  "already_have_account": "Already have an account?",
+  "login_here": "Login here"
 
 }
+
+

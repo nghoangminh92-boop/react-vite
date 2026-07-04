@@ -1,4 +1,148 @@
-*{
-    margin: 0;
-    padding: 0;
+.contact-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 20px 60px;
+}
+
+/* HERO */
+.contact-hero {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.contact-hero h1 {
+  font-size: 32px;
+  font-weight: 700;
+  color: #222;
+  margin-bottom: 10px;
+}
+
+.contact-hero p {
+  color: #666;
+  font-size: 15px;
+}
+
+/* CONTAINER: 2 cột */
+.contact-container {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  gap: 40px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  padding: 32px;
+}
+
+/* THÔNG TIN LIÊN HỆ */
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  border-right: 1px solid #eee;
+  padding-right: 32px;
+}
+
+.contact-info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.contact-icon {
+  font-size: 22px;
+  line-height: 1;
+}
+
+.contact-info-item h4 {
+  margin: 0 0 4px;
+  font-size: 15px;
+  color: #222;
+  font-weight: 600;
+}
+
+.contact-info-item p {
+  margin: 0;
+  font-size: 14px;
+  color: #666;
+}
+
+/* FORM */
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.contact-form h3 {
+  margin: 0 0 8px;
+  font-size: 20px;
+  color: #222;
+  font-weight: 700;
+}
+
+.contact-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.contact-form-group label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+.contact-form-group input,
+.contact-form-group textarea {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s;
+  resize: vertical;
+}
+
+.contact-form-group input:focus,
+.contact-form-group textarea:focus {
+  border-color: #d9534f;
+}
+
+.contact-submit-btn {
+  align-self: flex-start;
+  background: #d9534f;
+  color: #fff;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.contact-submit-btn:hover {
+  background: #c9302c;
+}
+
+.contact-success-msg {
+  color: #2e7d32;
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+/* RESPONSIVE - mobile */
+@media (max-width: 768px) {
+  .contact-container {
+    grid-template-columns: 1fr;
+    padding: 24px;
+  }
+
+  .contact-info {
+    border-right: none;
+    border-bottom: 1px solid #eee;
+    padding-right: 0;
+    padding-bottom: 24px;
+  }
 }

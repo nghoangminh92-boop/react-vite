@@ -2,11 +2,16 @@ import { Button, Form, Input, notification, Card, Typography, Row, Col, Divider 
 import { registerUserAPI } from '../services/api.services';
 import { Link, useNavigate } from 'react-router-dom';
 
+// ⭐ i18n
+import { useTranslation } from "react-i18next";
+import LanguageSwitcher from "../components/language/LanguageSwitcher";
+
 const { Title, Text } = Typography;
 
 const RegisterPage = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
+  const { t } = useTranslation(); // ⭐ dùng i18n
 
   const onFinish = async (values) => {
     const res = await registerUserAPI(
@@ -18,13 +23,13 @@ const RegisterPage = () => {
 
     if (res.data) {
       notification.success({
-        message: "ユーザー登録",
-        description: "ユーザー登録が成功しました",
+        message: t("register_title"),
+        description: t("register_success"),
       });
       navigate("/login");
     } else {
       notification.error({
-        message: "登録エラー",
+        message: t("register_error"),
         description: JSON.stringify(res.message),
       });
     }
@@ -40,8 +45,14 @@ const RegisterPage = () => {
         alignItems: "center",
         background: "#f5f7fa",
         padding: 20,
+        position: "relative",
       }}
     >
+      {/* ⭐ NÚT ĐỔI NGÔN NGỮ - góc trên phải */}
+      <div style={{ position: "absolute", top: 20, right: 20 }}>
+        <LanguageSwitcher />
+      </div>
+
       <Card
         style={{
           width: 520,
@@ -85,7 +96,7 @@ const RegisterPage = () => {
         </div>
 
         <Title level={3} style={{ textAlign: "center", marginBottom: 5 }}>
-          アカウント作成
+          {t("register_title")}
         </Title>
 
         <Text
@@ -96,7 +107,7 @@ const RegisterPage = () => {
             color: "#666",
           }}
         >
-          新しい旅を始めましょう
+          {t("register_subtitle")}
         </Text>
 
         <Form
@@ -111,11 +122,11 @@ const RegisterPage = () => {
               <Row justify="center">
                 <Col span={24}>
                   <Form.Item
-                    label="氏名"
+                    label={t("full_name")}
                     name="fullName"
-                    rules={[{ required: true, message: "氏名を入力してください" }]}
+                    rules={[{ required: true, message: t("full_name_required") }]}
                   >
-                    <Input placeholder="氏名を入力" />
+                    <Input placeholder={t("full_name_placeholder")} />
                   </Form.Item>
                 </Col>
               </Row>
@@ -123,11 +134,11 @@ const RegisterPage = () => {
               <Row justify="center">
                 <Col span={24}>
                   <Form.Item
-                    label="メールアドレス"
+                    label={t("email")}
                     name="email"
                     rules={[
-                      { required: true, message: "メールアドレスは必須です" },
-                      { type: "email", message: "メールアドレスが正しくありません" },
+                      { required: true, message: t("email_required") },
+                      { type: "email", message: t("email_invalid") },
                     ]}
                   >
                     <Input placeholder="example@gmail.com" />
@@ -138,18 +149,17 @@ const RegisterPage = () => {
               <Row justify="center">
                 <Col span={24}>
                   <Form.Item
-                    label="パスワード"
+                    label={t("password")}
                     name="password"
                     rules={[
                       {
                         required: true,
                         pattern: /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{8,}$/,
-                        message:
-                          "パスワードは8文字以上、大文字・小文字・数字を含める必要があります",
+                        message: t("password_rule"),
                       },
                     ]}
                   >
-                    <Input.Password placeholder="パスワードを入力" />
+                    <Input.Password placeholder={t("password_placeholder")} />
                   </Form.Item>
                 </Col>
               </Row>
@@ -157,12 +167,12 @@ const RegisterPage = () => {
               <Row justify="center">
                 <Col span={24}>
                   <Form.Item
-                    label="電話番号"
+                    label={t("phone")}
                     name="phone"
                     rules={[
                       {
                         pattern: /^[0-9]{9,11}$/,
-                        message: "電話番号は9〜11桁で入力してください",
+                        message: t("phone_rule"),
                       },
                     ]}
                   >
@@ -188,14 +198,14 @@ const RegisterPage = () => {
                         boxShadow: "0 4px 12px rgba(56,103,214,0.3)",
                       }}
                     >
-                      登録
+                      {t("register_button")}
                     </Button>
                   </div>
 
                   <Divider>
                     <div>
-                      すでにアカウントがありますか？{" "}
-                      <Link to={"/login"}>ログインはこちら</Link>
+                      {t("already_have_account")}{" "}
+                      <Link to={"/login"}>{t("login_here")}</Link>
                     </div>
                   </Divider>
                 </Col>

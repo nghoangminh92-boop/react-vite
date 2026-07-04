@@ -1,13 +1,21 @@
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { notification, Popconfirm, Table } from "antd";
+import { notification, Popconfirm, Table, Pagination } from "antd";
 import { useEffect, useState } from "react";
 import { deletePostAPI } from "../../services/api.services";
 import PostDetail from "./post.detail";
 import UpdatePostModal from "./updatePost.modal";
 import RatingDisplay from "./RatingDisplay";
+import "./post-table.css";
 
 // ⭐ i18n
 import { useTranslation } from "react-i18next";
+
+const getImageUrl = (image) =>
+  image
+    ? image.startsWith("http")
+      ? image
+      : `${import.meta.env.VITE_BACKEND_URL}/images/${image}`
+    : null;
 
 const PostTable = (props) => {
   const {
@@ -20,7 +28,7 @@ const PostTable = (props) => {
     setPageSize,
   } = props;
 
-  const { t } = useTranslation(); // ⭐ dùng i18n
+  const { t } = useTranslation();
 
   const [dataDetail, setDataDetail] = useState(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
@@ -73,6 +81,16 @@ const PostTable = (props) => {
     }
   };
 
+  const handleEdit = (record) => {
+    setDataUpdate(record);
+    setIsModalUpdateOpen(true);
+  };
+
+  const handleOpenDetail = (record) => {
+    setDataDetail(record);
+    setIsDetailOpen(true);
+  };
+
   const columns = [
     {
       title: t("index"),
@@ -82,15 +100,15 @@ const PostTable = (props) => {
       title: "ID",
       dataIndex: "_id",
       render: (_, record) => (
-        <a
-          href="#"
+        
+          <a href="#"
+          className="post-id-link"
           onClick={(e) => {
             e.preventDefault();
-            setDataDetail(record);
-            setIsDetailOpen(true);
+            handleOpenDetail(record);
           }}
         >
-          {record._id}
+          {record._id?.slice(-8)}
         </a>
       ),
     },
@@ -98,26 +116,18 @@ const PostTable = (props) => {
       title: t("title"),
       dataIndex: "title",
       ellipsis: true,
+      render: (text, record) => (
+        <span className="post-title-link" onClick={() => handleOpenDetail(record)}>
+          {text}
+        </span>
+      ),
     },
     {
       title: t("image"),
       dataIndex: "image",
       render: (image) =>
         image ? (
-          <img
-            src={
-              image?.startsWith("http")
-                ? image
-                : `${import.meta.env.VITE_BACKEND_URL}/images/${image}`
-            }
-            alt=""
-            style={{
-              width: 60,
-              height: 40,
-              objectFit: "cover",
-              borderRadius: 4,
-            }}
-          />
+          <img src={getImageUrl(image)} alt="" className="post-thumb" />
         ) : (
           "-"
         ),
@@ -143,11 +153,8 @@ const PostTable = (props) => {
       render: (_, record) => (
         <div style={{ display: "flex", gap: "20px" }}>
           <EditOutlined
-            onClick={() => {
-              setDataUpdate(record);
-              setIsModalUpdateOpen(true);
-            }}
-            style={{ cursor: "pointer", color: "orange" }}
+            className="post-action-icon edit"
+            onClick={() => handleEdit(record)}
           />
 
           <Popconfirm
@@ -158,7 +165,7 @@ const PostTable = (props) => {
             cancelText={t("no")}
             placement="left"
           >
-            <DeleteOutlined style={{ cursor: "pointer", color: "red" }} />
+            <DeleteOutlined className="post-action-icon delete" />
           </Popconfirm>
         </div>
       ),
@@ -166,24 +173,102 @@ const PostTable = (props) => {
   ];
 
   return (
-    <>
-      <Table
-        columns={columns}
-        dataSource={dataPosts}
-        rowKey={(record) => record._id?.toString?.() || record._id}
-        pagination={{
-          current,
-          pageSize,
-          total,
-          showSizeChanger: true,
-          showTotal: (totalCount, range) => (
-            <div>
-              {range[0]}-{range[1]} {t("on")} {totalCount} {t("posts")}
+    <div className="post-table-page">
+      {/* DESKTOP TABLE */}
+      <div className="post-table-wrapper">
+        <Table
+          className="post-table"
+          columns={columns}
+          dataSource={dataPosts}
+          rowKey={(record) => record._id?.toString?.() || record._id}
+          scroll={{ x: 900 }}
+          pagination={{
+            current,
+            pageSize,
+            total,
+            showSizeChanger: true,
+            showTotal: (totalCount, range) => (
+              <div>
+                {range[0]}-{range[1]} {t("on")} {totalCount} {t("posts")}
+              </div>
+            ),
+          }}
+          onChange={onChange}
+        />
+      </div>
+
+      {/* MOBILE CARD LIST */}
+      <div className="post-card-list">
+        {dataPosts.map((post) => (
+          <div className="post-mobile-card" key={post._id}>
+            {post.image ? (
+              <img src={getImageUrl(post.image)} alt="" />
+            ) : (
+              <div className="post-mobile-card-noimg" />
+            )}
+
+            <div className="post-mobile-card-body">
+              <p
+                className="post-mobile-card-title"
+                onClick={() => handleOpenDetail(post)}
+              >
+                {post.title}
+              </p>
+
+              <div className="post-mobile-card-meta">
+                <span>{post.author}</span>
+                <span>·</span>
+                <span>{formatDate(post.createdAt)}</span>
+              </div>
+
+              {post.foodId && (
+                <div className="post-mobile-card-rating">
+                  <RatingDisplay postId={post.foodId} />
+                </div>
+              )}
             </div>
-          ),
-        }}
-        onChange={onChange}
-      />
+
+            <div className="post-mobile-card-actions">
+              <EditOutlined
+                className="post-action-icon edit"
+                onClick={() => handleEdit(post)}
+              />
+
+              <Popconfirm
+                title={t("delete_post")}
+                description={t("delete_post_confirm")}
+                onConfirm={() => handleDeletePost(post._id)}
+                okText={t("yes")}
+                cancelText={t("no")}
+                placement="left"
+              >
+                <DeleteOutlined className="post-action-icon delete" />
+              </Popconfirm>
+            </div>
+          </div>
+        ))}
+
+        {dataPosts.length === 0 && (
+          <p style={{ textAlign: "center", color: "#999", padding: "20px 0" }}>
+            {t("none")}
+          </p>
+        )}
+
+        {total > pageSize && (
+          <div className="post-mobile-pagination">
+            <Pagination
+              current={current}
+              pageSize={pageSize}
+              total={total}
+              onChange={(page, size) => {
+                setCurrent(page);
+                if (size !== pageSize) setPageSize(size);
+              }}
+              simple
+            />
+          </div>
+        )}
+      </div>
 
       <PostDetail
         dataDetail={dataDetail}
@@ -199,7 +284,7 @@ const PostTable = (props) => {
         setDataUpdate={setDataUpdate}
         loadPost={loadPost}
       />
-    </>
+    </div>
   );
 };
 

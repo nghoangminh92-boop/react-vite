@@ -7,30 +7,35 @@ import { AuthContext } from "../components/context/auth.context";
 import { GoogleLogin } from '@react-oauth/google';
 import { googleLoginAPI } from "../services/api.services";
 
+// ⭐ i18n
+import { useTranslation } from "react-i18next";
+import LanguageSwitcher from "../components/language/LanguageSwitcher";
+
 const LoginPage = () => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { setUser } = useContext(AuthContext);
+  const { t, i18n } = useTranslation(); // ⭐ dùng i18n
 
   const onFinish = async (values) => {
     setLoading(true);
     try {
       const res = await loginUserAPI(values.email, values.password);
       if (res.data) {
-        message.success("ログイン成功");
+        message.success(t("login_success"));
         localStorage.setItem("access_token", res.data.access_token);
         setUser(res.data.user);
         navigate("/");
       } else {
         notification.error({
-          message: "ログインエラー",
+          message: t("login_error"),
           description: JSON.stringify(res.message),
         });
       }
     } catch (error) {
       notification.error({
-        message: "ネットワークエラー",
+        message: t("network_error"),
         description: error.message,
       });
     }
@@ -42,19 +47,19 @@ const LoginPage = () => {
     try {
       const res = await googleLoginAPI(credentialResponse.credential);
       if (res?.data) {
-        message.success("ログイン成功");
+        message.success(t("login_success"));
         localStorage.setItem("access_token", res.data.access_token);
         setUser(res.data.user);
         navigate("/");
       } else {
         notification.error({
-          message: "ログインエラー",
+          message: t("login_error"),
           description: JSON.stringify(res?.message),
         });
       }
     } catch (error) {
       notification.error({
-        message: "ネットワークエラー",
+        message: t("network_error"),
         description: error.message,
       });
     }
@@ -63,13 +68,18 @@ const LoginPage = () => {
 
   const handleGoogleError = () => {
     notification.error({
-      message: "Googleログインエラー",
-      description: "Googleログインに失敗しました",
+      message: t("google_login_error"),
+      description: t("google_login_error_desc"),
     });
   };
 
   return (
-    <Row justify="center" style={{ margin: "30px" }}>
+    <Row justify="center" style={{ margin: "30px", position: "relative" }}>
+      {/* ⭐ NÚT ĐỔI NGÔN NGỮ - góc trên phải */}
+      <div style={{ position: "absolute", top: 0, right: 20 }}>
+        <LanguageSwitcher />
+      </div>
+
       <Col span={24}>
         <fieldset
           style={{
@@ -82,7 +92,7 @@ const LoginPage = () => {
           }}
         >
           <legend style={{ padding: "0 10px", fontWeight: 600 }}>
-            ログイン
+            {t("login")}
           </legend>
 
           {/* LOGO */}
@@ -110,23 +120,23 @@ const LoginPage = () => {
 
           <Form form={form} layout="vertical" onFinish={onFinish}>
             <Form.Item
-              label="メールアドレス"
+              label={t("email")}
               name="email"
               rules={[
-                { required: true, message: "メールアドレスは必須です" },
-                { type: "email", message: "メールアドレスが正しくありません" },
+                { required: true, message: t("email_required") },
+                { type: "email", message: t("email_invalid") },
               ]}
             >
               <Input placeholder="example@gmail.com" />
             </Form.Item>
 
             <Form.Item
-              label="パスワード"
+              label={t("password")}
               name="password"
-              rules={[{ required: true, message: "パスワードは必須です" }]}
+              rules={[{ required: true, message: t("password_required") }]}
             >
               <Input.Password
-                placeholder="パスワードを入力"
+                placeholder={t("password_placeholder")}
                 onKeyDown={(event) => {
                   if (event.key === "Enter") form.submit();
                 }}
@@ -135,7 +145,7 @@ const LoginPage = () => {
 
             <div style={{ textAlign: "right", marginTop: -8, marginBottom: 12 }}>
               <Link to={"/forgot-password"} style={{ fontSize: 13 }}>
-                パスワードをお忘れですか？
+                {t("forgot_password")}
               </Link>
             </div>
 
@@ -154,27 +164,28 @@ const LoginPage = () => {
                   htmlType="submit"
                   icon={<ArrowRightOutlined />}
                 >
-                  ログイン
+                  {t("login")}
                 </Button>
 
                 <Link to={"/"} style={{ fontWeight: 500 }}>
-                  ホームへ戻る <ArrowRightOutlined />
+                  {t("back_to_home")} <ArrowRightOutlined />
                 </Link>
               </div>
             </Form.Item>
 
             <Divider>
               <div style={{ textAlign: "center" }}>
-                アカウントがありませんか？{" "}
-                <Link to={"/register"}>新規登録はこちら</Link>
+                {t("no_account")}{" "}
+                <Link to={"/register"}>{t("register_here")}</Link>
               </div>
             </Divider>
 
             <div style={{ textAlign: "center", marginTop: 16 }}>
               <GoogleLogin
+                key={i18n.language}
                 onSuccess={handleGoogleSuccess}
                 onError={handleGoogleError}
-                locale="ja"
+                locale={i18n.language === "vi" ? "vi" : i18n.language === "ja" ? "ja" : "en"}
               />
             </div>
           </Form>

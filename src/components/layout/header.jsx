@@ -8,6 +8,8 @@ import {
   UserOutlined,
   LogoutOutlined,
   DownOutlined,
+  CoffeeOutlined,   // ⭐ icon cho Menu
+  PhoneOutlined,    // ⭐ icon cho Liên hệ
 } from '@ant-design/icons';
 import { Dropdown, message, Avatar } from 'antd';
 import { useContext, useState } from 'react';
@@ -43,6 +45,9 @@ const Header = () => {
   const navLinks = [
     { key: 'home', to: '/', label: t("home"), icon: <HomeOutlined /> },
 
+    // ⭐ Menu - ai cũng xem được
+    { key: 'menu', to: '/menu', label: t("menu"), icon: <CoffeeOutlined /> },
+
     ...(user.role === 'ADMIN'
       ? [
           { key: 'dishes', to: '/dishes', label: t("dishes"), icon: <AuditOutlined /> },
@@ -50,6 +55,9 @@ const Header = () => {
           { key: 'users', to: '/users', label: t("users"), icon: <UsergroupAddOutlined /> },
         ]
       : []),
+
+    // ⭐ Liên hệ - ai cũng xem được
+    { key: 'contact', to: '/liên hệ', label: t("contact"), icon: <PhoneOutlined /> },
   ];
 
   const userMenuItems = {
@@ -71,7 +79,7 @@ const Header = () => {
     ],
   };
 
-  const isActive = (to) => location.pathname === to;
+  const isActive = (to) => location.pathname === decodeURIComponent(to) || decodeURIComponent(location.pathname) === to;
 
   return (
     <header className="app-header">
@@ -88,7 +96,7 @@ const Header = () => {
           {navLinks.map((item) => (
             <Link
               key={item.key}
-              to={item.to}
+              to={encodeURI(item.to)}
               className={`app-nav-link ${isActive(item.to) ? 'active' : ''}`}
             >
               {item.icon}
@@ -150,7 +158,7 @@ const Header = () => {
         {navLinks.map((item) => (
           <Link
             key={item.key}
-            to={item.to}
+            to={encodeURI(item.to)}
             className={`app-mobile-nav-link ${isActive(item.to) ? 'active' : ''}`}
             onClick={() => setMobileOpen(false)}
           >

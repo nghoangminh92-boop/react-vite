@@ -1,90 +1,98 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Inter:wght@400;500;600&display=swap');
+
 :root {
-  --hd-primary: #d4380d;
-  --hd-primary-light: #ff6b3d;
-  --hd-text: #1f1f1f;
-  --hd-text-secondary: #65676b;
-  --hd-border: #eee;
-  --hd-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  --hd-ink: #4a4a4a;         /* đổi từ #141414 đen sang xám đậm */
+  --hd-ink-light: #565656;   /* đổi từ #232323 sang xám nhạt hơn 1 chút (dùng cho mobile dropdown) */
+  --hd-gray: #3a3a3a;
+  --hd-gray-text: hwb(0 100% 0%);
+  --hd-gray-text-hover: #ffffff;
+  --hd-border: rgba(255,255,255,0.08);
 }
 
 .app-header {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: #fff;
-  box-shadow: var(--hd-shadow);
+  background: var(--hd-ink);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.15);
 }
 
 .app-header-inner {
-  max-width: 1200px;
+  max-width: 1280px;
   margin: 0 auto;
   padding: 0 24px;
-  height: 64px;
+  height: 68px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 24px;
 }
 
-/* LOGO */
+/* ===== LOGO ===== */
 .app-logo {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-weight: 800;
-  font-size: 20px;
-  color: var(--hd-primary);
+  gap: 10px;
   text-decoration: none;
-  letter-spacing: -0.4px;
   flex-shrink: 0;
-  transition: opacity 0.2s;
 }
 
-.app-logo:hover {
-  opacity: 0.85;
+.app-logo-image {
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  object-fit: cover;
 }
 
-.app-logo-icon {
-  font-size: 24px;
+.app-logo-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+  color: #f2f2f2;
+  white-space: nowrap;
 }
 
-/* NAV - desktop */
+/* ===== NAV DESKTOP ===== */
 .app-nav {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   flex: 1;
+  justify-content: center;
 }
 
 .app-nav-link {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 14px;
+  gap: 7px;
+  padding: 9px 16px;
   border-radius: 999px;
+  font-family: 'Inter', sans-serif;
   font-size: 14px;
-  font-weight: 600;
-  color: var(--hd-text-secondary);
+  font-weight: 500;
+  color: var(--hd-gray-text);
   text-decoration: none;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
+  white-space: nowrap;
 }
 
 .app-nav-link:hover {
-  background: #fff3e0;
-  color: var(--hd-primary);
+  color: var(--hd-gray-text-hover);
+  background: rgba(255,255,255,0.06);
 }
 
 .app-nav-link.active {
-  background: linear-gradient(135deg, var(--hd-primary) 0%, var(--hd-primary-light) 100%);
-  color: #fff;
-  box-shadow: 0 3px 10px rgba(212, 56, 13, 0.25);
+  color: var(--hd-ink);
+  background: #f2f2f2;
+  font-weight: 600;
 }
 
-/* RIGHT SIDE */
+/* ===== RIGHT SIDE ===== */
 .app-header-right {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   flex-shrink: 0;
 }
 
@@ -92,68 +100,67 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 18px;
+  padding: 8px 20px;
   border-radius: 999px;
-  background: linear-gradient(135deg, var(--hd-primary) 0%, var(--hd-primary-light) 100%);
-  color: #fff;
-  font-weight: 600;
+  background: #f2f2f2;
+  color: var(--hd-ink);
   font-size: 14px;
+  font-weight: 600;
   text-decoration: none;
-  box-shadow: 0 3px 10px rgba(212, 56, 13, 0.25);
-  transition: all 0.2s;
+  transition: background 0.2s ease, transform 0.15s ease;
 }
 
 .app-login-btn:hover {
+  background: #ffffff;
   transform: translateY(-1px);
-  box-shadow: 0 5px 14px rgba(212, 56, 13, 0.35);
-  color: #fff;
 }
 
-/* USER CHIP */
+/* ===== USER CHIP ===== */
 .app-user-chip {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 4px 12px 4px 4px;
+  gap: 9px;
+  padding: 6px 12px 6px 6px;
   border-radius: 999px;
+  background: rgba(255,255,255,0.06);
   cursor: pointer;
-  transition: background 0.2s;
-  border: 1px solid var(--hd-border);
+  transition: background 0.2s ease;
 }
 
 .app-user-chip:hover {
-  background: #f7f5f2;
+  background: rgba(255,255,255,0.12);
 }
 
 .app-user-avatar-fallback {
-  background: linear-gradient(135deg, var(--hd-primary), var(--hd-primary-light));
+  background: var(--hd-gray) !important;
+  color: #fff !important;
   font-weight: 700;
 }
 
 .app-user-name {
   font-size: 14px;
   font-weight: 600;
-  color: var(--hd-text);
+  color: #f2f2f2;
   max-width: 120px;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .app-user-caret {
-  font-size: 10px;
-  color: var(--hd-text-secondary);
+  color: var(--hd-gray-text);
+  font-size: 11px;
 }
 
-/* HAMBURGER - hidden on desktop */
+/* ===== HAMBURGER (mobile) ===== */
 .app-hamburger {
   display: none;
   flex-direction: column;
   justify-content: center;
   gap: 5px;
-  width: 32px;
-  height: 32px;
-  background: none;
+  width: 34px;
+  height: 34px;
+  background: transparent;
   border: none;
   cursor: pointer;
   padding: 0;
@@ -163,9 +170,9 @@
   display: block;
   width: 100%;
   height: 2px;
-  background: var(--hd-text);
+  background: #f2f2f2;
   border-radius: 2px;
-  transition: all 0.25s;
+  transition: transform 0.25s ease, opacity 0.25s ease;
 }
 
 .app-hamburger.open span:nth-child(1) {
@@ -180,46 +187,54 @@
   transform: translateY(-7px) rotate(-45deg);
 }
 
-/* MOBILE NAV */
+/* ===== MOBILE NAV DROPDOWN ===== */
 .app-mobile-nav {
   display: none;
   flex-direction: column;
   max-height: 0;
   overflow: hidden;
+  background: var(--hd-ink-light);
   transition: max-height 0.3s ease;
-  background: #fff;
-  border-top: 1px solid var(--hd-border);
+  border-top: 1px solid transparent;
 }
 
 .app-mobile-nav.open {
-  max-height: 400px;
+  max-height: 500px;
+  border-top: 1px solid var(--hd-border);
 }
 
 .app-mobile-nav-link {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   padding: 14px 24px;
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--hd-text-secondary);
+  color: var(--hd-gray-text);
   text-decoration: none;
-  border-bottom: 1px solid #f5f5f5;
+  font-size: 15px;
+  font-weight: 500;
+  border-bottom: 1px solid var(--hd-border);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.app-mobile-nav-link:hover {
+  background: rgba(255,255,255,0.05);
+  color: #fff;
 }
 
 .app-mobile-nav-link.active {
-  color: var(--hd-primary);
-  background: #fff3e0;
+  color: #fff;
+  background: rgba(255,255,255,0.08);
+  font-weight: 600;
 }
 
-/* RESPONSIVE */
-@media (max-width: 768px) {
+/* ============ RESPONSIVE ============ */
+@media (max-width: 900px) {
   .app-nav {
     display: none;
   }
 
   .app-hamburger {
-    display: flex;  
+    display: flex;
   }
 
   .app-mobile-nav {
@@ -229,28 +244,61 @@
   .app-user-name {
     display: none;
   }
+}
+
+@media (max-width: 480px) {
+  .app-header-inner {
+    height: 60px;
+    padding: 0 16px;
+  }
+
+  .app-logo-image {
+    width: 32px;
+    height: 32px;
+  }
+
+  .app-logo-text {
+    font-size: 16px;
+  }
 
   .app-login-btn span {
     display: none;
   }
- .app-login-btn > span {
-    display: inline-block !important;
-  }
+
   .app-login-btn {
     padding: 8px 12px;
   }
-
-  .app-header-inner {
-    padding: 0 16px;
-  }
-
-  .app-logo-text {
-    font-size: 17px;
-  }
 }
 
-.app-logo-image {
-  height: 42px;
-  width: auto;
-  object-fit: contain;
+/* ===== LANGUAGE SWITCHER WRAPPER ===== */
+.app-header-right > *:first-child {
+  display: flex;
+  align-items: center;
+}
+
+/* Style chung cho mọi button/text bên trong LanguageSwitcher nếu nó không có class riêng */
+.app-header-right .ant-dropdown-trigger,
+.app-header-right button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.08);
+  color: #f2f2f2 !important;
+  font-size: 13px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.app-header-right .ant-dropdown-trigger:hover,
+.app-header-right button:hover {
+  background: rgba(255,255,255,0.16);
+}
+
+/* Căn đều khoảng cách các khối bên phải */
+.app-header-right {
+  gap: 12px;
 }

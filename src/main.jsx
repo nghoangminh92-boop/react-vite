@@ -20,8 +20,8 @@ import PrivateRoute from './pages/private.route.jsx';
 import MenuPage from './pages/menu.jsx';
 import DishPage from './pages/dish.jsx';
 import ForgotPasswordPage from './pages/ForgotPasswordPage.jsx';
+import ContactPage from './pages/contact.jsx'; // ⭐ trang liên hệ mới
 import "./i18n";
-
 
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
@@ -54,6 +54,7 @@ const router = createBrowserRouter([
         )
       },
       { path:"/menu", element:<MenuPage/> },
+      { path:"/liên hệ", element:<ContactPage/> }, // ⭐ route liên hệ
       {
         path: "/profile",
         element: (

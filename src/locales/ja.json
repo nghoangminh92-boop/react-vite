@@ -219,7 +219,58 @@
   "total_users": "総ユーザー数",
   "admin_users": "管理者",
   "google_login_users": "Googleログイン",
-  "search_user_placeholder": "名前またはメールで検索"
+  "search_user_placeholder": "名前またはメールで検索",
+
+  "contact": "お問い合わせ",
+
+  "contact_title": "お問い合わせ",
+  "contact_subtitle": "",
+
+  "contact_address_label": "",
+  "contact_address_value": "",
+
+  "contact_phone_label": "電話番号",
+  "contact_phone_value": "",
+
+  "contact_email_label": "メール",
+  "contact_email_value": "",
+
+  "contact_hours_label": "営業時間",
+  "contact_hours_value": "",
+
+  "contact_form_title": "メッセージを送る",
+  "contact_form_name": "お名前",
+  "contact_form_name_placeholder": "お名前を入力してください",
+  "contact_form_email": "メール",
+  "contact_form_email_placeholder": "メールアドレスを入力してください",
+  "contact_form_message": "メッセージ",
+  "contact_form_message_placeholder": "お伝えしたい内容をご記入ください...",
+  "contact_form_submit": "送信する",
+  "contact_form_success": "ありがとうございます！メッセージが送信されました。",
+  "login_success": "ログイン成功",
+  "login_error": "ログインエラー",
+  "network_error": "ネットワークエラー",
+  "google_login_error": "Googleログインエラー",
+  "google_login_error_desc": "Googleログインに失敗しました",
+  "email_required": "メールアドレスは必須です",
+  "email_invalid": "メールアドレスが正しくありません",
+  "password_required": "パスワードは必須です",
+  "password_placeholder": "パスワードを入力",
+  "forgot_password": "パスワードをお忘れですか？",
+  "back_to_home": "ホームへ戻る",
+  "no_account": "アカウントがありませんか？",
+  "register_here": "新規登録はこちら",
+   "register_title": "アカウント作成",
+  "register_subtitle": "新しい旅を始めましょう",
+  "register_success": "ユーザー登録が成功しました",
+  "register_error": "登録エラー",
+  "full_name_required": "氏名を入力してください",
+  "password_rule": "パスワードは8文字以上、大文字・小文字・数字を含める必要があります",
+  "phone_rule": "電話番号は9〜11桁で入力してください",
+  "register_button": "登録",
+  "already_have_account": "すでにアカウントがありますか？",
+  "login_here": "ログインはこちら"
+
 
 }
 
