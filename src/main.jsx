@@ -18,7 +18,7 @@ import { AuthWrapper } from './components/context/auth.context.jsx';
 import PrivateRoute from './pages/private.route.jsx';
 import MenuPage from './pages/menu.jsx';
 import DishPage from './pages/dish.jsx';
- 
+ import ForgotPasswordPage from './pages/ForgotPasswordPage.jsx';
 
 const router = createBrowserRouter([
   {
@@ -35,14 +35,6 @@ const router = createBrowserRouter([
     element:<UserPage/>
 
   },
-  //  {
-  //   path:"/foods",
-  //   element:(
-  //     <PrivateRoute>
-  //       <BookPage/>
-  //     </PrivateRoute>)
-
-  // },
   {
     path:"/dishes",
     element:(
@@ -80,11 +72,14 @@ const router = createBrowserRouter([
     path:"/register",
     element:<RegisterPage/>
 
+  },
+  {
+    path:"/forgot-password",
+    element:<ForgotPasswordPage/>
   }
   
   
 ]);
-
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(

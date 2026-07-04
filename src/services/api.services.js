@@ -203,6 +203,18 @@ const fetchPostsByFoodAPI = (foodId) => {
 };
 
 
+const changePasswordAPI = (oldPassword, newPassword) => {
+  const URL_BACKEND = "/api/v1/auth/change-password";
+  const data = { oldPassword, newPassword };
+  return axios.post(URL_BACKEND, data);
+};
+
+const forgotPasswordAPI = (email, phone, newPassword) => {
+  const URL_BACKEND = "/api/v1/auth/forgot-password";
+  const data = { email, phone, newPassword };
+  return axios.post(URL_BACKEND, data);
+};
+
 export {
     createUserAPI,updateUserAPI,fetchAllUserAPI,
     deleteUserAPI,handleUpdateFile,updateUserAvatarAPI,
@@ -213,5 +225,5 @@ export {
     createCommentAPI,fetchCommentsByPostAPI,updateCommentAPI,deleteCommentAPI,
     ratePostAPI,fetchPostRatingAPI,fetchUserRatingAPI,
     fetchMenuAPI,
-    createDishAPI,fetchAllDishAPI,fetchDishByIdAPI,updateDishAPI,deleteDishAPI
+    createDishAPI,fetchAllDishAPI,fetchDishByIdAPI,updateDishAPI,deleteDishAPI,changePasswordAPI,forgotPasswordAPI
 }

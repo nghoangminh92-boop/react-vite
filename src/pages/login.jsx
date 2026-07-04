@@ -95,10 +95,16 @@ const LoginPage = () => {
               <Input.Password
                 placeholder="パスワードを入力"
                 onKeyDown={(event) => {
-                  if (event.key === "enter") form.submit;
+                  if (event.key === "Enter") form.submit();
                 }}
               />
             </Form.Item>
+
+            <div style={{ textAlign: "right", marginTop: -8, marginBottom: 12 }}>
+              <Link to={"/forgot-password"} style={{ fontSize: 13 }}>
+                パスワードをお忘れですか？
+              </Link>
+            </div>
 
             <Form.Item>
               <div

@@ -1,8 +1,12 @@
-import { Avatar, Button, Input, notification } from "antd";
+import { Avatar, Button, Input, notification, Divider } from "antd";
 import { useContext, useRef, useState } from "react";
 import { AuthContext } from "../components/context/auth.context";
-import { handleUpdateFile, updateUserAvatarAPI } from "../services/api.services";
-import { UserOutlined } from "@ant-design/icons";
+import {
+  handleUpdateFile,
+  updateUserAvatarAPI,
+  changePasswordAPI,
+} from "../services/api.services";
+import { UserOutlined, LockOutlined } from "@ant-design/icons";
 
 const ProfilePage = () => {
   const { user, setUser } = useContext(AuthContext);
@@ -13,6 +17,12 @@ const ProfilePage = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  // パスワード変更用の状態
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [changingPassword, setChangingPassword] = useState(false);
 
   const handleFileChange = (event) => {
     if (!event.target.files || event.target.files.length === 0) return;
@@ -62,6 +72,56 @@ const ProfilePage = () => {
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleChangePassword = async () => {
+    if (!oldPassword.trim()) {
+      notification.warning({
+        message: "入力エラー",
+        description: "現在のパスワードを入力してください",
+      });
+      return;
+    }
+    if (!newPassword.trim() || newPassword.length < 6) {
+      notification.warning({
+        message: "パスワードが無効です",
+        description: "新しいパスワードは6文字以上で入力してください",
+      });
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      notification.warning({
+        message: "一致しません",
+        description: "確認用パスワードが新しいパスワードと一致しません",
+      });
+      return;
+    }
+
+    setChangingPassword(true);
+    try {
+      const res = await changePasswordAPI(oldPassword, newPassword);
+      if (res?.data) {
+        notification.success({
+          message: "変更成功",
+          description: "パスワードが変更されました。次回ログインから新しいパスワードをご使用ください",
+        });
+        setOldPassword("");
+        setNewPassword("");
+        setConfirmPassword("");
+      } else {
+        notification.error({
+          message: "変更エラー",
+          description: JSON.stringify(res?.message || "エラーが発生しました"),
+        });
+      }
+    } catch (error) {
+      notification.error({
+        message: "エラー",
+        description: "パスワードを変更できませんでした",
+      });
+    } finally {
+      setChangingPassword(false);
     }
   };
 
@@ -118,6 +178,50 @@ const ProfilePage = () => {
 
       <Button type="primary" onClick={handleUpdateProfile} loading={loading} block>
         変更を保存
+      </Button>
+
+      <Divider />
+
+      {/* パスワード変更 */}
+      <h3 style={{ marginBottom: 16 }}>パスワード変更</h3>
+      <div style={{ display: "flex", flexDirection: "column", gap: 16, marginBottom: 24 }}>
+        <div>
+          <div style={{ marginBottom: 4 }}>現在のパスワード</div>
+          <Input.Password
+            prefix={<LockOutlined />}
+            value={oldPassword}
+            onChange={(e) => setOldPassword(e.target.value)}
+            placeholder="現在のパスワードを入力してください"
+          />
+        </div>
+        <div>
+          <div style={{ marginBottom: 4 }}>新しいパスワード</div>
+          <Input.Password
+            prefix={<LockOutlined />}
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+            placeholder="6文字以上"
+          />
+        </div>
+        <div>
+          <div style={{ marginBottom: 4 }}>新しいパスワード（確認）</div>
+          <Input.Password
+            prefix={<LockOutlined />}
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            placeholder="新しいパスワードを再入力してください"
+          />
+        </div>
+      </div>
+
+      <Button
+        type="primary"
+        danger
+        onClick={handleChangePassword}
+        loading={changingPassword}
+        block
+      >
+        パスワードを変更
       </Button>
     </div>
   );
