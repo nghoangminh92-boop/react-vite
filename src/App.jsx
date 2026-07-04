@@ -8,6 +8,7 @@ import { useContext, useEffect } from 'react';
 import { AuthContext } from './components/context/auth.context';
 import {Spin}from 'antd';
 import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 
 const  App= ()=> {
   const { setUser,isAppLoading,setIsAppLoading } = useContext(AuthContext);
@@ -58,6 +59,7 @@ useEffect(()=>{
     <Outlet />
     <Footer />
     <Analytics />
+    <SpeedInsights />
   </>
 );
 }
