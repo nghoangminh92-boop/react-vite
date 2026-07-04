@@ -38,35 +38,36 @@ const LoginPage = () => {
   };
 
   const handleGoogleSuccess = async (credentialResponse) => {
-  setLoading(true);
-  try {
-    const res = await googleLoginAPI(credentialResponse.credential);
-    if (res?.data) {
-      message.success("ログイン成功");
-      localStorage.setItem("access_token", res.data.access_token);
-      setUser(res.data.user);
-      navigate("/");
-    } else {
+    setLoading(true);
+    try {
+      const res = await googleLoginAPI(credentialResponse.credential);
+      if (res?.data) {
+        message.success("ログイン成功");
+        localStorage.setItem("access_token", res.data.access_token);
+        setUser(res.data.user);
+        navigate("/");
+      } else {
+        notification.error({
+          message: "ログインエラー",
+          description: JSON.stringify(res?.message),
+        });
+      }
+    } catch (error) {
       notification.error({
-        message: "ログインエラー",
-        description: JSON.stringify(res?.message),
+        message: "ネットワークエラー",
+        description: error.message,
       });
     }
-  } catch (error) {
-    notification.error({
-      message: "ネットワークエラー",
-      description: error.message,
-    });
-  }
-  setLoading(false);
-};
+    setLoading(false);
+  };
 
-const handleGoogleError = () => {
-  notification.error({
-    message: "Googleログインエラー",
-    description: "Googleログインに失敗しました",
-  });
-};
+  const handleGoogleError = () => {
+    notification.error({
+      message: "Googleログインエラー",
+      description: "Googleログインに失敗しました",
+    });
+  };
+
   return (
     <Row justify="center" style={{ margin: "30px" }}>
       <Col span={24}>
@@ -168,6 +169,14 @@ const handleGoogleError = () => {
                 <Link to={"/register"}>新規登録はこちら</Link>
               </div>
             </Divider>
+
+            <div style={{ textAlign: "center", marginTop: 16 }}>
+              <GoogleLogin
+                onSuccess={handleGoogleSuccess}
+                onError={handleGoogleError}
+                locale="ja"
+              />
+            </div>
           </Form>
         </fieldset>
       </Col>
