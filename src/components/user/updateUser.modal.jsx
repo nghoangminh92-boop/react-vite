@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { Input, notification, Modal, Select } from "antd";
 import { updateUserAPI } from "../../services/api.services";
+import { AuthContext } from "../../components/context/auth.context";
 
 const UpdateUserModal = (props) => {
   const {
@@ -11,19 +12,20 @@ const UpdateUserModal = (props) => {
     loadUser
   } = props;
 
+  // ⭐ DÙNG CONTEXT — KHÔNG DÙNG localStorage NỮA
+  const { user: currentUser } = useContext(AuthContext);
+
   const [id, setId] = useState("");
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
   const [role, setRole] = useState("USER");
-
-  const currentUser = JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
     if (dataUpdate) {
       setId(dataUpdate._id);
       setFullName(dataUpdate.fullName);
       setPhone(dataUpdate.phone);
-      setRole(dataUpdate.role); // ⭐ load role vào modal
+      setRole(dataUpdate.role);
     }
   }, [dataUpdate]);
 
@@ -38,7 +40,7 @@ const UpdateUserModal = (props) => {
       res = await updateUserAPI(id, fullName, phone);
     }
 
-    if (res.data) {
+    if (res?.data) {
       notification.success({
         message: "Update user",
         description: "Cập nhật user thành công"
@@ -48,7 +50,7 @@ const UpdateUserModal = (props) => {
     } else {
       notification.error({
         message: "Error update user",
-        description: JSON.stringify(res.message)
+        description: JSON.stringify(res?.message)
       });
     }
   };
@@ -98,11 +100,11 @@ const UpdateUserModal = (props) => {
         {/* ⭐ Chỉ ADMIN mới được đổi role */}
         {currentUser?.role === "ADMIN" && (
           <div>
-            <span>Role</span>
+            <span style={{ fontWeight: 600 }}>Role</span>
             <Select
               value={role}
               onChange={(value) => setRole(value)}
-              style={{ width: "100%" }}
+              style={{ width: "100%", marginTop: 5 }}
               options={[
                 { value: "USER", label: "一般 (USER)" },
                 { value: "ADMIN", label: "管理者 (ADMIN)" },

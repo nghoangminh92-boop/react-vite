@@ -84,6 +84,7 @@ const UserTable = (props) => {
     {
       title: '操作',
       key: 'action',
+      
       render: (_, record) => {
         const currentUser = JSON.parse(localStorage.getItem("user"));
 
