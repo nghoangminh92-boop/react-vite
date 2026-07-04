@@ -1,6 +1,6 @@
 import "./todo.css";
 import banner from "../../assets/banner.jpg";
-import ramen1 from "../../assets/ramen1.jpg";
+import banner1 from "../../assets/banner1.jpg";
 import { useContext, useEffect, useRef, useState } from "react";
 import { Button, notification } from "antd";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
@@ -12,9 +12,7 @@ import { AuthContext } from "../context/auth.context";
 import { fetchAllPostAPI, fetchMenuAPI } from "../../services/api.services";
 
 const parsePostListResponse = (res, current, pageSize) => {
-  if (!res?.data) {
-    return { posts: [], total: 0, current, pageSize };
-  }
+  if (!res?.data) return { posts: [], total: 0, current, pageSize };
 
   if (res.data.result && Array.isArray(res.data.result)) {
     return {
@@ -40,12 +38,14 @@ const parsePostListResponse = (res, current, pageSize) => {
 
 const TodoApp = () => {
   const { user } = useContext(AuthContext);
+
   const [dataPosts, setDataPosts] = useState([]);
   const [dataMenu, setDataMenu] = useState([]);
   const [current, setCurrent] = useState(1);
   const [pageSize] = useState(10);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
+
   const [dataDetail, setDataDetail] = useState(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
 
@@ -56,22 +56,55 @@ const TodoApp = () => {
 
   const foodListRef = useRef(null);
 
+  // ⭐ BANNER SLIDESHOW FIXED VERSION
+const bannerImages = [
+  banner,
+  banner1,
+];
+
+const [bannerIndex, setBannerIndex] = useState(0);
+const slideshowTimer = useRef(null);
+
+// ⭐ Auto slideshow + reset khi bấm nút
+useEffect(() => {
+  startAutoSlide();
+  return () => stopAutoSlide();
+}, []);
+
+const startAutoSlide = () => {
+  stopAutoSlide();
+  slideshowTimer.current = setInterval(() => {
+    setBannerIndex((prev) => (prev + 1) % bannerImages.length);
+  }, 4000);
+};
+
+const stopAutoSlide = () => {
+  if (slideshowTimer.current) clearInterval(slideshowTimer.current);
+};
+
+const goNext = () => {
+  setBannerIndex((prev) => (prev + 1) % bannerImages.length);
+  startAutoSlide(); // reset timer
+};
+
+const goPrev = () => {
+  setBannerIndex((prev) =>
+    prev === 0 ? bannerImages.length - 1 : prev - 1
+  );
+  startAutoSlide(); // reset timer
+};
+
+
   useEffect(() => {
     loadPost();
     loadMenu();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const loadMenu = async () => {
     try {
       const res = await fetchMenuAPI();
-      if (Array.isArray(res?.data)) {
-        setDataMenu(res.data);
-      } else {
-        setDataMenu([]);
-      }
-    } catch (error) {
-      console.error("メニューの読み込みエラー:", error);
+      setDataMenu(Array.isArray(res?.data) ? res.data : []);
+    } catch {
       setDataMenu([]);
     }
   };
@@ -81,7 +114,7 @@ const TodoApp = () => {
     try {
       const res = await fetchAllPostAPI(page, pageSize);
 
-      if (res?.statusCode && res.statusCode >= 400) {
+      if (res?.statusCode >= 400) {
         notification.error({
           message: "投稿の読み込みエラー",
           description: JSON.stringify(res.message),
@@ -106,10 +139,10 @@ const TodoApp = () => {
       }
 
       setTotal(totalCount);
-    } catch (error) {
+    } catch {
       notification.error({
         message: "接続エラー",
-        description: "バックエンドに接続できません。サーバーを確認してください。",
+        description: "バックエンドに接続できません。",
       });
       if (page === 1) setDataPosts([]);
     } finally {
@@ -117,9 +150,7 @@ const TodoApp = () => {
     }
   };
 
-  const handleLoadMore = () => {
-    loadPost(current + 1);
-  };
+  const handleLoadMore = () => loadPost(current + 1);
 
   const handlePostClick = (post) => {
     setDataDetail(post);
@@ -148,14 +179,35 @@ const TodoApp = () => {
   return (
     <div className="home-container">
 
-      {/* BANNER */}
+      {/* ⭐ SLIDESHOW BANNER */}
       <div className="home-banner">
-        <img src={banner} alt="banner" />
-        <div className="banner-text">
-          <h1>Discover the Best of Food</h1>
-          <p>日本のラーメンを楽しもう</p>
-        </div>
-      </div>
+  <img
+    src={bannerImages[bannerIndex]}
+    alt="banner"
+    className="banner-image"
+  />
+
+  <button
+    type="button"
+    className="banner-btn left"
+    onClick={goPrev}
+  >
+    <LeftOutlined />
+  </button>
+
+  <button
+    type="button"
+    className="banner-btn right"
+    onClick={goNext}
+  >
+    <RightOutlined />
+  </button>
+
+  <div className="banner-text">
+    <h1>Discover the Best of Food</h1>
+    <p>日本のラーメンを楽しもう</p>
+  </div>
+</div>
 
       {/* FOOD LIST */}
       <div className="food-section">
@@ -163,18 +215,10 @@ const TodoApp = () => {
           <h2 className="section-title">おすすめメニュー</h2>
           {dataMenu.length > 4 && (
             <div className="food-scroll-controls">
-              <button
-                className="food-scroll-btn"
-                onClick={() => scrollFoodList("left")}
-                aria-label="左にスクロール"
-              >
+              <button className="food-scroll-btn" onClick={() => scrollFoodList("left")}>
                 <LeftOutlined />
               </button>
-              <button
-                className="food-scroll-btn"
-                onClick={() => scrollFoodList("right")}
-                aria-label="右にスクロール"
-              >
+              <button className="food-scroll-btn" onClick={() => scrollFoodList("right")}>
                 <RightOutlined />
               </button>
             </div>
@@ -189,7 +233,7 @@ const TodoApp = () => {
                 key={dish._id}
                 onClick={() => handleFoodClick(dish._id)}
               >
-                <img src={dish.image || ramen1} alt={dish.name} />
+                <img src={dish.image || banner1} alt={dish.name} />
                 <h3>{dish.name}</h3>
                 {dish.total > 0 ? (
                   <p className="rating">
@@ -206,9 +250,9 @@ const TodoApp = () => {
         </div>
       </div>
 
-      {/* POSTS FEED SECTION */}
+      {/* POSTS */}
       <div className="posts-section">
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "20px" }}>
           <h2 className="section-title">最新の投稿</h2>
           {user?.id && <PostForm loadPost={() => loadPost(1)} />}
         </div>
@@ -231,7 +275,6 @@ const TodoApp = () => {
         )}
       </div>
 
-      {/* POST DETAIL MODAL */}
       <PostDetail
         dataDetail={dataDetail}
         setDataDetail={setDataDetail}
@@ -240,7 +283,6 @@ const TodoApp = () => {
         onRatingChanged={handleRatingChanged}
       />
 
-      {/* FOOD DETAIL DRAWER */}
       <FoodDetailDrawer
         foodId={selectedFoodId}
         isOpen={isFoodDrawerOpen}

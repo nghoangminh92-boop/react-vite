@@ -520,3 +520,96 @@
     font-size: 15px;
   }
 }
+
+/* SLIDESHOW BANNER */
+.home-banner {
+  position: relative;
+  width: 100%;
+  height: 320px;
+  overflow: hidden;
+  border-radius: 12px;
+  margin-bottom: 30px;
+}
+
+/* ẢNH */
+.banner-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  animation: fadeSlide 0.8s ease-in-out;
+  border-radius: 12px;
+  display: block;
+  pointer-events: none;     /* ⭐ Ảnh không chặn click */
+}
+
+@keyframes fadeSlide {
+  from {
+    opacity: 0;
+    transform: scale(1.02);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* NÚT MŨI TÊN */
+.banner-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.75);
+  border: none;
+  padding: 10px 14px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 18px;
+  transition: 0.2s;
+  z-index: 20;              /* ⭐ Nút nằm trên ảnh */
+}
+
+.banner-btn:hover {
+  background: rgba(255, 255, 255, 0.95);
+}
+
+.banner-btn.left {
+  left: 14px;
+}
+
+.banner-btn.right {
+  right: 14px;
+}
+
+/* TEXT */
+.banner-text {
+  position: absolute;
+  bottom: 20px;
+  left: 24px;
+  color: white;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+  z-index: 10;
+}
+
+.banner-text h1 {
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.banner-text p {
+  font-size: 18px;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .home-banner {
+    height: 240px;
+  }
+
+  .banner-text h1 {
+    font-size: 22px;
+  }
+
+  .banner-text p {
+    font-size: 14px;
+  }
+}
