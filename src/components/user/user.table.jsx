@@ -3,13 +3,17 @@ import {
   EditOutlined,
   GoogleOutlined,
   MailOutlined,
-  CrownOutlined
-} from '@ant-design/icons';
-import { notification, Popconfirm, Table, Tag, Tooltip } from 'antd';
+  CrownOutlined,
+} from "@ant-design/icons";
+import { notification, Popconfirm, Table, Tag, Tooltip } from "antd";
 import { useState } from "react";
-import UpdateUserModal from './updateUser.modal';
-import ViewUserDetail from './view.user.detail';
-import { deleteUserAPI } from '../../services/api.services';
+
+import UpdateUserModal from "./updateUser.modal";
+import ViewUserDetail from "./view.user.detail";
+import { deleteUserAPI } from "../../services/api.services";
+
+// ⭐ Import CSS đúng 100%
+import "./user.css";
 
 const UserTable = (props) => {
   const { dataUsers, loadUser, current, pageSize, total, setCurrent, setPageSize } = props;
@@ -22,17 +26,18 @@ const UserTable = (props) => {
   const columns = [
     {
       title: "STT",
-      render: (_, record, index) => <>{(index + 1) + (current - 1) * pageSize}</>,
+      width: 60,
+      render: (_, record, index) => <>{index + 1 + (current - 1) * pageSize}</>,
     },
     {
-      title: 'ユーザー',
-      dataIndex: 'fullName',
+      title: "ユーザー",
+      dataIndex: "fullName",
       render: (_, record) => (
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           {record.avatar ? (
             <img
               src={
-                record.avatar?.startsWith('http')
+                record.avatar?.startsWith("http")
                   ? record.avatar
                   : `${import.meta.env.VITE_BACKEND_URL}/images/avatar/${record.avatar}`
               }
@@ -44,6 +49,7 @@ const UserTable = (props) => {
               {(record.fullName || "?")[0].toUpperCase()}
             </div>
           )}
+
           <div>
             <a
               href="#"
@@ -62,35 +68,42 @@ const UserTable = (props) => {
       ),
     },
     {
-      title: '権限',
-      dataIndex: 'role',
+      title: "権限",
+      dataIndex: "role",
+      width: 100,
       render: (role) =>
-        role === 'ADMIN' ? (
-          <Tag icon={<CrownOutlined />} color="gold">管理者</Tag>
+        role === "ADMIN" ? (
+          <Tag icon={<CrownOutlined />} color="gold">
+            管理者
+          </Tag>
         ) : (
           <Tag color="default">一般</Tag>
         ),
     },
     {
-      title: 'ログイン方法',
-      dataIndex: 'authProvider',
+      title: "ログイン方法",
+      dataIndex: "authProvider",
+      width: 120,
       render: (authProvider) =>
-        authProvider === 'google' ? (
-          <Tag icon={<GoogleOutlined />} color="red">Google</Tag>
+        authProvider === "google" ? (
+          <Tag icon={<GoogleOutlined />} color="red">
+            Google
+          </Tag>
         ) : (
-          <Tag icon={<MailOutlined />} color="blue">メール</Tag>
+          <Tag icon={<MailOutlined />} color="blue">
+            メール
+          </Tag>
         ),
     },
     {
-      title: '操作',
-      key: 'action',
-      
+      title: "操作",
+      key: "action",
+      width: 160,
       render: (_, record) => {
         const currentUser = JSON.parse(localStorage.getItem("user"));
 
         return (
-          <div style={{ display: "flex", gap: "16px", alignItems: "center" }}>
-            {/* 編集 */}
+          <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
             <Tooltip title="編集">
               <EditOutlined
                 onClick={() => {
@@ -101,11 +114,15 @@ const UserTable = (props) => {
               />
             </Tooltip>
 
-            {/* ⭐ 権限変更:  chỉ ADMIN mới thấy và mở modal update (có dropdown role) */}
             {currentUser?.role === "ADMIN" && (
               <Tooltip title="権限変更">
                 <span
-                  style={{ cursor: "pointer", color: "blue", fontSize: 14, fontWeight: 600 }}
+                  style={{
+                    cursor: "pointer",
+                    color: "blue",
+                    fontSize: 14,
+                    fontWeight: 600,
+                  }}
                   onClick={() => {
                     setDataUpdate(record);
                     setIsModalUpdateOpen(true);
@@ -116,7 +133,6 @@ const UserTable = (props) => {
               </Tooltip>
             )}
 
-            {/* 削除 */}
             <Popconfirm
               title="ユーザーの削除"
               description="このユーザーを削除してもよろしいですか？"
@@ -133,8 +149,8 @@ const UserTable = (props) => {
             </Popconfirm>
           </div>
         );
-      }
-    }
+      },
+    },
   ];
 
   const handleDeleteUser = async (id) => {
@@ -154,29 +170,26 @@ const UserTable = (props) => {
   };
 
   const onChange = (pagination) => {
-    if (pagination && pagination.current) {
-      if (pagination.current !== current) {
-        setCurrent(+pagination.current);
-      }
+    if (pagination?.current && pagination.current !== current) {
+      setCurrent(+pagination.current);
     }
-    if (pagination && pagination.pageSize) {
-      if (pagination.pageSize !== pageSize) {
-        setPageSize(+pagination.pageSize);
-      }
+    if (pagination?.pageSize && pagination.pageSize !== pageSize) {
+      setPageSize(+pagination.pageSize);
     }
   };
 
   return (
     <>
       <Table
+        className="user-table-responsive"
         columns={columns}
         dataSource={dataUsers}
-        rowKey={"_id"}
+        rowKey="_id"
         pagination={{
-          current: current,
-          pageSize: pageSize,
+          current,
+          pageSize,
           showSizeChanger: true,
-          total: total,
+          total,
           showTotal: (total, range) => (
             <div>
               {range[0]}-{range[1]} 件 / 全 {total} 件

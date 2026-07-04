@@ -103,3 +103,109 @@
 .ant-table-row:hover {
   cursor: default;
 }
+
+/* ============================
+   📱 MOBILE RESPONSIVE (≤ 768px)
+   ============================ */
+@media (max-width: 768px) {
+
+  .user-mgmt-container {
+    padding: 16px;
+  }
+
+  .user-mgmt-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .user-mgmt-title {
+    font-size: 20px;
+    gap: 8px;
+  }
+
+  .user-mgmt-stats {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .user-stat-card {
+    padding: 14px 16px;
+    gap: 12px;
+  }
+
+  .user-stat-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+  }
+
+  .user-stat-value {
+    font-size: 18px;
+  }
+
+  .user-stat-label {
+    font-size: 12px;
+  }
+
+  .user-mgmt-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .user-mgmt-card {
+    padding: 12px;
+  }
+
+  .user-table-avatar,
+  .user-table-avatar-placeholder {
+    width: 30px;
+    height: 30px;
+    font-size: 13px;
+  }
+
+  .ant-table {
+    font-size: 13px;
+  }
+
+  .ant-table-cell {
+    padding: 8px !important;
+  }
+
+  .ant-table-row:hover {
+    cursor: default;
+  }
+}
+
+/* ============================
+   📱 SMALL MOBILE (≤ 480px)
+   ============================ */
+@media (max-width: 480px) {
+
+  .user-mgmt-title {
+    font-size: 18px;
+  }
+
+  .user-stat-card {
+    padding: 12px;
+  }
+
+  .user-stat-value {
+    font-size: 16px;
+  }
+
+  .user-stat-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+  }
+
+  .ant-table {
+    font-size: 12px;
+  }
+
+  .ant-table-cell {
+    padding: 6px !important;
+  }
+}

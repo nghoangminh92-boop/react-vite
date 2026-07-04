@@ -1,0 +1,84 @@
+.user-table-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid #eee;
+}
+
+.user-table-avatar-placeholder {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #1677ff;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* ============================
+   📱 MOBILE RESPONSIVE (≤ 768px)
+   ============================ */
+@media (max-width: 768px) {
+  .user-table-avatar,
+  .user-table-avatar-placeholder {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+
+  .user-table-responsive .ant-table-cell {
+    padding: 8px !important;
+    font-size: 13px;
+  }
+
+  .user-table-responsive .ant-table-cell:last-child {
+    min-width: 120px;
+  }
+
+  .user-table-responsive .anticon {
+    font-size: 14px !important;
+  }
+
+  .user-table-responsive .ant-tag {
+    font-size: 12px;
+    padding: 2px 6px;
+  }
+
+  .user-table-responsive a {
+    font-size: 14px;
+  }
+}
+
+/* ============================
+   📱 SMALL MOBILE (≤ 480px)
+   ============================ */
+@media (max-width: 480px) {
+  .user-table-avatar,
+  .user-table-avatar-placeholder {
+    width: 24px;
+    height: 24px;
+    font-size: 11px;
+  }
+
+  .user-table-responsive .ant-table-cell {
+    padding: 6px !important;
+    font-size: 12px;
+  }
+
+  .user-table-responsive .ant-tag {
+    font-size: 11px;
+    padding: 1px 4px;
+  }
+
+  .user-table-responsive .anticon {
+    font-size: 12px !important;
+  }
+
+  .user-table-responsive .ant-table-cell:last-child {
+    min-width: 100px;
+  }
+}
