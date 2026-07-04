@@ -1,149 +1,184 @@
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import {notification, Popconfirm, Table} from 'antd';
+import { DeleteOutlined, EditOutlined, GoogleOutlined, MailOutlined, CrownOutlined } from '@ant-design/icons';
+import { notification, Popconfirm, Table, Tag, Tooltip } from 'antd';
 import { useState } from "react";
 import UpdateUserModal from './updateUser.modal';
 import ViewUserDetail from './view.user.detail';
 import { deleteUserAPI } from '../../services/api.services';
 
+const UserTable = (props) => {
+  const { dataUsers, loadUser, current, pageSize, total, setCurrent, setPageSize } = props;
 
-const UserTable = (props)=>{
-  const {dataUsers,loadUser,current,pageSize,total,setCurrent,setPageSize}=props;
-  
-  const[isModalUpdateOpen,setIsModalUpdateOpen] = useState(false);
-  
-  const[dataUpdate, setDataUpdate]=useState(null)
+  const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false);
+  const [dataUpdate, setDataUpdate] = useState(null);
 
-  const [dataDetail, setDataDetail]=useState(null);
-  const [isDetailOpen, setIsDetailOpen]=useState(false);
-  
+  const [dataDetail, setDataDetail] = useState(null);
+  const [isDetailOpen, setIsDetailOpen] = useState(false);
+
   const columns = [
     {
-      title:"STT",
-        render: (_, record,index) => {
-      return (
-        <>{(index + 1) +(current-1)*pageSize}</>
-      )
-    }
+      title: "STT",
+      render: (_, record, index) => <>{(index + 1) + (current - 1) * pageSize}</>,
     },
-  {
-    title: 'Id',
-    dataIndex: '_id',
-    render: (_, record) => {
-      return (
-        <a href='#'
-        onClick={()=>{
-          setDataDetail(record);
-          setIsDetailOpen(true);
-        }}
-        >{record._id}</a>
-      )
-    }
-  },
-  {
-    title: 'Full name',
-    dataIndex: 'fullName',
-    
-  },
-  {
-    title: 'Email',
-    dataIndex: 'email',
-    
-  },
-  {
-    title: 'Action',
-    key: 'action',
-    render: (_, record) => (
-      <div style={{display:"flex", gap:"20px"}}>
-        <EditOutlined 
-          onClick={()=> {
-            setDataUpdate(record);
-            setIsModalUpdateOpen(true);
-          }}
-        style={{cursor:"pointer",color:"orange"}} />
+    {
+      title: 'ユーザー',
+      dataIndex: 'fullName',
+      render: (_, record) => (
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          {record.avatar ? (
+            <img
+              src={
+                record.avatar?.startsWith('http')
+                  ? record.avatar
+                  : `${import.meta.env.VITE_BACKEND_URL}/images/avatar/${record.avatar}`
+              }
+              alt={record.fullName}
+              className="user-table-avatar"
+            />
+          ) : (
+            <div className="user-table-avatar-placeholder">
+              {(record.fullName || "?")[0].toUpperCase()}
+            </div>
+          )}
 
-        {/* hàm xóa */}
-        <Popconfirm
-          title="xóa người dùng"
-          description="Bạn chắc chắn xóa user này?"
-          onConfirm={()=>handleDeleteUser(record._id)}
-          okText="Yes"
-          cancelText="No"
-          placement="left"
-          >
+          <div>
+            <a
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                setDataDetail(record);
+                setIsDetailOpen(true);
+              }}
+              style={{ fontWeight: 600 }}
+            >
+              {record.fullName}
+            </a>
 
-          <DeleteOutlined style={{cursor:"pointer",color:"red"}} />
-        </Popconfirm>
-        
+            <div style={{ fontSize: 12, color: "#999" }}>{record.email}</div>
+          </div>
         </div>
       ),
     },
-   ];
+    {
+      title: '権限',
+      dataIndex: 'role',
+      render: (role) =>
+        role === 'ADMIN' ? (
+          <Tag icon={<CrownOutlined />} color="gold">管理者</Tag>
+        ) : (
+          <Tag color="default">一般</Tag>
+        ),
+    },
+    {
+      title: 'ログイン方法',
+      dataIndex: 'authProvider',
+      render: (authProvider) =>
+        authProvider === 'google' ? (
+          <Tag icon={<GoogleOutlined />} color="red">Google</Tag>
+        ) : (
+          <Tag icon={<MailOutlined />} color="blue">メール</Tag>
+        ),
+    },
+    {
+      title: '操作',
+      key: 'action',
+      render: (_, record) => (
+        <div style={{ display: "flex", gap: "16px" }}>
+          <Tooltip title="編集">
+            <EditOutlined
+              onClick={() => {
+                setDataUpdate(record);
+                setIsModalUpdateOpen(true);
+              }}
+              style={{ cursor: "pointer", color: "orange", fontSize: 16 }}
+            />
+          </Tooltip>
 
-   const handleDeleteUser= async(id)=>{
+          <Popconfirm
+            title="ユーザーの削除"
+            description="このユーザーを削除してもよろしいですか？"
+            onConfirm={() => handleDeleteUser(record._id)}
+            okText="はい"
+            cancelText="いいえ"
+            placement="left"
+          >
+            <Tooltip title="削除">
+              <DeleteOutlined
+                style={{ cursor: "pointer", color: "red", fontSize: 16 }}
+              />
+            </Tooltip>
+          </Popconfirm>
+        </div>
+      ),
+    },
+  ];
+
+  const handleDeleteUser = async (id) => {
     const res = await deleteUserAPI(id);
-    if(res.data){
+    if (res.data) {
       notification.success({
-        message:"Delete user",
-        description:"Xóa user thành công"
-      })
+        message: "ユーザー削除",
+        description: "ユーザーの削除に成功しました",
+      });
       await loadUser();
-    }else {
+    } else {
       notification.error({
-        message:"Error delete user",
-        description:JSON.stringify(res.message)
-      })
+        message: "ユーザー削除エラー",
+        description: JSON.stringify(res.message),
+      });
     }
-   }
-const onChange = (pagination, filters, sorter, extra) => {  
-  
-  // neeus thay doi trang : current 
-  if(pagination && pagination.current){
-    if(pagination.current !== current){
-        setCurrent(+pagination.current);//"5" => 5
-    }
-  }
-  // neeus thay doi trang : page
-  if(pagination && pagination.pageSize){
-    if(pagination.pageSize !== pageSize){
-        setPageSize(+pagination.pageSize);//"5" => 5
-    }
-  }
-};
+  };
 
-return (
-  <>
-  <Table columns={columns} 
-    dataSource={dataUsers} 
-    rowKey={"_id"}
-    pagination={
-        {
-        current: current,
-        pageSize: pageSize,
-        showSizeChanger: true, //page
-        total: total,
-        showTotal: (total, range) => { return (<div> {range[0]}-{range[1]} trên {total} rows</div>) }
-        } 
+  const onChange = (pagination) => {
+    if (pagination && pagination.current) {
+      if (pagination.current !== current) {
+        setCurrent(+pagination.current);
       }
-      onChange={onChange}
+    }
 
-          />
-  <UpdateUserModal
-  isModalUpdateOpen={isModalUpdateOpen}
-  setIsModalUpdateOpen={setIsModalUpdateOpen}
-  dataUpdate={dataUpdate}
-  setDataUpdate={setDataUpdate}
-  loadUser={loadUser}
-  />
-  
-  <ViewUserDetail
-  dataDetail={dataDetail}
-  setDataDetail={setDataDetail}
-  isDetailOpen={isDetailOpen}
-  setIsDetailOpen={setIsDetailOpen}
-  loadUser={loadUser}
-  />
-  </>
-  )
-}
+    if (pagination && pagination.pageSize) {
+      if (pagination.pageSize !== pageSize) {
+        setPageSize(+pagination.pageSize);
+      }
+    }
+  };
+
+  return (
+    <>
+      <Table
+        columns={columns}
+        dataSource={dataUsers}
+        rowKey={"_id"}
+        pagination={{
+          current: current,
+          pageSize: pageSize,
+          showSizeChanger: true,
+          total: total,
+          showTotal: (total, range) => (
+            <div>
+              {range[0]}-{range[1]} 件 / 全 {total} 件
+            </div>
+          ),
+        }}
+        onChange={onChange}
+      />
+
+      <UpdateUserModal
+        isModalUpdateOpen={isModalUpdateOpen}
+        setIsModalUpdateOpen={setIsModalUpdateOpen}
+        dataUpdate={dataUpdate}
+        setDataUpdate={setDataUpdate}
+        loadUser={loadUser}
+      />
+
+      <ViewUserDetail
+        dataDetail={dataDetail}
+        setDataDetail={setDataDetail}
+        isDetailOpen={isDetailOpen}
+        setIsDetailOpen={setIsDetailOpen}
+        loadUser={loadUser}
+      />
+    </>
+  );
+};
 
 export default UserTable;

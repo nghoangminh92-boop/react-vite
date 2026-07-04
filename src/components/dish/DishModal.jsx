@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
-import { Modal, Form, Input, notification, Upload, Button } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
+import { Modal, Form, Input, notification, Upload, Button, Divider } from "antd";
+import {
+  UploadOutlined,
+  FileTextOutlined,
+  DollarOutlined,
+  PictureOutlined,
+  InfoCircleOutlined
+} from "@ant-design/icons";
 import {
   createDishAPI,
   updateDishAPI,
@@ -23,18 +29,18 @@ const DishModal = (props) => {
   const [imageUrl, setImageUrl] = useState("");
 
   useEffect(() => {
-  if (dataUpdate) {
-    form.setFieldsValue({
-      name: dataUpdate.name,
-      description: dataUpdate.description,
-      price: dataUpdate.price,
-    });
-    setImageUrl(dataUpdate.image || "");
-  } else {
-    form.resetFields();
-    setImageUrl("");
-  }
-}, [dataUpdate]);
+    if (dataUpdate) {
+      form.setFieldsValue({
+        name: dataUpdate.name,
+        description: dataUpdate.description,
+        price: dataUpdate.price,
+      });
+      setImageUrl(dataUpdate.image || "");
+    } else {
+      form.resetFields();
+      setImageUrl("");
+    }
+  }, [dataUpdate]);
 
   const handleClose = () => {
     setIsModalOpen(false);
@@ -47,114 +53,147 @@ const DishModal = (props) => {
     setUploading(true);
     const res = await handleUpdateFile(file, "food");
     setUploading(false);
+
     if (res?.data) {
       setImageUrl(res.data.fileUploaded || res.data.url || res.data);
-      notification.success({ message: "Tải ảnh thành công" });
+      notification.success({ message: "画像アップロード成功" });
     } else {
-      notification.error({ message: "Tải ảnh thất bại" });
+      notification.error({ message: "画像アップロード失敗" });
     }
   };
 
   const onFinish = async (values) => {
     let res;
+
     if (dataUpdate) {
       res = await updateDishAPI(
-  dataUpdate._id,
-  values.name,
-  values.description,
-  Number(values.price),
-  imageUrl
-);
-
+        dataUpdate._id,
+        values.name,
+        values.description,
+        Number(values.price),
+        imageUrl
+      );
     } else {
       res = await createDishAPI(
-  values.name,
-  values.description,
-  Number(values.price),
-  imageUrl
-);
-
+        values.name,
+        values.description,
+        Number(values.price),
+        imageUrl
+      );
     }
 
     if (res?.data) {
       notification.success({
-        message: dataUpdate ? "Cập nhật món ăn thành công" : "Thêm món ăn thành công",
+        message: dataUpdate ? "料理更新成功" : "料理追加成功",
       });
       handleClose();
       await loadDishes();
     } else {
       notification.error({
-        message: "Lỗi",
-        description: JSON.stringify(res?.message || "Có lỗi xảy ra"),
+        message: "エラー",
+        description: JSON.stringify(res?.message || "問題が発生しました"),
       });
     }
   };
 
   return (
     <Modal
-      title={dataUpdate ? "Cập nhật món ăn" : "Thêm món ăn mới"}
+      title={dataUpdate ? "🍽️ 料理を編集" : "🍽️ 新しい料理を追加"}
       open={isModalOpen}
       onCancel={handleClose}
       onOk={() => form.submit()}
-      okText={dataUpdate ? "Cập nhật" : "Thêm"}
-      cancelText="Hủy"
+      okText={dataUpdate ? "更新" : "追加"}
+      cancelText="キャンセル"
+      centered
     >
+      <Divider orientation="left">
+        <InfoCircleOutlined /> 基本情報
+      </Divider>
+
       <Form form={form} layout="vertical" onFinish={onFinish}>
+
+        {/* Tên món */}
         <Form.Item
-          label="Tên món ăn"
+          label={
+            <span>
+              <FileTextOutlined style={{ marginRight: 6 }} />
+              料理名
+            </span>
+          }
           name="name"
-          rules={[{ required: true, message: "Vui lòng nhập tên món ăn" }]}
+          rules={[{ required: true, message: "料理名を入力してください" }]}
         >
-          <Input placeholder="VD: Phở bò" />
-        </Form.Item>
-<Form.Item
-  label="Giá tiền"
-  name="price"
-  rules={[
-    { required: true, message: "Vui lòng nhập giá tiền" },
-    {
-      validator: (_, value) => {
-        if (value === undefined || value === null || value === "") {
-          return Promise.reject("Giá tiền không được để trống");
-        }
-        if (isNaN(value)) {
-          return Promise.reject("Giá tiền phải là số");
-        }
-        if (Number(value) < 0) {
-          return Promise.reject("Giá tiền phải >= 0");
-        }
-        return Promise.resolve();
-      }
-    }
-  ]}
->
-  <Input placeholder="Nhập giá tiền" allowClear />
-</Form.Item>
-
-        <Form.Item label="Mô tả" name="description">
-          <TextArea rows={3} placeholder="Mô tả ngắn về món ăn" />
+          <Input placeholder="例: 牛肉フォー" />
         </Form.Item>
 
-        <Form.Item label="Ảnh món ăn">
+        {/* Giá tiền */}
+        <Form.Item
+          label={
+            <span>
+              <DollarOutlined style={{ marginRight: 6 }} />
+              価格
+            </span>
+          }
+          name="price"
+          rules={[
+            { required: true, message: "価格を入力してください" },
+            {
+              validator: (_, value) => {
+                if (!value) return Promise.reject("価格は必須です");
+                if (isNaN(value)) return Promise.reject("価格は数字である必要があります");
+                if (Number(value) < 0) return Promise.reject("価格は0以上である必要があります");
+                return Promise.resolve();
+              },
+            },
+          ]}
+        >
+          <Input placeholder="例: 1200" allowClear />
+        </Form.Item>
+
+        <Divider orientation="left">
+          <InfoCircleOutlined /> 詳細情報
+        </Divider>
+
+        {/* Mô tả */}
+        <Form.Item
+          label={
+            <span>
+              <FileTextOutlined style={{ marginRight: 6 }} />
+              説明
+            </span>
+          }
+          name="description"
+        >
+          <TextArea rows={3} placeholder="料理の簡単な説明" />
+        </Form.Item>
+
+        <Divider orientation="left">
+          <PictureOutlined /> 料理画像
+        </Divider>
+
+        {/* Ảnh món ăn */}
+        <Form.Item>
           <Upload
             customRequest={handleUploadImage}
             showUploadList={false}
             accept="image/*"
           >
             <Button icon={<UploadOutlined />} loading={uploading}>
-              Tải ảnh lên
+              画像をアップロード
             </Button>
           </Upload>
+
           {imageUrl && (
             <img
               src={imageUrl}
               alt="preview"
               style={{
                 marginTop: 10,
-                width: 100,
-                height: 100,
+                width: 140,
+                height: 140,
                 objectFit: "cover",
-                borderRadius: 8,
+                borderRadius: 10,
+                boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
               }}
             />
           )}

@@ -1,7 +1,14 @@
 import { useEffect, useState } from "react";
 import { fetchAllDishAPI, deleteDishAPI } from "../../services/api.services";
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { Button, notification, Popconfirm, Table } from "antd";
+import {
+  DeleteOutlined,
+  EditOutlined,
+  PlusOutlined,
+  FileTextOutlined,
+  DollarOutlined,
+  PictureOutlined
+} from "@ant-design/icons";
+import { Button, notification, Popconfirm, Table, Tag, Tooltip } from "antd";
 import FoodDetail from "./food.detail";
 
 const FoodTable = () => {
@@ -32,13 +39,13 @@ const FoodTable = () => {
     const res = await deleteDishAPI(id);
     if (res.data) {
       notification.success({
-        message: "Xóa món ăn",
-        description: "Xóa món ăn thành công",
+        message: "削除完了",
+        description: "フードの削除に成功しました",
       });
       await loadFood();
     } else {
       notification.error({
-        message: "Lỗi xóa món ăn",
+        message: "削除エラー",
         description: JSON.stringify(res.message),
       });
     }
@@ -46,80 +53,121 @@ const FoodTable = () => {
 
   const formatPrice = (price) => {
     if (price == null) return "";
-    return price.toLocaleString("vi-VN") + " đ";
+    return new Intl.NumberFormat("ja-JP", {
+      style: "currency",
+      currency: "JPY",
+    }).format(price);
   };
 
   const columns = [
     {
-      title: "STT",
+      title: "No.",
+      width: 70,
       render: (_, __, index) => <>{index + 1}</>,
     },
     {
       title: "ID",
       dataIndex: "_id",
       render: (_, record) => (
-        
-          <a href="#"
+        <a
+          href="#"
           onClick={(e) => {
             e.preventDefault();
             setDataDetail(record);
             setIsDetailOpen(true);
           }}
+          style={{ fontWeight: 600 }}
         >
           {record._id}
         </a>
       ),
     },
     {
-      title: "Tên món",
+      title: "名前",
       dataIndex: "name",
+      render: (name) => (
+        <span style={{ fontWeight: 500 }}>
+          <FileTextOutlined style={{ marginRight: 6 }} />
+          {name}
+        </span>
+      ),
     },
     {
-      title: "Giá",
+      title: "価格",
       dataIndex: "price",
-      render: (text) => formatPrice(text),
+      render: (price) => (
+        <span>
+          <DollarOutlined style={{ marginRight: 6 }} />
+          {formatPrice(price)}
+        </span>
+      ),
     },
     {
-      title: "Mô tả",
+      title: "説明",
       dataIndex: "description",
       ellipsis: true,
     },
     {
-      title: "Ảnh",
+      title: "画像",
       dataIndex: "image",
       render: (image) =>
         image ? (
           <img
-            src={image?.startsWith("http") ? image : `${import.meta.env.VITE_BACKEND_URL}/images/${image}`}
+            src={
+              image?.startsWith("http")
+                ? image
+                : `${import.meta.env.VITE_BACKEND_URL}/images/${image}`
+            }
             alt=""
-            style={{ width: 60, height: 40, objectFit: "cover", borderRadius: 4 }}
+            style={{
+              width: 60,
+              height: 40,
+              objectFit: "cover",
+              borderRadius: 6,
+              boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
+            }}
           />
         ) : (
-          "-"
+          <Tag color="default">なし</Tag>
         ),
     },
     {
-      title: "Thao tác",
+      title: "操作",
       key: "action",
+      width: 120,
       render: (_, record) => (
-        <div style={{ display: "flex", gap: "20px" }}>
-          <EditOutlined
-            onClick={() => {
-              setDataUpdate(record);
-              setIsModalUpdateOpen(true);
-            }}
-            style={{ cursor: "pointer", color: "orange" }}
-          />
+        <div style={{ display: "flex", gap: "16px" }}>
+          <Tooltip title="編集">
+            <EditOutlined
+              onClick={() => {
+                setDataUpdate(record);
+                setIsModalUpdateOpen(true);
+              }}
+              style={{
+                cursor: "pointer",
+                color: "orange",
+                fontSize: 18,
+              }}
+            />
+          </Tooltip>
 
           <Popconfirm
-            title="Xóa món ăn"
-            description="Bạn chắc chắn xóa món ăn này?"
+            title="フード削除"
+            description="このフードを削除してもよろしいですか？"
             onConfirm={() => handleDeleteFood(record._id)}
-            okText="Có"
-            cancelText="Không"
+            okText="はい"
+            cancelText="いいえ"
             placement="left"
           >
-            <DeleteOutlined style={{ cursor: "pointer", color: "red" }} />
+            <Tooltip title="削除">
+              <DeleteOutlined
+                style={{
+                  cursor: "pointer",
+                  color: "red",
+                  fontSize: 18,
+                }}
+              />
+            </Tooltip>
           </Popconfirm>
         </div>
       ),
@@ -128,26 +176,38 @@ const FoodTable = () => {
 
   return (
     <>
+      {/* Header */}
       <div
         style={{
           marginTop: "10px",
+          marginBottom: "16px",
           display: "flex",
           justifyContent: "space-between",
+          alignItems: "center",
         }}
       >
-        <h3>Danh sách món ăn</h3>
-        <Button type="primary" onClick={() => setIsModalCreateOpen(true)}>
-          Thêm món ăn
+        <h3 style={{ fontSize: 20, fontWeight: 700 }}>🍜 フード一覧</h3>
+
+        <Button
+          type="primary"
+          icon={<PlusOutlined />}
+          onClick={() => setIsModalCreateOpen(true)}
+        >
+          新規追加
         </Button>
       </div>
 
+      {/* Table */}
       <Table
         columns={columns}
         dataSource={dataFood}
         rowKey={"_id"}
         loading={loading}
+        bordered
+        style={{ background: "#fff", borderRadius: 8 }}
       />
 
+      {/* Detail Drawer */}
       <FoodDetail
         dataDetail={dataDetail}
         setDataDetail={setDataDetail}
