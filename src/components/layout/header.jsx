@@ -80,7 +80,7 @@ const Header = () => {
         {/* LOGO */}
         <Link to="/" className="app-logo">
           <img src={logoMuji} alt="logo" className="app-logo-image" />
-          <span className="app-logo-text">{t("food_review")}</span>
+          <span className="app-logo-text">{t("Food Review")}</span>
         </Link>
 
         {/* NAV LINKS - desktop */}
