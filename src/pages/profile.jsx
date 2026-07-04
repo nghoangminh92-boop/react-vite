@@ -1,4 +1,4 @@
-import { Avatar, Button, Input, notification, Divider } from "antd";
+import { Avatar, Button, Input, notification, Divider, Collapse } from "antd";
 import { useContext, useRef, useState } from "react";
 import { AuthContext } from "../components/context/auth.context";
 import {
@@ -7,6 +7,8 @@ import {
   changePasswordAPI,
 } from "../services/api.services";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
+
+const { Panel } = Collapse;
 
 const ProfilePage = () => {
   const { user, setUser } = useContext(AuthContext);
@@ -18,7 +20,7 @@ const ProfilePage = () => {
   const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // パスワード変更用の状態
+  // パスワード変更用
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -104,7 +106,7 @@ const ProfilePage = () => {
       if (res?.data) {
         notification.success({
           message: "変更成功",
-          description: "パスワードが変更されました。次回ログインから新しいパスワードをご使用ください",
+          description: "パスワードが変更されました",
         });
         setOldPassword("");
         setNewPassword("");
@@ -112,7 +114,7 @@ const ProfilePage = () => {
       } else {
         notification.error({
           message: "変更エラー",
-          description: JSON.stringify(res?.message || "エラーが発生しました"),
+          description: JSON.stringify(res?.message),
         });
       }
     } catch (error) {
@@ -134,95 +136,180 @@ const ProfilePage = () => {
       : null);
 
   return (
-    <div style={{ maxWidth: 500, margin: "40px auto", padding: "0 20px" }}>
-      <h2>プロフィール設定</h2>
+    <div style={{ maxWidth: 520, margin: "40px auto", padding: "0 20px" }}>
+      <h2 style={{ fontWeight: 700, marginBottom: 20 }}>プロフィール設定</h2>
 
-      {/* Avatar */}
-      <div style={{ textAlign: "center", marginBottom: 30 }}>
-        <Avatar
-          size={100}
-          src={avatarSrc}
-          icon={!avatarSrc && <UserOutlined />}
-          style={{ cursor: "pointer", border: "2px solid #1677ff" }}
-          onClick={() => fileInputRef.current?.click()}
-        />
-        <input
-          type="file"
-          hidden
-          ref={fileInputRef}
-          accept="image/*"
-          onChange={handleFileChange}
-        />
-        <div style={{ marginTop: 8 }}>
-          <Button size="small" onClick={() => fileInputRef.current?.click()}>
-            プロフィール画像を変更
-          </Button>
-        </div>
-      </div>
-
-      {/* Basic Info */}
-      <div style={{ display: "flex", flexDirection: "column", gap: 16, marginBottom: 24 }}>
-        <div>
-          <div style={{ marginBottom: 4 }}>メールアドレス（変更不可）</div>
-          <Input value={user?.email} disabled />
-        </div>
-        <div>
-          <div style={{ marginBottom: 4 }}>氏名</div>
-          <Input value={fullName} onChange={(e) => setFullName(e.target.value)} />
-        </div>
-        <div>
-          <div style={{ marginBottom: 4 }}>電話番号</div>
-          <Input value={phone} onChange={(e) => setPhone(e.target.value)} />
-        </div>
-      </div>
-
-      <Button type="primary" onClick={handleUpdateProfile} loading={loading} block>
-        変更を保存
-      </Button>
-
-      <Divider />
-
-      {/* パスワード変更 */}
-      <h3 style={{ marginBottom: 16 }}>パスワード変更</h3>
-      <div style={{ display: "flex", flexDirection: "column", gap: 16, marginBottom: 24 }}>
-        <div>
-          <div style={{ marginBottom: 4 }}>現在のパスワード</div>
-          <Input.Password
-            prefix={<LockOutlined />}
-            value={oldPassword}
-            onChange={(e) => setOldPassword(e.target.value)}
-            placeholder="現在のパスワードを入力してください"
-          />
-        </div>
-        <div>
-          <div style={{ marginBottom: 4 }}>新しいパスワード</div>
-          <Input.Password
-            prefix={<LockOutlined />}
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-            placeholder="6文字以上"
-          />
-        </div>
-        <div>
-          <div style={{ marginBottom: 4 }}>新しいパスワード（確認）</div>
-          <Input.Password
-            prefix={<LockOutlined />}
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            placeholder="新しいパスワードを再入力してください"
-          />
-        </div>
-      </div>
-
-      <Button
-        type="primary"
-        danger
-        onClick={handleChangePassword}
-        loading={changingPassword}
-        block
+      <Collapse
+        accordion
+        bordered={false}
+        style={{
+          background: "transparent",
+        }}
       >
-        パスワードを変更
-      </Button>
+        {/* Avatar Section */}
+        <Panel
+          header="プロフィール画像"
+          key="1"
+          style={{
+            background: "#fff",
+            borderRadius: 12,
+            marginBottom: 12,
+            boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+          }}
+        >
+          <div style={{ textAlign: "center", marginBottom: 20 }}>
+            <Avatar
+              size={110}
+              src={avatarSrc}
+              icon={!avatarSrc && <UserOutlined />}
+              style={{
+                cursor: "pointer",
+                border: "3px solid #1677ff",
+                marginBottom: 12,
+              }}
+              onClick={() => fileInputRef.current?.click()}
+            />
+            <input
+              type="file"
+              hidden
+              ref={fileInputRef}
+              accept="image/*"
+              onChange={handleFileChange}
+            />
+            <Button size="small" onClick={() => fileInputRef.current?.click()}>
+              画像を変更
+            </Button>
+          </div>
+        </Panel>
+
+        {/* Basic Info */}
+        <Panel
+          header="基本情報"
+          key="2"
+          style={{
+            background: "#fff",
+            borderRadius: 12,
+            marginBottom: 12,
+            boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+          }}
+        >
+          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+            <div>
+              <label style={{ fontWeight: 600, marginBottom: 6, display: "block" }}>
+                メールアドレス（変更不可）
+              </label>
+              <Input value={user?.email} disabled style={{ height: 42, borderRadius: 8 }} />
+            </div>
+
+            <div>
+              <label style={{ fontWeight: 600, marginBottom: 6, display: "block" }}>
+                氏名
+              </label>
+              <Input
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                style={{ height: 42, borderRadius: 8 }}
+              />
+            </div>
+
+            <div>
+              <label style={{ fontWeight: 600, marginBottom: 6, display: "block" }}>
+                電話番号
+              </label>
+              <Input
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                style={{ height: 42, borderRadius: 8 }}
+              />
+            </div>
+
+            <Button
+              type="primary"
+              onClick={handleUpdateProfile}
+              loading={loading}
+              block
+              style={{
+                height: 45,
+                borderRadius: 8,
+                fontWeight: 600,
+                fontSize: 15,
+              }}
+            >
+              保存する
+            </Button>
+          </div>
+        </Panel>
+
+        {/* Password Change */}
+        <Panel
+          header="パスワード変更"
+          key="3"
+          style={{
+            background: "#fff",
+            borderRadius: 12,
+            marginBottom: 12,
+            boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+          }}
+        >
+          <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+            <div>
+              <label style={{ display: "block", marginBottom: 6, fontWeight: 600 }}>
+                現在のパスワード
+              </label>
+              <Input.Password
+                prefix={<LockOutlined />}
+                value={oldPassword}
+                onChange={(e) => setOldPassword(e.target.value)}
+                placeholder="現在のパスワードを入力してください"
+                style={{ height: 42, borderRadius: 8 }}
+              />
+            </div>
+
+            <div>
+              <label style={{ display: "block", marginBottom: 6, fontWeight: 600 }}>
+                新しいパスワード
+              </label>
+              <Input.Password
+                prefix={<LockOutlined />}
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                placeholder="6文字以上"
+                style={{ height: 42, borderRadius: 8 }}
+              />
+            </div>
+
+            <div>
+              <label style={{ display: "block", marginBottom: 6, fontWeight: 600 }}>
+                新しいパスワード（確認）
+              </label>
+              <Input.Password
+                prefix={<LockOutlined />}
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="新しいパスワードを再入力してください"
+                style={{ height: 42, borderRadius: 8 }}
+              />
+            </div>
+
+            <Button
+              type="primary"
+              danger
+              onClick={handleChangePassword}
+              loading={changingPassword}
+              block
+              style={{
+                marginTop: 10,
+                height: 45,
+                borderRadius: 8,
+                fontWeight: 600,
+                fontSize: 15,
+              }}
+            >
+              パスワードを変更
+            </Button>
+          </div>
+        </Panel>
+      </Collapse>
     </div>
   );
 };
