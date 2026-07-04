@@ -12,15 +12,17 @@ import axios from "./axios.customize";
       return  axios.post(URL_BACKEND,data);
 }
 
- const updateUserAPI=(_id,fullName,phone)=>{
- const URL_BACKEND="/api/v1/user";
-        const data= {
-            _id:_id,
-            fullName: fullName,
-            phone: phone
-        }
-      return  axios.put(URL_BACKEND,data);
-}
+const updateUserAPI = (_id, fullName, phone, role) => {
+  const URL_BACKEND = "/api/v1/user";
+  const data = {
+    _id,
+    fullName,
+    phone,
+    role   // ⭐ thêm role vào body gửi lên backend
+  };
+  return axios.put(URL_BACKEND, data);
+};
+
 
 const fetchAllUserAPI=(current,pageSize)=>{
     const URL_BACKEND=`/api/v1/user?current=${current}&pageSize=${pageSize}`;

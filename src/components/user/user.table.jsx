@@ -78,38 +78,68 @@ const UserTable = (props) => {
           <Tag icon={<MailOutlined />} color="blue">メール</Tag>
         ),
     },
-    {
-      title: '操作',
-      key: 'action',
-      render: (_, record) => (
-        <div style={{ display: "flex", gap: "16px" }}>
-          <Tooltip title="編集">
-            <EditOutlined
-              onClick={() => {
-                setDataUpdate(record);
-                setIsModalUpdateOpen(true);
+   {
+  title: '操作',
+  key: 'action',
+  render: (_, record) => {
+    const currentUser = JSON.parse(localStorage.getItem("user")); // user đang đăng nhập
+
+    return (
+      <div style={{ display: "flex", gap: "16px", alignItems: "center" }}>
+
+        {/* nút sửa */}
+        <Tooltip title="編集">
+          <EditOutlined
+            onClick={() => {
+              setDataUpdate(record);
+              setIsModalUpdateOpen(true);
+            }}
+            style={{ cursor: "pointer", color: "orange", fontSize: 16 }}
+          />
+        </Tooltip>
+
+        {/* ⭐ CHỈ ADMIN MỚI THẤY NÚT CẤP QUYỀN */}
+        {currentUser?.role === "ADMIN" && (
+          <Tooltip title="権限変更">
+            <span
+              style={{
+                cursor: "pointer",
+                color: "blue",
+                fontSize: 14,
+                fontWeight: 600
               }}
-              style={{ cursor: "pointer", color: "orange", fontSize: 16 }}
+              onClick={() => {
+                // mở modal đổi quyền
+                // bạn sẽ tạo RoleModal sau
+                console.log("Open role modal for:", record);
+              }}
+            >
+              権限
+            </span>
+          </Tooltip>
+        )}
+
+        {/* nút xóa */}
+        <Popconfirm
+          title="ユーザーの削除"
+          description="このユーザーを削除してもよろしいですか？"
+          onConfirm={() => handleDeleteUser(record._id)}
+          okText="はい"
+          cancelText="いいえ"
+          placement="left"
+        >
+          <Tooltip title="削除">
+            <DeleteOutlined
+              style={{ cursor: "pointer", color: "red", fontSize: 16 }}
             />
           </Tooltip>
+        </Popconfirm>
 
-          <Popconfirm
-            title="ユーザーの削除"
-            description="このユーザーを削除してもよろしいですか？"
-            onConfirm={() => handleDeleteUser(record._id)}
-            okText="はい"
-            cancelText="いいえ"
-            placement="left"
-          >
-            <Tooltip title="削除">
-              <DeleteOutlined
-                style={{ cursor: "pointer", color: "red", fontSize: 16 }}
-              />
-            </Tooltip>
-          </Popconfirm>
-        </div>
-      ),
-    },
+      </div>
+    );
+  }
+}
+
   ];
 
   const handleDeleteUser = async (id) => {
