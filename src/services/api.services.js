@@ -12,7 +12,7 @@ import axios from "./axios.customize";
       return  axios.post(URL_BACKEND,data);
 }
 
-const updateUserAPI = (_id, fullName, phone, role) => {
+const updateUserAPI= (_id, fullName, phone, role) => {
   const URL_BACKEND = "/api/v1/user";
   const data = {
     _id,

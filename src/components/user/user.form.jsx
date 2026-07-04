@@ -1,4 +1,4 @@
-import { Button, Form, Input, notification, Modal } from "antd";
+import { Button, Form, Input, notification, Modal, Select } from "antd";
 import { UserAddOutlined } from "@ant-design/icons";
 import { useState } from 'react';
 import { createUserAPI } from "../../services/api.services";
@@ -9,10 +9,19 @@ const UserForm = (props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const currentUser = JSON.parse(localStorage.getItem("user"));
+
   const handleSubmitBtn = async (values) => {
     setLoading(true);
     try {
-      const res = await createUserAPI(values.fullName, values.email, values.password, values.phone);
+      const res = await createUserAPI(
+        values.fullName,
+        values.email,
+        values.password,
+        values.phone,
+        values.role   // ⭐ gửi role lên backend
+      );
+
       if (res.data) {
         notification.success({
           message: "Tạo user thành công",
@@ -61,7 +70,12 @@ const UserForm = (props) => {
         cancelText="キャンセル"
         confirmLoading={loading}
       >
-        <Form form={form} layout="vertical" onFinish={handleSubmitBtn} style={{ marginTop: 20 }}>
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={handleSubmitBtn}
+          style={{ marginTop: 20 }}
+        >
           <Form.Item
             label="氏名"
             name="fullName"
@@ -99,6 +113,24 @@ const UserForm = (props) => {
           >
             <Input placeholder="09012345678" />
           </Form.Item>
+
+          {/* ⭐ Chỉ ADMIN mới được chọn role */}
+          {currentUser?.role === "ADMIN" && (
+            <Form.Item
+              label="権限 (Role)"
+              name="role"
+              initialValue="USER"
+              rules={[{ required: true, message: "権限を選択してください" }]}
+            >
+              <Select
+                options={[
+                  { value: "USER", label: "一般 (USER)" },
+                  { value: "ADMIN", label: "管理者 (ADMIN)" },
+                  { value: "STAFF", label: "スタッフ (STAFF)" },
+                ]}
+              />
+            </Form.Item>
+          )}
         </Form>
       </Modal>
     </>

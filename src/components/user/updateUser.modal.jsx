@@ -16,7 +16,6 @@ const UpdateUserModal = (props) => {
   const [phone, setPhone] = useState("");
   const [role, setRole] = useState("USER");
 
-  // Lấy user đang đăng nhập để kiểm tra quyền ADMIN
   const currentUser = JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
@@ -29,7 +28,15 @@ const UpdateUserModal = (props) => {
   }, [dataUpdate]);
 
   const handleSubmitBtn = async () => {
-    const res = await updateUserAPI(id, fullName, phone, role); // ⭐ gửi role lên API
+    let res;
+
+    // ⭐ ADMIN được phép đổi role
+    if (currentUser?.role === "ADMIN") {
+      res = await updateUserAPI(id, fullName, phone, role);
+    } else {
+      // ⭐ USER chỉ được sửa thông tin cá nhân
+      res = await updateUserAPI(id, fullName, phone);
+    }
 
     if (res.data) {
       notification.success({
