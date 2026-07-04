@@ -4,6 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { loginUserAPI } from "../services/api.services";
 import { useContext, useState } from "react";
 import { AuthContext } from "../components/context/auth.context";
+import { GoogleLogin } from '@react-oauth/google';
+import { googleLoginAPI } from "../services/api.services";
 
 const LoginPage = () => {
   const [form] = Form.useForm();
@@ -35,6 +37,36 @@ const LoginPage = () => {
     setLoading(false);
   };
 
+  const handleGoogleSuccess = async (credentialResponse) => {
+  setLoading(true);
+  try {
+    const res = await googleLoginAPI(credentialResponse.credential);
+    if (res?.data) {
+      message.success("ログイン成功");
+      localStorage.setItem("access_token", res.data.access_token);
+      setUser(res.data.user);
+      navigate("/");
+    } else {
+      notification.error({
+        message: "ログインエラー",
+        description: JSON.stringify(res?.message),
+      });
+    }
+  } catch (error) {
+    notification.error({
+      message: "ネットワークエラー",
+      description: error.message,
+    });
+  }
+  setLoading(false);
+};
+
+const handleGoogleError = () => {
+  notification.error({
+    message: "Googleログインエラー",
+    description: "Googleログインに失敗しました",
+  });
+};
   return (
     <Row justify="center" style={{ margin: "30px" }}>
       <Col span={24}>

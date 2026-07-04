@@ -215,6 +215,12 @@ const forgotPasswordAPI = (email, phone, newPassword) => {
   return axios.post(URL_BACKEND, data);
 };
 
+const googleLoginAPI = (credential) => {
+  const URL_BACKEND = "/api/v1/auth/google-login";
+  const data = { credential };
+  return axios.post(URL_BACKEND, data);
+};
+
 export {
     createUserAPI,updateUserAPI,fetchAllUserAPI,
     deleteUserAPI,handleUpdateFile,updateUserAvatarAPI,
@@ -225,5 +231,5 @@ export {
     createCommentAPI,fetchCommentsByPostAPI,updateCommentAPI,deleteCommentAPI,
     ratePostAPI,fetchPostRatingAPI,fetchUserRatingAPI,
     fetchMenuAPI,
-    createDishAPI,fetchAllDishAPI,fetchDishByIdAPI,updateDishAPI,deleteDishAPI,changePasswordAPI,forgotPasswordAPI
+    createDishAPI,fetchAllDishAPI,fetchDishByIdAPI,updateDishAPI,deleteDishAPI,changePasswordAPI,forgotPasswordAPI,googleLoginAPI
 }
