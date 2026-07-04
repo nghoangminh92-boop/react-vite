@@ -1,19 +1,15 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState } from "react";
 import i18n from "../../i18n";
 
 export const LanguageContext = createContext();
 
 export const LanguageProvider = ({ children }) => {
-  const savedLang = localStorage.getItem("app_lang") || "ja";
-  const [lang, setLang] = useState(savedLang);
-
-  useEffect(() => {
-    i18n.changeLanguage(lang);
-  }, [lang]);
+  const [lang, setLang] = useState(localStorage.getItem("lang") || "ja");
 
   const changeLanguage = (newLang) => {
     setLang(newLang);
-    localStorage.setItem("app_lang", newLang);
+    localStorage.setItem("lang", newLang);
+    i18n.changeLanguage(newLang);
   };
 
   return (

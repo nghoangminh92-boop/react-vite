@@ -44,3 +44,27 @@
   background: #e6f4ff;
   font-weight: bold;
 }
+.lang-switcher {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.lang-btn {
+  background: transparent;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: 0.2s;
+}
+
+.lang-btn.active {
+  opacity: 1;
+  transform: scale(1.15);
+}
+
+.lang-btn:hover {
+  opacity: 1;
+}
+

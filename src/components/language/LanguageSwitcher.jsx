@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { LanguageContext } from "../context/language.context";
-import { GlobalOutlined } from "@ant-design/icons";
+import LanguageFlag from "./LanguageFlag";   // ⭐ THÊM DÒNG NÀY
 import "./LanguageSwitcher.css";
 
 const LanguageSwitcher = () => {
@@ -14,8 +14,9 @@ const LanguageSwitcher = () => {
 
   return (
     <div className="lang-dropdown">
+      {/* ⭐ THAY QUẢ CẦU BẰNG LÁ CỜ */}
       <button className="lang-trigger" onClick={() => setOpen(!open)}>
-        <GlobalOutlined className="lang-icon" />
+        <LanguageFlag />   {/* ⭐ LÁ CỜ SẼ ĐỔI THEO NGÔN NGỮ */}
       </button>
 
       {open && (
