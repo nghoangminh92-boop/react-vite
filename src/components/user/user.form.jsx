@@ -3,11 +3,16 @@ import { UserAddOutlined } from "@ant-design/icons";
 import { useState } from 'react';
 import { createUserAPI } from "../../services/api.services";
 
+// ⭐ i18n
+import { useTranslation } from "react-i18next";
+
 const UserForm = (props) => {
   const { loadUser } = props;
   const [form] = Form.useForm();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const { t } = useTranslation(); // ⭐ dùng i18n
 
   const currentUser = JSON.parse(localStorage.getItem("user"));
 
@@ -19,26 +24,26 @@ const UserForm = (props) => {
         values.email,
         values.password,
         values.phone,
-        values.role   // ⭐ gửi role lên backend
+        values.role
       );
 
       if (res.data) {
         notification.success({
-          message: "Tạo user thành công",
-          description: `Đã tạo tài khoản cho ${values.fullName}`,
+          message: t("create_user_success"),
+          description: t("create_user_desc", { name: values.fullName })
         });
         resetAndCloseModal();
         await loadUser();
       } else {
         notification.error({
-          message: "Error create user",
+          message: t("create_user_error"),
           description: JSON.stringify(res.message),
         });
       }
     } catch (error) {
       notification.error({
-        message: "Error create user",
-        description: error?.response?.data?.message || "Có lỗi xảy ra",
+        message: t("create_user_error"),
+        description: error?.response?.data?.message || t("error_occurred"),
       });
     } finally {
       setLoading(false);
@@ -57,59 +62,55 @@ const UserForm = (props) => {
         type="primary"
         icon={<UserAddOutlined />}
       >
-        ユーザー追加
+        {t("add_user")}
       </Button>
 
       <Modal
-        title="新規ユーザー作成"
+        title={t("create_new_user")}
         open={isModalOpen}
         onOk={() => form.submit()}
         onCancel={resetAndCloseModal}
         maskClosable={false}
-        okText="作成"
-        cancelText="キャンセル"
+        okText={t("create")}
+        cancelText={t("cancel")}
         confirmLoading={loading}
       >
-        <Form
-          form={form}
-          layout="vertical"
-          onFinish={handleSubmitBtn}
-          style={{ marginTop: 20 }}
-        >
+        <Form form={form} layout="vertical" onFinish={handleSubmitBtn} style={{ marginTop: 20 }}>
+
           <Form.Item
-            label="氏名"
+            label={t("full_name")}
             name="fullName"
-            rules={[{ required: true, message: "氏名を入力してください" }]}
+            rules={[{ required: true, message: t("enter_full_name") }]}
           >
-            <Input placeholder="山田太郎" />
+            <Input placeholder={t("full_name_placeholder")} />
           </Form.Item>
 
           <Form.Item
-            label="メールアドレス"
+            label={t("email")}
             name="email"
             rules={[
-              { required: true, message: "メールアドレスを入力してください" },
-              { type: "email", message: "メールアドレスの形式が正しくありません" },
+              { required: true, message: t("enter_email") },
+              { type: "email", message: t("invalid_email") },
             ]}
           >
             <Input placeholder="example@gmail.com" />
           </Form.Item>
 
           <Form.Item
-            label="パスワード"
+            label={t("password")}
             name="password"
             rules={[
-              { required: true, message: "パスワードを入力してください" },
-              { min: 6, message: "6文字以上で入力してください" },
+              { required: true, message: t("enter_password") },
+              { min: 6, message: t("password_min_length") },
             ]}
           >
-            <Input.Password placeholder="6文字以上" />
+            <Input.Password placeholder={t("password_min_length")} />
           </Form.Item>
 
           <Form.Item
-            label="電話番号"
+            label={t("phone")}
             name="phone"
-            rules={[{ required: true, message: "電話番号を入力してください" }]}
+            rules={[{ required: true, message: t("enter_phone") }]}
           >
             <Input placeholder="09012345678" />
           </Form.Item>
@@ -117,20 +118,21 @@ const UserForm = (props) => {
           {/* ⭐ Chỉ ADMIN mới được chọn role */}
           {currentUser?.role === "ADMIN" && (
             <Form.Item
-              label="権限 (Role)"
+              label={t("role")}
               name="role"
               initialValue="USER"
-              rules={[{ required: true, message: "権限を選択してください" }]}
+              rules={[{ required: true, message: t("select_role") }]}
             >
               <Select
                 options={[
-                  { value: "USER", label: "一般 (USER)" },
-                  { value: "ADMIN", label: "管理者 (ADMIN)" },
-                  { value: "STAFF", label: "スタッフ (STAFF)" },
+                  { value: "USER", label: t("role_user") },
+                  { value: "ADMIN", label: t("role_admin") },
+                  { value: "STAFF", label: t("role_staff") },
                 ]}
               />
             </Form.Item>
           )}
+
         </Form>
       </Modal>
     </>

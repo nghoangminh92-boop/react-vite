@@ -16,32 +16,37 @@ import { logoutAPI } from '../../services/api.services';
 import './header.css';
 import logoMuji from "../../assets/image7.jpg";
 
+// ⭐ i18n
+import { useTranslation } from "react-i18next";
+
+// ⭐ Language Switcher
+import LanguageSwitcher from "../language/LanguageSwitcher";
 
 const Header = () => {
   const { user, setUser } = useContext(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useTranslation();
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleLogout = async () => {
     const res = await logoutAPI();
     if (res.data) {
       localStorage.removeItem('access_token');
-      setUser({
-        email: '', phone: '', fullName: '', role: '', avatar: '', id: '',
-      });
-      message.success('ログアウトしました');
+      setUser({ email: '', phone: '', fullName: '', role: '', avatar: '', id: '' });
+      message.success(t("logout_success"));
       navigate('/');
     }
   };
 
   const navLinks = [
-    { key: 'home', to: '/', label: 'ホーム', icon: <HomeOutlined /> },
+    { key: 'home', to: '/', label: t("home"), icon: <HomeOutlined /> },
+
     ...(user.role === 'ADMIN'
       ? [
-          { key: 'dishes', to: '/dishes', label: '料理', icon: <AuditOutlined /> },
-          { key: 'posts', to: '/posts', label: '投稿', icon: <FileTextOutlined /> },
-          { key: 'users', to: '/users', label: 'ユーザー', icon: <UsergroupAddOutlined /> },
+          { key: 'dishes', to: '/dishes', label: t("dishes"), icon: <AuditOutlined /> },
+          { key: 'posts', to: '/posts', label: t("posts"), icon: <FileTextOutlined /> },
+          { key: 'users', to: '/users', label: t("users"), icon: <UsergroupAddOutlined /> },
         ]
       : []),
   ];
@@ -50,14 +55,14 @@ const Header = () => {
     items: [
       {
         key: 'profile',
-        label: 'プロフィール設定',
+        label: t("profile_settings"),
         icon: <UserOutlined />,
         onClick: () => navigate('/profile'),
       },
       { type: 'divider' },
       {
         key: 'logout',
-        label: 'ログアウト',
+        label: t("logout"),
         icon: <LogoutOutlined />,
         danger: true,
         onClick: handleLogout,
@@ -70,12 +75,12 @@ const Header = () => {
   return (
     <header className="app-header">
       <div className="app-header-inner">
-       {/* LOGO */}
-<Link to="/" className="app-logo">
-  <img src={logoMuji} alt="logo" className="app-logo-image" />
-  <span className="app-logo-text">フードレビュー</span>
-</Link>
 
+        {/* LOGO */}
+        <Link to="/" className="app-logo">
+          <img src={logoMuji} alt="logo" className="app-logo-image" />
+          <span className="app-logo-text">{t("food_review")}</span>
+        </Link>
 
         {/* NAV LINKS - desktop */}
         <nav className="app-nav">
@@ -93,6 +98,10 @@ const Header = () => {
 
         {/* RIGHT SIDE */}
         <div className="app-header-right">
+
+          {/* ⭐ NÚT ĐỔI NGÔN NGỮ */}
+          <LanguageSwitcher />
+
           {user?.id ? (
             <Dropdown menu={userMenuItems} trigger={['click']} placement="bottomRight">
               <div className="app-user-chip">
@@ -110,6 +119,7 @@ const Header = () => {
                     {(user.fullName || 'A')[0].toUpperCase()}
                   </Avatar>
                 )}
+
                 <span className="app-user-name">{user.fullName}</span>
                 <DownOutlined className="app-user-caret" />
               </div>
@@ -117,7 +127,7 @@ const Header = () => {
           ) : (
             <Link to="/login" className="app-login-btn">
               <LoginOutlined />
-              <span>ログイン</span>
+              <span>{t("login")}</span>
             </Link>
           )}
 
@@ -125,7 +135,7 @@ const Header = () => {
           <button
             className={`app-hamburger ${mobileOpen ? 'open' : ''}`}
             onClick={() => setMobileOpen(!mobileOpen)}
-            aria-label="メニュー"
+            aria-label={t("menu")}
           >
             <span></span>
             <span></span>

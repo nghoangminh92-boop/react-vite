@@ -12,11 +12,15 @@ import UpdateUserModal from "./updateUser.modal";
 import ViewUserDetail from "./view.user.detail";
 import { deleteUserAPI } from "../../services/api.services";
 
-// ⭐ Import CSS đúng 100%
 import "./user.css";
+
+// ⭐ i18n
+import { useTranslation } from "react-i18next";
 
 const UserTable = (props) => {
   const { dataUsers, loadUser, current, pageSize, total, setCurrent, setPageSize } = props;
+
+  const { t } = useTranslation();
 
   const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false);
   const [dataUpdate, setDataUpdate] = useState(null);
@@ -25,12 +29,12 @@ const UserTable = (props) => {
 
   const columns = [
     {
-      title: "STT",
+      title: t("stt"),
       width: 60,
       render: (_, record, index) => <>{index + 1 + (current - 1) * pageSize}</>,
     },
     {
-      title: "ユーザー",
+      title: t("user"),
       dataIndex: "fullName",
       render: (_, record) => (
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
@@ -68,20 +72,20 @@ const UserTable = (props) => {
       ),
     },
     {
-      title: "権限",
+      title: t("role"),
       dataIndex: "role",
       width: 100,
       render: (role) =>
         role === "ADMIN" ? (
           <Tag icon={<CrownOutlined />} color="gold">
-            管理者
+            {t("role_admin")}
           </Tag>
         ) : (
-          <Tag color="default">一般</Tag>
+          <Tag color="default">{t("role_user")}</Tag>
         ),
     },
     {
-      title: "ログイン方法",
+      title: t("login_method"),
       dataIndex: "authProvider",
       width: 120,
       render: (authProvider) =>
@@ -91,12 +95,12 @@ const UserTable = (props) => {
           </Tag>
         ) : (
           <Tag icon={<MailOutlined />} color="blue">
-            メール
+            {t("login_email")}
           </Tag>
         ),
     },
     {
-      title: "操作",
+      title: t("actions"),
       key: "action",
       width: 160,
       render: (_, record) => {
@@ -104,7 +108,7 @@ const UserTable = (props) => {
 
         return (
           <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
-            <Tooltip title="編集">
+            <Tooltip title={t("edit")}>
               <EditOutlined
                 onClick={() => {
                   setDataUpdate(record);
@@ -115,7 +119,7 @@ const UserTable = (props) => {
             </Tooltip>
 
             {currentUser?.role === "ADMIN" && (
-              <Tooltip title="権限変更">
+              <Tooltip title={t("change_role")}>
                 <span
                   style={{
                     cursor: "pointer",
@@ -128,20 +132,20 @@ const UserTable = (props) => {
                     setIsModalUpdateOpen(true);
                   }}
                 >
-                  権限
+                  {t("role")}
                 </span>
               </Tooltip>
             )}
 
             <Popconfirm
-              title="ユーザーの削除"
-              description="このユーザーを削除してもよろしいですか？"
+              title={t("delete_user")}
+              description={t("delete_user_confirm")}
               onConfirm={() => handleDeleteUser(record._id)}
-              okText="はい"
-              cancelText="いいえ"
+              okText={t("yes")}
+              cancelText={t("no")}
               placement="left"
             >
-              <Tooltip title="削除">
+              <Tooltip title={t("delete")}>
                 <DeleteOutlined
                   style={{ cursor: "pointer", color: "red", fontSize: 16 }}
                 />
@@ -157,13 +161,13 @@ const UserTable = (props) => {
     const res = await deleteUserAPI(id);
     if (res.data) {
       notification.success({
-        message: "ユーザー削除",
-        description: "ユーザーの削除に成功しました",
+        message: t("delete_user"),
+        description: t("delete_user_success"),
       });
       await loadUser();
     } else {
       notification.error({
-        message: "ユーザー削除エラー",
+        message: t("delete_user_error"),
         description: JSON.stringify(res.message),
       });
     }
@@ -192,7 +196,7 @@ const UserTable = (props) => {
           total,
           showTotal: (total, range) => (
             <div>
-              {range[0]}-{range[1]} 件 / 全 {total} 件
+              {range[0]}-{range[1]} {t("items")} / {t("total")} {total}
             </div>
           ),
         }}

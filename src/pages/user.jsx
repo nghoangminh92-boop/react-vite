@@ -6,7 +6,12 @@ import { Input } from "antd";
 import { useEffect, useMemo, useState } from "react";
 import "./userManagement.css";
 
+// ⭐ i18n
+import { useTranslation } from "react-i18next";
+
 const UserPage = () => {
+  const { t } = useTranslation(); // ⭐ dùng i18n
+
   const [dataUsers, setDataUsers] = useState([]);
   const [current, setCurrent] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -44,7 +49,7 @@ const UserPage = () => {
     <div className="user-mgmt-container">
       <div className="user-mgmt-header">
         <h2 className="user-mgmt-title">
-          <TeamOutlined /> ユーザー管理
+          <TeamOutlined /> {t("user_management")}
         </h2>
       </div>
 
@@ -55,7 +60,7 @@ const UserPage = () => {
           </div>
           <div>
             <div className="user-stat-value">{total}</div>
-            <div className="user-stat-label">総ユーザー数</div>
+            <div className="user-stat-label">{t("total_users")}</div>
           </div>
         </div>
 
@@ -65,7 +70,7 @@ const UserPage = () => {
           </div>
           <div>
             <div className="user-stat-value">{adminCount}</div>
-            <div className="user-stat-label">管理者</div>
+            <div className="user-stat-label">{t("admin_users")}</div>
           </div>
         </div>
 
@@ -75,14 +80,14 @@ const UserPage = () => {
           </div>
           <div>
             <div className="user-stat-value">{googleCount}</div>
-            <div className="user-stat-label">Googleログイン</div>
+            <div className="user-stat-label">{t("google_login_users")}</div>
           </div>
         </div>
       </div>
 
       <div className="user-mgmt-toolbar">
         <Input.Search
-          placeholder="名前またはメールで検索"
+          placeholder={t("search_user_placeholder")}
           allowClear
           style={{ maxWidth: 300 }}
           value={searchText}

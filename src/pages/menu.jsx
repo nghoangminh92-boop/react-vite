@@ -3,7 +3,12 @@ import { Empty, Spin, Rate, Tag } from "antd";
 import { fetchMenuAPI } from "../services/api.services";
 import FoodDetailDrawer from "./FoodDetailDrawer";
 
+// ⭐ i18n
+import { useTranslation } from "react-i18next";
+
 const MenuPage = () => {
+  const { t } = useTranslation(); // ⭐ dùng i18n
+
   const [menu, setMenu] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -45,12 +50,12 @@ const MenuPage = () => {
   }
 
   if (menu.length === 0) {
-    return <Empty description="料理がありません" style={{ marginTop: 60 }} />;
+    return <Empty description={t("no_food")} style={{ marginTop: 60 }} />;
   }
 
   return (
     <div style={{ maxWidth: 900, margin: "0 auto", padding: "24px 16px" }}>
-      <h2 style={{ marginBottom: 24 }}>メニュー一覧 - 評価ランキング</h2>
+      <h2 style={{ marginBottom: 24 }}>{t("menu_title")}</h2>
 
       {menu.map((item, index) => (
         <div
@@ -112,15 +117,16 @@ const MenuPage = () => {
 
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <Rate disabled allowHalf value={item.average} style={{ fontSize: 14 }} />
+
               <span style={{ fontSize: 13, color: "#888" }}>
                 {item.average > 0
-                  ? `${item.average} (${item.total} 件の評価)`
-                  : "まだ評価がありません"}
+                  ? `${item.average} (${item.total} ${t("reviews")})`
+                  : t("no_reviews")}
               </span>
 
               {index < 3 && item.total > 0 && (
                 <Tag color={index === 0 ? "gold" : index === 1 ? "silver" : "orange"}>
-                  トップ {index + 1}
+                  {t("top")} {index + 1}
                 </Tag>
               )}
             </div>

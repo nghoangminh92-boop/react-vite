@@ -25,7 +25,18 @@ import {
 import UpdateCommentModal from "./updateComment.modal";
 import UpdatePostModal from "./updatePost.modal";
 import "./postDetail.css";
+
+// ⭐ i18n
+import { useTranslation } from "react-i18next";
+
 const { TextArea } = Input;
+
+// Map mã ngôn ngữ i18next -> locale dùng cho Date.toLocaleString
+const LOCALE_MAP = {
+  ja: "ja-JP",
+  vi: "vi-VN",
+  en: "en-US",
+};
 
 const normalizeListData = (res) => {
   if (!res) return [];
@@ -38,6 +49,8 @@ const normalizeListData = (res) => {
 const PostDetail = (props) => {
   const { dataDetail, setDataDetail, isDetailOpen, setIsDetailOpen, onRatingChanged } = props;
   const { user } = useContext(AuthContext);
+
+  const { t, i18n } = useTranslation(); // ⭐ dùng i18n
 
   const [foodRating, setFoodRating] = useState(null);
   const [userStar, setUserStar] = useState(0);
@@ -109,8 +122,8 @@ const PostDetail = (props) => {
   const handleRateFood = async (value) => {
     if (!user) {
       notification.warning({
-        message: "ログインが必要",
-        description: "料理を評価するにはログインしてください",
+        message: t("login_required"),
+        description: t("login_required_to_rate"),
       });
       return;
     }
@@ -121,19 +134,19 @@ const PostDetail = (props) => {
       const res = await ratePostAPI(postDetail.foodId, value);
       if (res?.data || (res?.statusCode && res.statusCode < 400)) {
         setUserStar(value);
-        notification.success({ message: "評価しました" });
+        notification.success({ message: t("rating_success") });
         await loadFoodInfo(postDetail.foodId);
         onRatingChanged?.(postDetail.foodId);
       } else {
         notification.error({
-          message: "評価エラー",
-          description: JSON.stringify(res?.message || "エラーが発生しました"),
+          message: t("rating_error"),
+          description: JSON.stringify(res?.message || t("generic_error")),
         });
       }
     } catch (error) {
       notification.error({
-        message: "評価エラー",
-        description: "エラーが発生しました。もう一度お試しください",
+        message: t("rating_error"),
+        description: t("generic_error_retry"),
       });
     } finally {
       setSubmittingRating(false);
@@ -150,8 +163,8 @@ const PostDetail = (props) => {
   const handleAddComment = async () => {
     if (!commentContent.trim()) {
       notification.warning({
-        message: "内容が必要です",
-        description: "コメント内容を入力してください",
+        message: t("missing_comment"),
+        description: t("enter_comment_content"),
       });
       return;
     }
@@ -166,14 +179,14 @@ const PostDetail = (props) => {
 
     if (res.data) {
       notification.success({
-        message: "コメント",
-        description: "コメントを追加しました",
+        message: t("comment"),
+        description: t("comment_added"),
       });
       setCommentContent("");
       await loadComments(postDetail._id);
     } else {
       notification.error({
-        message: "コメント追加エラー",
+        message: t("comment_add_error"),
         description: JSON.stringify(res.message),
       });
     }
@@ -183,13 +196,13 @@ const PostDetail = (props) => {
     const res = await deleteCommentAPI(id);
     if (res.data) {
       notification.success({
-        message: "コメントを削除",
-        description: "コメントを削除しました",
+        message: t("delete_comment"),
+        description: t("comment_deleted"),
       });
       await loadComments(postDetail._id);
     } else {
       notification.error({
-        message: "コメント削除エラー",
+        message: t("comment_delete_error"),
         description: JSON.stringify(res.message),
       });
     }
@@ -204,19 +217,20 @@ const PostDetail = (props) => {
   const handleDeletePost = async () => {
     const res = await deletePostAPI(postDetail._id);
     if (res?.data) {
-      notification.success({ message: "投稿を削除しました" });
+      notification.success({ message: t("post_deleted") });
       handleClose();
     } else {
       notification.error({
-        message: "投稿削除エラー",
-        description: JSON.stringify(res?.message || "エラーが発生しました"),
+        message: t("post_delete_error"),
+        description: JSON.stringify(res?.message || t("generic_error")),
       });
     }
   };
 
   const formatDate = (date) => {
     if (!date) return "";
-    return new Date(date).toLocaleString("ja-JP");
+    const locale = LOCALE_MAP[i18n.language] || i18n.language || "ja-JP";
+    return new Date(date).toLocaleString(locale);
   };
 
   const handleClose = () => {
@@ -265,7 +279,7 @@ const PostDetail = (props) => {
                 </div>
               )}
               <div className="post-author-section">
-                <span className="post-author-name">{postDetail.author || "Anonymous"}</span>
+                <span className="post-author-name">{postDetail.author || t("anonymous")}</span>
               </div>
 
               {canDeletePost() && (
@@ -278,17 +292,17 @@ const PostDetail = (props) => {
                       setIsModalUpdatePostOpen(true);
                     }}
                   >
-                    編集
+                    {t("edit")}
                   </Button>
                   <Popconfirm
-                    title="投稿を削除"
-                    description="この投稿を削除しますか？"
+                    title={t("delete_post")}
+                    description={t("delete_post_confirm")}
                     onConfirm={handleDeletePost}
-                    okText="削除"
-                    cancelText="キャンセル"
+                    okText={t("delete")}
+                    cancelText={t("cancel")}
                   >
                     <Button size="small" danger icon={<DeleteOutlined />}>
-                      削除
+                      {t("delete")}
                     </Button>
                   </Popconfirm>
                 </div>
@@ -300,19 +314,21 @@ const PostDetail = (props) => {
                 <div className="food-review-top">
                   <span className="food-review-icon">🍜</span>
                   <div className="food-review-info">
-                    <span className="food-review-label">料理を評価</span>
+                    <span className="food-review-label">{t("rate_food")}</span>
                     <span className="food-review-name">{foodInfo.name}</span>
                   </div>
                   {foodRating && foodRating.total > 0 && (
                     <div className="food-review-avg">
                       <span className="food-review-avg-star">⭐ {foodRating.average}</span>
-                      <span className="food-review-avg-count">({foodRating.total}件の評価)</span>
+                      <span className="food-review-avg-count">
+                        {t("rating_count", { count: foodRating.total })}
+                      </span>
                     </div>
                   )}
                 </div>
 
                 <div className="food-review-bottom">
-                  <span className="food-review-your-label">あなたの評価</span>
+                  <span className="food-review-your-label">{t("your_rating")}</span>
                   <Rate
                     value={userStar}
                     onChange={handleRateFood}
@@ -345,7 +361,7 @@ const PostDetail = (props) => {
 
             <div className="comments-section">
               <div className="comments-header">
-                コメント
+                {t("comment")}
                 <span className="comments-count">{comments.length}</span>
               </div>
 
@@ -368,7 +384,7 @@ const PostDetail = (props) => {
                 <div className="comment-input-wrapper">
                   <TextArea
                     rows={2}
-                    placeholder="コメントを入力..."
+                    placeholder={t("comment_placeholder")}
                     value={commentContent}
                     onChange={(e) => setCommentContent(e.target.value)}
                   />
@@ -378,7 +394,7 @@ const PostDetail = (props) => {
                     onClick={handleAddComment}
                     loading={submittingComment}
                   >
-                    送信
+                    {t("send")}
                   </Button>
                 </div>
               </div>
@@ -389,7 +405,7 @@ const PostDetail = (props) => {
                 </div>
               ) : comments.length === 0 ? (
                 <div className="empty-state">
-                  <Empty description={<span className="empty-state-text">まだコメントがありません</span>} />
+                  <Empty description={<span className="empty-state-text">{t("no_comments")}</span>} />
                 </div>
               ) : (
                 <div className="comments-list">
@@ -412,7 +428,7 @@ const PostDetail = (props) => {
                       )}
                       <div className="comment-body">
                         <div className="comment-bubble">
-                          <div className="comment-author-name">{item.user || "Anonymous"}</div>
+                          <div className="comment-author-name">{item.user || t("anonymous")}</div>
                           <div className="comment-text">{item.content}</div>
                         </div>
                         <div className="comment-actions">
@@ -424,17 +440,17 @@ const PostDetail = (props) => {
                               setIsModalUpdateCommentOpen(true);
                             }}
                           >
-                            <EditOutlined /> 編集
+                            <EditOutlined /> {t("edit")}
                           </span>
                           <Popconfirm
-                            title="コメントを削除"
-                            description="このコメントを削除しますか？"
+                            title={t("delete_comment")}
+                            description={t("delete_comment_confirm")}
                             onConfirm={() => handleDeleteComment(item._id)}
-                            okText="はい"
-                            cancelText="いいえ"
+                            okText={t("yes")}
+                            cancelText={t("no")}
                           >
                             <span className="comment-action-btn danger">
-                              <DeleteOutlined /> 削除
+                              <DeleteOutlined /> {t("delete")}
                             </span>
                           </Popconfirm>
                         </div>
@@ -446,7 +462,7 @@ const PostDetail = (props) => {
             </div>
           </div>
         ) : (
-          <p className="no-data">データがありません</p>
+          <p className="no-data">{t("no_data")}</p>
         )}
       </Modal>
 

@@ -7,6 +7,9 @@ import {
 import PostsFeedList from "../components/post/PostsFeedList";
 import PostDetail from "../components/post/post.detail";
 
+// ⭐ i18n
+import { useTranslation } from "react-i18next";
+
 const formatPrice = (price) => {
   if (price == null) return "";
   return new Intl.NumberFormat("ja-JP", {
@@ -23,6 +26,8 @@ const FoodDetailDrawer = ({
   onRatingChanged,
   refreshKey,
 }) => {
+  const { t } = useTranslation(); // ⭐ dùng i18n
+
   const [dish, setDish] = useState(null);
   const [posts, setPosts] = useState([]);
   const [loadingDish, setLoadingDish] = useState(false);
@@ -54,15 +59,12 @@ const FoodDetailDrawer = ({
     try {
       const res = await fetchPostsByFoodAPI(id);
       let list = [];
-      if (Array.isArray(res?.data)) {
-        list = res.data;
-      } else if (Array.isArray(res?.data?.result)) {
-        list = res.data.result;
-      } else if (Array.isArray(res?.data?.data?.result)) {
-        list = res.data.data.result;
-      } else if (Array.isArray(res?.data?.data)) {
-        list = res.data.data;
-      }
+
+      if (Array.isArray(res?.data)) list = res.data;
+      else if (Array.isArray(res?.data?.result)) list = res.data.result;
+      else if (Array.isArray(res?.data?.data?.result)) list = res.data.data.result;
+      else if (Array.isArray(res?.data?.data)) list = res.data.data;
+
       setPosts(list);
     } catch (error) {
       setPosts([]);
@@ -90,7 +92,7 @@ const FoodDetailDrawer = ({
   return (
     <>
       <Modal
-        title="料理の詳細"
+        title={t("dish_detail")}
         open={isOpen}
         onCancel={handleClose}
         footer={null}
@@ -125,11 +127,13 @@ const FoodDetailDrawer = ({
                   }}
                 />
               )}
+
               <div style={{ flex: 1, minWidth: 200 }}>
                 <h2 style={{ margin: 0 }}>{dish.name}</h2>
                 <p style={{ color: "#666", margin: "8px 0" }}>
                   {dish.description}
                 </p>
+
                 <div
                   style={{
                     fontWeight: "bold",
@@ -144,8 +148,9 @@ const FoodDetailDrawer = ({
             </div>
 
             <hr />
+
             <h3 style={{ margin: "20px 0 12px" }}>
-              この料理のレビュー投稿 ({posts.length}件)
+              {t("dish_reviews")} ({posts.length}{t("reviews_count")})
             </h3>
 
             {loadingPosts ? (
@@ -153,7 +158,7 @@ const FoodDetailDrawer = ({
                 <Spin />
               </div>
             ) : posts.length === 0 ? (
-              <Empty description="この料理のレビューがまだありません" />
+              <Empty description={t("no_dish_reviews")} />
             ) : (
               <PostsFeedList
                 posts={posts}
@@ -166,7 +171,7 @@ const FoodDetailDrawer = ({
             )}
           </>
         ) : (
-          <p>料理が見つかりません</p>
+          <p>{t("dish_not_found")}</p>
         )}
       </Modal>
 

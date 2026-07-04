@@ -3,6 +3,9 @@ import { useState } from "react";
 import { handleUpdateFile, updateUserAvatarAPI } from "../../services/api.services";
 import "./viewUserDetail.css";
 
+// ⭐ i18n
+import { useTranslation } from "react-i18next";
+
 const ViewUserDetail = (props) => {
   const {
     isDetailOpen,
@@ -11,6 +14,8 @@ const ViewUserDetail = (props) => {
     setDataDetail,
     loadUser,
   } = props;
+
+  const { t } = useTranslation(); // ⭐ dùng i18n
 
   const [selectedFile, setSelectedFile] = useState(null);
   const [preview, setPreview] = useState(null);
@@ -31,7 +36,7 @@ const ViewUserDetail = (props) => {
 
     if (!resUpload.data) {
       notification.error({
-        message: "Error upload file",
+        message: t("upload_error"),
         description: JSON.stringify(resUpload.message),
       });
       return;
@@ -48,8 +53,8 @@ const ViewUserDetail = (props) => {
 
     if (resUpdateAvatar.data) {
       notification.success({
-        message: "Update User avatar",
-        description: "Cập nhật thành công",
+        message: t("update_avatar"),
+        description: t("update_success"),
       });
 
       setIsDetailOpen(false);
@@ -58,7 +63,7 @@ const ViewUserDetail = (props) => {
       await loadUser();
     } else {
       notification.error({
-        message: "Error update file",
+        message: t("update_error"),
         description: JSON.stringify(resUpdateAvatar.message),
       });
     }
@@ -66,7 +71,7 @@ const ViewUserDetail = (props) => {
 
   return (
     <Drawer
-      title="Chi tiết user"
+      title={t("user_detail")}
       width={"40vw"}
       onClose={() => {
         setDataDetail(null);
@@ -76,14 +81,13 @@ const ViewUserDetail = (props) => {
     >
       {dataDetail ? (
         <>
-          <p><strong>ID:</strong> {dataDetail._id}</p>
-          <p><strong>Full name:</strong> {dataDetail.fullName}</p>
-          <p><strong>Email:</strong> {dataDetail.email}</p>
-          <p><strong>Phone:</strong> {dataDetail.phone}</p>
+          <p><strong>{t("user_id")}:</strong> {dataDetail._id}</p>
+          <p><strong>{t("full_name")}:</strong> {dataDetail.fullName}</p>
+          <p><strong>{t("email")}:</strong> {dataDetail.email}</p>
+          <p><strong>{t("phone")}:</strong> {dataDetail.phone}</p>
 
-          <p><strong>Avatar:</strong></p>
+          <p><strong>{t("avatar")}:</strong></p>
 
-          {/* Avatar hiển thị */}
           <div className="avatar-box">
             <img
               src={`${import.meta.env.VITE_BACKEND_URL}/images/avatar/${dataDetail.avatar}`}
@@ -92,10 +96,9 @@ const ViewUserDetail = (props) => {
             />
           </div>
 
-          {/* Upload button */}
           <div className="upload-row">
             <label htmlFor="btnUpload" className="upload-btn">
-              Upload Avatar
+              {t("upload_avatar")}
             </label>
             <input
               type="file"
@@ -105,7 +108,6 @@ const ViewUserDetail = (props) => {
             />
           </div>
 
-          {/* Preview */}
           {preview && (
             <>
               <div className="avatar-box">
@@ -121,13 +123,13 @@ const ViewUserDetail = (props) => {
                 className="save-btn"
                 onClick={handleUpdateUserAvatar}
               >
-                Save
+                {t("save")}
               </Button>
             </>
           )}
         </>
       ) : (
-        <p>Không có dữ liệu</p>
+        <p>{t("no_data")}</p>
       )}
     </Drawer>
   );

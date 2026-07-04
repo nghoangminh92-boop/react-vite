@@ -1,0 +1,46 @@
+.lang-dropdown {
+  position: relative;
+  margin-right: 16px;
+}
+
+.lang-trigger {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+}
+
+.lang-icon {
+  font-size: 22px;
+  color: #333;
+}
+
+.lang-menu {
+  position: absolute;
+  top: 36px;
+  right: 0;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  padding: 8px 0;
+  width: 140px;
+  z-index: 999;
+}
+
+.lang-item {
+  padding: 10px 14px;
+  cursor: pointer;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lang-item:hover {
+  background: #f5f5f5;
+}
+
+.lang-item.active {
+  background: #e6f4ff;
+  font-weight: bold;
+}

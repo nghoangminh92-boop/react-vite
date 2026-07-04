@@ -5,7 +5,19 @@ import { deletePostAPI } from "../../services/api.services";
 import RatingDisplay from "./RatingDisplay";
 import UpdatePostModal from "./updatePost.modal";
 
-const PostsFeedList = ({ posts, onPostClick, loading, currentUser, onPostDeleted,refreshKey }) => {
+// ⭐ i18n
+import { useTranslation } from "react-i18next";
+
+const PostsFeedList = ({
+  posts,
+  onPostClick,
+  loading,
+  currentUser,
+  onPostDeleted,
+  refreshKey
+}) => {
+  const { t } = useTranslation(); // ⭐ dùng i18n
+
   const [dataUpdate, setDataUpdate] = useState(null);
   const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false);
 
@@ -34,12 +46,14 @@ const PostsFeedList = ({ posts, onPostClick, loading, currentUser, onPostDeleted
   const handleDelete = async (id) => {
     const res = await deletePostAPI(id);
     if (res?.data) {
-      notification.success({ message: "Xóa bài viết thành công" });
+      notification.success({
+        message: t("delete_post_success")
+      });
       onPostDeleted?.();
     } else {
       notification.error({
-        message: "Lỗi xóa bài viết",
-        description: JSON.stringify(res?.message || "Có lỗi xảy ra"),
+        message: t("delete_post_error"),
+        description: JSON.stringify(res?.message || t("error_occurred"))
       });
     }
   };
@@ -53,7 +67,7 @@ const PostsFeedList = ({ posts, onPostClick, loading, currentUser, onPostDeleted
   }
 
   if (posts.length === 0) {
-    return <Empty description="Chưa có bài viết nào" />;
+    return <Empty description={t("no_posts")} />;
   }
 
   return (
@@ -64,6 +78,7 @@ const PostsFeedList = ({ posts, onPostClick, loading, currentUser, onPostDeleted
           className="post-feed-card"
           onClick={() => onPostClick(post)}
         >
+          {/* EDIT + DELETE BUTTONS */}
           <div
             style={{
               position: "absolute",
@@ -71,7 +86,7 @@ const PostsFeedList = ({ posts, onPostClick, loading, currentUser, onPostDeleted
               right: 14,
               display: "flex",
               gap: 8,
-              zIndex: 2,
+              zIndex: 2
             }}
           >
             {canEdit(post) && (
@@ -90,15 +105,15 @@ const PostsFeedList = ({ posts, onPostClick, loading, currentUser, onPostDeleted
 
             {canDelete(post) && (
               <Popconfirm
-                title="Xóa bài viết"
-                description="Bạn chắc chắn muốn xóa bài viết này?"
+                title={t("delete_post")}
+                description={t("delete_post_confirm")}
                 onConfirm={(e) => {
                   e?.stopPropagation();
                   handleDelete(post._id);
                 }}
                 onCancel={(e) => e?.stopPropagation()}
-                okText="Xóa"
-                cancelText="Hủy"
+                okText={t("delete")}
+                cancelText={t("cancel")}
               >
                 <div
                   className="post-card-delete-btn"
@@ -111,29 +126,45 @@ const PostsFeedList = ({ posts, onPostClick, loading, currentUser, onPostDeleted
             )}
           </div>
 
+          {/* IMAGE */}
           {post.image && (
             <img
-              src={post.image?.startsWith('http') ? post.image : `${import.meta.env.VITE_BACKEND_URL}/images/${post.image}`}
+              src={
+                post.image?.startsWith("http")
+                  ? post.image
+                  : `${import.meta.env.VITE_BACKEND_URL}/images/${post.image}`
+              }
               alt={post.title}
               className="post-card-image"
             />
           )}
+
+          {/* CONTENT */}
           <div className="post-card-content">
             <h3 className="post-card-title">{post.title}</h3>
             <p className="post-card-excerpt">{truncateText(post.content)}</p>
+
             <div className="post-card-footer">
               <div className="post-card-author-info">
                 {post.avatar && (
                   <img
-                    src={post.avatar?.startsWith('http') ? post.avatar : `${import.meta.env.VITE_BACKEND_URL}/images/avatar/${post.avatar}`}
+                    src={
+                      post.avatar?.startsWith("http")
+                        ? post.avatar
+                        : `${import.meta.env.VITE_BACKEND_URL}/images/avatar/${post.avatar}`
+                    }
                     alt={post.author}
                     className="post-card-avatar"
                   />
                 )}
-                <span className="post-card-author">{post.author || "Anonymous"}</span>
+                <span className="post-card-author">
+                  {post.author || t("anonymous")}
+                </span>
               </div>
+
               <span className="post-card-date">{formatDate(post.createdAt)}</span>
             </div>
+
             <RatingDisplay postId={post.foodId} refreshKey={refreshKey} />
           </div>
         </div>
@@ -148,7 +179,6 @@ const PostsFeedList = ({ posts, onPostClick, loading, currentUser, onPostDeleted
       />
     </div>
   );
-  
 };
 
-export default PostsFeedList; 
+export default PostsFeedList;

@@ -2,6 +2,9 @@ import { Input, Modal, notification } from "antd";
 import { useEffect, useState } from "react";
 import { handleUpdateFile, updatePostAPI } from "../../services/api.services";
 
+// ⭐ i18n
+import { useTranslation } from "react-i18next";
+
 const { TextArea } = Input;
 
 const UpdatePostModal = (props) => {
@@ -12,6 +15,8 @@ const UpdatePostModal = (props) => {
     setDataUpdate,
     loadPost,
   } = props;
+
+  const { t } = useTranslation(); // ⭐ dùng i18n
 
   const [id, setId] = useState("");
   const [title, setTitle] = useState("");
@@ -47,16 +52,16 @@ const UpdatePostModal = (props) => {
   const handleSubmitBtn = async () => {
     if (!title.trim()) {
       notification.warning({
-        message: "Thiếu tiêu đề",
-        description: "Vui lòng nhập tiêu đề bài viết",
+        message: t("missing_title"),
+        description: t("enter_title"),
       });
       return;
     }
 
     if (!content.trim()) {
       notification.warning({
-        message: "Thiếu nội dung",
-        description: "Vui lòng nhập nội dung bài viết",
+        message: t("missing_content"),
+        description: t("enter_content"),
       });
       return;
     }
@@ -69,7 +74,7 @@ const UpdatePostModal = (props) => {
         imageName = resUpload.data.url;
       } else {
         notification.error({
-          message: "Error upload file",
+          message: t("upload_error"),
           description: JSON.stringify(resUpload.message),
         });
         return;
@@ -80,14 +85,14 @@ const UpdatePostModal = (props) => {
 
     if (res.data) {
       notification.success({
-        message: "Update post",
-        description: "Cập nhật bài viết thành công",
+        message: t("update_post"),
+        description: t("update_post_success"),
       });
       resetAndCloseModal();
       await loadPost();
     } else {
       notification.error({
-        message: "Error update post",
+        message: t("update_post_error"),
         description: JSON.stringify(res.message),
       });
     }
@@ -107,28 +112,28 @@ const UpdatePostModal = (props) => {
 
   return (
     <Modal
-      title="Cập nhật bài viết"
+      title={t("update_post")}
       open={isModalUpdateOpen}
       onOk={handleSubmitBtn}
       onCancel={resetAndCloseModal}
       maskClosable={false}
-      okText="LƯU"
-      cancelText="HỦY"
+      okText={t("save")}
+      cancelText={t("cancel")}
       width={600}
     >
       <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
         <div>
-          <span>Id</span>
+          <span>{t("id")}</span>
           <Input value={id} disabled />
         </div>
 
         <div>
-          <span>Tiêu đề</span>
+          <span>{t("title")}</span>
           <Input value={title} onChange={(e) => setTitle(e.target.value)} />
         </div>
 
         <div>
-          <span>Nội dung</span>
+          <span>{t("content")}</span>
           <TextArea
             rows={4}
             value={content}
@@ -137,12 +142,12 @@ const UpdatePostModal = (props) => {
         </div>
 
         <div>
-          <span>Tác giả</span>
+          <span>{t("author")}</span>
           <Input value={author} disabled />
         </div>
 
         <div>
-          <span>Ảnh bài viết</span>
+          <span>{t("post_image")}</span>
           <div style={{ marginTop: "10px" }}>
             <label
               htmlFor="btnUploadPostUpdate"
@@ -154,7 +159,7 @@ const UpdatePostModal = (props) => {
                 cursor: "pointer",
               }}
             >
-              Chọn ảnh mới
+              {t("choose_new_image")}
             </label>
             <input
               type="file"
@@ -164,11 +169,14 @@ const UpdatePostModal = (props) => {
               onChange={handleOnChangeFile}
             />
           </div>
+
           {(preview || image) && (
             <img
               src={
                 preview ||
-                image?.startsWith('http') ? image : `${import.meta.env.VITE_BACKEND_URL}/images/${image}`
+                (image?.startsWith("http")
+                  ? image
+                  : `${import.meta.env.VITE_BACKEND_URL}/images/${image}`)
               }
               alt="preview"
               style={{

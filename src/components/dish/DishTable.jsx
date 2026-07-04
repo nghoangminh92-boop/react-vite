@@ -8,7 +8,7 @@ import {
   Tooltip,
   Tag,
   Input,
-  Divider
+  Divider,
 } from "antd";
 import {
   DeleteOutlined,
@@ -17,18 +17,21 @@ import {
   PictureOutlined,
   DollarOutlined,
   FileTextOutlined,
-  SearchOutlined
+  SearchOutlined,
 } from "@ant-design/icons";
 import { fetchAllDishAPI, deleteDishAPI } from "../../services/api.services";
 import DishModal from "./DishModal";
 
+// ⭐ i18n
+import { useTranslation } from "react-i18next";
+
 const DishTable = () => {
+  const { t } = useTranslation(); // ⭐ dùng i18n
+
   const [dataDish, setDataDish] = useState([]);
   const [filteredDish, setFilteredDish] = useState([]);
   const [loading, setLoading] = useState(false);
-
   const [searchText, setSearchText] = useState("");
-
   const [dataUpdate, setDataUpdate] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -40,8 +43,8 @@ const DishTable = () => {
     setLoading(true);
     try {
       const res = await fetchAllDishAPI();
-
       let list = [];
+
       if (res?.data && Array.isArray(res.data)) list = res.data;
       else if (Array.isArray(res)) list = res;
       else list = [];
@@ -50,8 +53,8 @@ const DishTable = () => {
       setFilteredDish(list);
     } catch (error) {
       notification.error({
-        message: "エラー",
-        description: "料理リストを読み込めませんでした",
+        message: t("error"),
+        description: t("load_dish_error"),
       });
       setDataDish([]);
       setFilteredDish([]);
@@ -62,16 +65,17 @@ const DishTable = () => {
 
   const handleDeleteDish = async (id) => {
     const res = await deleteDishAPI(id);
+
     if (res?.data) {
       notification.success({
-        message: "削除成功",
-        description: "料理の削除に成功しました",
+        message: t("delete_success"),
+        description: t("delete_dish_success"),
       });
       await loadDishes();
     } else {
       notification.error({
-        message: "削除エラー",
-        description: JSON.stringify(res?.message || "削除に失敗しました"),
+        message: t("delete_error"),
+        description: JSON.stringify(res?.message || t("delete_failed")),
       });
     }
   };
@@ -84,31 +88,27 @@ const DishTable = () => {
     }).format(price);
   };
 
-  // 🔍 Tìm kiếm giống UserTable
   const handleSearch = (value) => {
     setSearchText(value);
-
     if (!value) {
       setFilteredDish(dataDish);
       return;
     }
-
     const filtered = dataDish.filter((dish) =>
       dish.name.toLowerCase().includes(value.toLowerCase())
     );
-
     setFilteredDish(filtered);
   };
 
   const columns = [
     {
-      title: "番号",
+      title: t("index"),
       key: "stt",
       width: 70,
       render: (_, __, index) => <>{index + 1}</>,
     },
     {
-      title: "画像",
+      title: t("image"),
       dataIndex: "image",
       key: "image",
       render: (image) =>
@@ -128,73 +128,63 @@ const DishTable = () => {
             }}
           />
         ) : (
-          <Tag color="default">なし</Tag>
+          <Tag color="default">{t("none")}</Tag>
         ),
     },
     {
-      title: "料理名",
+      title: t("dish_name"),
       dataIndex: "name",
       key: "name",
       render: (name) => (
         <span style={{ fontWeight: 500 }}>
-          <FileTextOutlined style={{ marginRight: 6 }} />
-          {name}
+          <FileTextOutlined style={{ marginRight: 6 }} /> {name}
         </span>
       ),
     },
     {
-      title: "価格",
+      title: t("price"),
       dataIndex: "price",
       key: "price",
       render: (price) => (
         <span>
-          <DollarOutlined style={{ marginRight: 6 }} />
-          {formatPrice(price)}
+          <DollarOutlined style={{ marginRight: 6 }} /> {formatPrice(price)}
         </span>
       ),
     },
     {
-      title: "説明",
+      title: t("description"),
       dataIndex: "description",
       key: "description",
       ellipsis: true,
       render: (text) => text || "—",
     },
     {
-      title: "操作",
+      title: t("actions"),
       key: "action",
       width: 120,
       render: (_, record) => (
         <div style={{ display: "flex", gap: "16px" }}>
-          <Tooltip title="編集">
+          <Tooltip title={t("edit")}>
             <EditOutlined
               onClick={() => {
                 setDataUpdate(record);
                 setIsModalOpen(true);
               }}
-              style={{
-                cursor: "pointer",
-                color: "orange",
-                fontSize: 18,
-              }}
+              style={{ cursor: "pointer", color: "orange", fontSize: 18 }}
             />
           </Tooltip>
 
           <Popconfirm
-            title="料理削除"
-            description="この料理を削除してもよろしいですか？"
+            title={t("delete_dish")}
+            description={t("delete_dish_confirm")}
             onConfirm={() => handleDeleteDish(record._id)}
-            okText="はい"
-            cancelText="いいえ"
+            okText={t("yes")}
+            cancelText={t("no")}
             placement="left"
           >
-            <Tooltip title="削除">
+            <Tooltip title={t("delete")}>
               <DeleteOutlined
-                style={{
-                  cursor: "pointer",
-                  color: "red",
-                  fontSize: 18,
-                }}
+                style={{ cursor: "pointer", color: "red", fontSize: 18 }}
               />
             </Tooltip>
           </Popconfirm>
@@ -205,7 +195,6 @@ const DishTable = () => {
 
   return (
     <>
-      {/* Header */}
       <div
         style={{
           marginTop: "10px",
@@ -215,7 +204,7 @@ const DishTable = () => {
           alignItems: "center",
         }}
       >
-        <h3 style={{ fontSize: 20, fontWeight: 700 }}>🍽️ 料理管理</h3>
+        <h3 style={{ fontSize: 20, fontWeight: 700 }}>🍽️ {t("dish_management")}</h3>
 
         <Button
           type="primary"
@@ -225,27 +214,21 @@ const DishTable = () => {
             setIsModalOpen(true);
           }}
         >
-          新規追加
+          {t("add_new")}
         </Button>
       </div>
 
-      {/* Search bar giống User */}
       <Input
         prefix={<SearchOutlined />}
-        placeholder="料理名で検索..."
+        placeholder={t("search_dish")}
         value={searchText}
         onChange={(e) => handleSearch(e.target.value)}
         allowClear
-        style={{
-          marginBottom: 16,
-          width: 260,
-          borderRadius: 6,
-        }}
+        style={{ marginBottom: 16, width: 260, borderRadius: 6 }}
       />
 
       <Divider />
 
-      {/* Table */}
       <Table
         columns={columns}
         dataSource={filteredDish}
@@ -253,14 +236,9 @@ const DishTable = () => {
         loading={loading}
         bordered
         pagination={false}
-        style={{
-          background: "#fff",
-          borderRadius: 8,
-          padding: 10,
-        }}
+        style={{ background: "#fff", borderRadius: 8, padding: 10 }}
       />
 
-      {/* Modal */}
       <DishModal
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}

@@ -2,6 +2,9 @@ import { Input, Modal, notification } from "antd";
 import { useEffect, useState } from "react";
 import { updateCommentAPI } from "../../services/api.services";
 
+// ⭐ i18n
+import { useTranslation } from "react-i18next";
+
 const { TextArea } = Input;
 
 const UpdateCommentModal = (props) => {
@@ -13,6 +16,8 @@ const UpdateCommentModal = (props) => {
     loadComments,
     postId,
   } = props;
+
+  const { t } = useTranslation(); // ⭐ dùng i18n
 
   const [id, setId] = useState("");
   const [content, setContent] = useState("");
@@ -29,8 +34,8 @@ const UpdateCommentModal = (props) => {
   const handleSubmitBtn = async () => {
     if (!content.trim()) {
       notification.warning({
-        message: "Thiếu nội dung",
-        description: "Vui lòng nhập nội dung bình luận",
+        message: t("missing_comment_content"),
+        description: t("enter_comment_content"),
       });
       return;
     }
@@ -39,14 +44,14 @@ const UpdateCommentModal = (props) => {
 
     if (res.data) {
       notification.success({
-        message: "Cập nhật bình luận",
-        description: "Cập nhật bình luận thành công",
+        message: t("update_comment"),
+        description: t("update_comment_success"),
       });
       resetAndCloseModal();
       await loadComments(postId);
     } else {
       notification.error({
-        message: "Error update comment",
+        message: t("update_comment_error"),
         description: JSON.stringify(res.message),
       });
     }
@@ -62,23 +67,23 @@ const UpdateCommentModal = (props) => {
 
   return (
     <Modal
-      title="Cập nhật bình luận"
+      title={t("update_comment")}
       open={isModalUpdateOpen}
       onOk={handleSubmitBtn}
       onCancel={resetAndCloseModal}
       maskClosable={false}
-      okText="LƯU"
-      cancelText="HỦY"
+      okText={t("save")}
+      cancelText={t("cancel")}
       width={500}
     >
       <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
         <div>
-          <span>Người bình luận</span>
+          <span>{t("comment_user")}</span>
           <Input value={user} disabled />
         </div>
 
         <div>
-          <span>Nội dung</span>
+          <span>{t("comment_content")}</span>
           <TextArea
             rows={4}
             value={content}

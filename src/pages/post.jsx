@@ -4,40 +4,14 @@ import { fetchAllPostAPI } from "../services/api.services";
 import { notification, Spin } from "antd";
 import { useEffect, useState } from "react";
 
-// const parsePostListResponse = (res, current, pageSize) => {
-//   if (!res?.data) {
-//     return { posts: [], total: 0, current, pageSize };
-//   }
+// ⭐ i18n
+import { useTranslation } from "react-i18next";
 
-//   // Backend trả dạng phân trang: { result: [], meta: {} }
-//   if (res.data.result && Array.isArray(res.data.result)) {
-//     return {
-//       posts: res.data.result,
-//       total: +res.data.meta?.total || res.data.result.length,
-//       current: +res.data.meta?.current || current,
-//       pageSize: +res.data.meta?.pageSize || pageSize,
-//     };
-//   }
-
-//   // Backend trả dạng mảng trực tiếp: data: []
-//   if (Array.isArray(res.data)) {
-//     const start = (current - 1) * pageSize;
-//     return {
-//       posts: res.data.slice(start, start + pageSize),
-//       total: res.data.length,
-//       current,
-//       pageSize,
-//     };
-//   }
-
-//   return { posts: [], total: 0, current, pageSize };
-// };
 const parsePostListResponse = (res, current, pageSize) => {
   if (!res?.data) {
     return { posts: [], total: 0, current, pageSize };
   }
 
-  // Backend trả dạng phân trang chuẩn: { result: [], meta: {} }
   if (res.data.result && Array.isArray(res.data.result)) {
     return {
       posts: res.data.result,
@@ -47,7 +21,6 @@ const parsePostListResponse = (res, current, pageSize) => {
     };
   }
 
-  // Backend trả dạng mảng trực tiếp: data: []
   if (Array.isArray(res.data)) {
     const start = (current - 1) * pageSize;
     return {
@@ -58,10 +31,9 @@ const parsePostListResponse = (res, current, pageSize) => {
     };
   }
 
-  // Backend trả dạng object với key số: { "0": {...}, "1": {...}, "author": "..." }
   if (typeof res.data === "object") {
     const posts = Object.keys(res.data)
-      .filter((key) => /^\d+$/.test(key)) // chỉ lấy key là số, bỏ qua field "author" rác
+      .filter((key) => /^\d+$/.test(key))
       .sort((a, b) => +a - +b)
       .map((key) => res.data[key]);
 
@@ -77,6 +49,8 @@ const parsePostListResponse = (res, current, pageSize) => {
 };
 
 const PostPage = () => {
+  const { t } = useTranslation(); // ⭐ dùng i18n
+
   const [dataPosts, setDataPosts] = useState([]);
   const [current, setCurrent] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -85,7 +59,6 @@ const PostPage = () => {
 
   useEffect(() => {
     loadPost();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [current, pageSize]);
 
   const loadPost = async () => {
@@ -95,7 +68,7 @@ const PostPage = () => {
 
       if (res?.statusCode && res.statusCode >= 400) {
         notification.error({
-          message: "Lỗi tải bài viết",
+          message: t("post_load_error"),
           description: JSON.stringify(res.message),
         });
         setDataPosts([]);
@@ -103,8 +76,12 @@ const PostPage = () => {
         return;
       }
 
-      const { posts, total: totalCount, current: newCurrent, pageSize: newPageSize } =
-        parsePostListResponse(res, current, pageSize);
+      const {
+        posts,
+        total: totalCount,
+        current: newCurrent,
+        pageSize: newPageSize,
+      } = parsePostListResponse(res, current, pageSize);
 
       setDataPosts(posts);
       setTotal(totalCount);
@@ -112,8 +89,8 @@ const PostPage = () => {
       setPageSize(newPageSize);
     } catch (error) {
       notification.error({
-        message: "Lỗi kết nối",
-        description: "Không thể kết nối backend. Hãy kiểm tra server đang chạy tại port 8080.",
+        message: t("connection_error"),
+        description: t("backend_not_running"),
       });
       setDataPosts([]);
       setTotal(0);
@@ -125,10 +102,12 @@ const PostPage = () => {
   return (
     <div style={{ padding: "20px" }}>
       <PostForm loadPost={loadPost} />
+
       <div style={{ marginTop: "20px" }}>
         {loading ? (
           <div style={{ textAlign: "center", padding: "40px" }}>
             <Spin size="large" />
+            <p style={{ marginTop: 10 }}>{t("loading_posts")}</p>
           </div>
         ) : (
           <PostTable

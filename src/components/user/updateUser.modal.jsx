@@ -3,6 +3,9 @@ import { Input, notification, Modal, Select } from "antd";
 import { updateUserAPI } from "../../services/api.services";
 import { AuthContext } from "../../components/context/auth.context";
 
+// ⭐ i18n
+import { useTranslation } from "react-i18next";
+
 const UpdateUserModal = (props) => {
   const {
     isModalUpdateOpen,
@@ -12,8 +15,8 @@ const UpdateUserModal = (props) => {
     loadUser
   } = props;
 
-  // ⭐ DÙNG CONTEXT — KHÔNG DÙNG localStorage NỮA
   const { user: currentUser } = useContext(AuthContext);
+  const { t } = useTranslation(); // ⭐ dùng i18n
 
   const [id, setId] = useState("");
   const [fullName, setFullName] = useState("");
@@ -32,24 +35,22 @@ const UpdateUserModal = (props) => {
   const handleSubmitBtn = async () => {
     let res;
 
-    // ⭐ ADMIN được phép đổi role
     if (currentUser?.role === "ADMIN") {
       res = await updateUserAPI(id, fullName, phone, role);
     } else {
-      // ⭐ USER chỉ được sửa thông tin cá nhân
       res = await updateUserAPI(id, fullName, phone);
     }
 
     if (res?.data) {
       notification.success({
-        message: "Update user",
-        description: "Cập nhật user thành công"
+        message: t("update_user"),
+        description: t("update_user_success")
       });
       resetAndCloseModal();
       await loadUser();
     } else {
       notification.error({
-        message: "Error update user",
+        message: t("update_user_error"),
         description: JSON.stringify(res?.message)
       });
     }
@@ -66,23 +67,23 @@ const UpdateUserModal = (props) => {
 
   return (
     <Modal
-      title="Update User"
+      title={t("update_user")}
       open={isModalUpdateOpen}
       onOk={handleSubmitBtn}
       onCancel={resetAndCloseModal}
       maskClosable={false}
-      okText="SAVE"
-      cancelText="CANCEL"
+      okText={t("save")}
+      cancelText={t("cancel")}
     >
       <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
         
         <div>
-          <span>Id</span>
+          <span>{t("user_id")}</span>
           <Input value={id} disabled />
         </div>
 
         <div>
-          <span>FullName</span>
+          <span>{t("full_name")}</span>
           <Input
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
@@ -90,25 +91,24 @@ const UpdateUserModal = (props) => {
         </div>
 
         <div>
-          <span>Phone number</span>
+          <span>{t("phone")}</span>
           <Input
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
           />
         </div>
 
-        {/* ⭐ Chỉ ADMIN mới được đổi role */}
         {currentUser?.role === "ADMIN" && (
           <div>
-            <span style={{ fontWeight: 600 }}>Role</span>
+            <span style={{ fontWeight: 600 }}>{t("role")}</span>
             <Select
               value={role}
               onChange={(value) => setRole(value)}
               style={{ width: "100%", marginTop: 5 }}
               options={[
-                { value: "USER", label: "一般 (USER)" },
-                { value: "ADMIN", label: "管理者 (ADMIN)" },
-                { value: "STAFF", label: "スタッフ (STAFF)" }
+                { value: "USER", label: t("role_user") },
+                { value: "ADMIN", label: t("role_admin") },
+                { value: "STAFF", label: t("role_staff") }
               ]}
             />
           </div>

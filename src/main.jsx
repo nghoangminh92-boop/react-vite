@@ -5,7 +5,8 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-import ProfilePage from './pages/profile.jsx'; // thêm dòng này
+
+import ProfilePage from './pages/profile.jsx';
 import LoginPage from './pages/login.jsx';
 import RegisterPage from './pages/register.jsx';
 import UserPage from './pages/user.jsx';
@@ -18,8 +19,15 @@ import { AuthWrapper } from './components/context/auth.context.jsx';
 import PrivateRoute from './pages/private.route.jsx';
 import MenuPage from './pages/menu.jsx';
 import DishPage from './pages/dish.jsx';
- import ForgotPasswordPage from './pages/ForgotPasswordPage.jsx';
+import ForgotPasswordPage from './pages/ForgotPasswordPage.jsx';
+import "./i18n";
+
+
 import { GoogleOAuthProvider } from '@react-oauth/google';
+
+// ⭐ IMPORT i18n + LanguageProvider
+import "./i18n";
+import { LanguageProvider } from "./components/context/language.context.jsx";
 
 const router = createBrowserRouter([
   {
@@ -27,67 +35,46 @@ const router = createBrowserRouter([
     element: <App/>,
     errorElement:<ErrorPage/>,
     children:[
+      { index:true, element:<TodoApp/> },
+      { path:"/users", element:<UserPage/> },
       {
-        index:true,
-        element:<TodoApp/>
+        path:"/dishes",
+        element:(
+          <PrivateRoute>
+            <DishPage/>
+          </PrivateRoute>
+        )
       },
-       {
-    path:"/users",
-    element:<UserPage/>
-
-  },
-  {
-    path:"/dishes",
-    element:(
-      <PrivateRoute>
-        <DishPage/>
-      </PrivateRoute>)
-  },
-  {
-    path:"/posts",
-    element:(
-      <PrivateRoute>
-        <PostPage/>
-      </PrivateRoute>)
-  },
-  {
-    path:"/menu",
-    element:<MenuPage/>
-  },
-  {
-  path: "/profile",
-  element: (
-    <PrivateRoute>
-      <ProfilePage />
-    </PrivateRoute>
-  )
-},
+      {
+        path:"/posts",
+        element:(
+          <PrivateRoute>
+            <PostPage/>
+          </PrivateRoute>
+        )
+      },
+      { path:"/menu", element:<MenuPage/> },
+      {
+        path: "/profile",
+        element: (
+          <PrivateRoute>
+            <ProfilePage />
+          </PrivateRoute>
+        )
+      },
     ]
   },
-  {
-    path:"/login",
-    element:<LoginPage/>
-
-  },
-   {
-    path:"/register",
-    element:<RegisterPage/>
-
-  },
-  {
-    path:"/forgot-password",
-    element:<ForgotPasswordPage/>
-  }
-  
-  
+  { path:"/login", element:<LoginPage/> },
+  { path:"/register", element:<RegisterPage/> },
+  { path:"/forgot-password", element:<ForgotPasswordPage/> }
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  // <React.StrictMode>
   <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
     <AuthWrapper>
-      <RouterProvider router={router} />
+      <LanguageProvider>   {/* ⭐ Toàn bộ web nằm trong đây */}
+        <RouterProvider router={router} />
+      </LanguageProvider>
     </AuthWrapper>
   </GoogleOAuthProvider>
-  // </React.StrictMode>,
 )

@@ -8,11 +8,15 @@ import {
 } from "../services/api.services";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 
+// ⭐ i18n
+import { useTranslation } from "react-i18next";
+
 const { Panel } = Collapse;
 
 const ProfilePage = () => {
   const { user, setUser } = useContext(AuthContext);
   const fileInputRef = useRef(null);
+  const { t } = useTranslation(); // ⭐ dùng i18n
 
   const [fullName, setFullName] = useState(user?.fullName || "");
   const [phone, setPhone] = useState(user?.phone || "");
@@ -20,7 +24,6 @@ const ProfilePage = () => {
   const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // パスワード変更用
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -44,7 +47,7 @@ const ProfilePage = () => {
           avatarUrl = resUpload.data.url;
         } else {
           notification.error({
-            message: "画像アップロードエラー",
+            message: t("avatar_upload_error"),
             description: JSON.stringify(resUpload.message),
           });
           setLoading(false);
@@ -56,21 +59,21 @@ const ProfilePage = () => {
       if (res.data) {
         setUser({ ...user, fullName, phone, avatar: avatarUrl });
         notification.success({
-          message: "更新成功",
-          description: "プロフィール情報が更新されました",
+          message: t("update_success"),
+          description: t("profile_updated"),
         });
         setSelectedFile(null);
         setPreview(null);
       } else {
         notification.error({
-          message: "更新エラー",
+          message: t("update_error"),
           description: JSON.stringify(res.message),
         });
       }
     } catch (error) {
       notification.error({
-        message: "エラー",
-        description: "プロフィールを更新できませんでした",
+        message: t("error"),
+        description: t("profile_update_failed"),
       });
     } finally {
       setLoading(false);
@@ -80,22 +83,22 @@ const ProfilePage = () => {
   const handleChangePassword = async () => {
     if (!oldPassword.trim()) {
       notification.warning({
-        message: "入力エラー",
-        description: "現在のパスワードを入力してください",
+        message: t("input_error"),
+        description: t("enter_current_password"),
       });
       return;
     }
     if (!newPassword.trim() || newPassword.length < 6) {
       notification.warning({
-        message: "パスワードが無効です",
-        description: "新しいパスワードは6文字以上で入力してください",
+        message: t("invalid_password"),
+        description: t("password_min_length"),
       });
       return;
     }
     if (newPassword !== confirmPassword) {
       notification.warning({
-        message: "一致しません",
-        description: "確認用パスワードが新しいパスワードと一致しません",
+        message: t("not_match"),
+        description: t("password_not_match"),
       });
       return;
     }
@@ -105,22 +108,22 @@ const ProfilePage = () => {
       const res = await changePasswordAPI(oldPassword, newPassword);
       if (res?.data) {
         notification.success({
-          message: "変更成功",
-          description: "パスワードが変更されました",
+          message: t("change_success"),
+          description: t("password_changed"),
         });
         setOldPassword("");
         setNewPassword("");
         setConfirmPassword("");
       } else {
         notification.error({
-          message: "変更エラー",
+          message: t("change_error"),
           description: JSON.stringify(res?.message),
         });
       }
     } catch (error) {
       notification.error({
-        message: "エラー",
-        description: "パスワードを変更できませんでした",
+        message: t("error"),
+        description: t("password_change_failed"),
       });
     } finally {
       setChangingPassword(false);
@@ -137,18 +140,12 @@ const ProfilePage = () => {
 
   return (
     <div style={{ maxWidth: 520, margin: "40px auto", padding: "0 20px" }}>
-      <h2 style={{ fontWeight: 700, marginBottom: 20 }}>プロフィール設定</h2>
+      <h2 style={{ fontWeight: 700, marginBottom: 20 }}>{t("profile_settings")}</h2>
 
-      <Collapse
-        accordion
-        bordered={false}
-        style={{
-          background: "transparent",
-        }}
-      >
+      <Collapse accordion bordered={false} style={{ background: "transparent" }}>
         {/* Avatar Section */}
         <Panel
-          header="プロフィール画像"
+          header={t("profile_image")}
           key="1"
           style={{
             background: "#fff",
@@ -177,14 +174,14 @@ const ProfilePage = () => {
               onChange={handleFileChange}
             />
             <Button size="small" onClick={() => fileInputRef.current?.click()}>
-              画像を変更
+              {t("change_image")}
             </Button>
           </div>
         </Panel>
 
         {/* Basic Info */}
         <Panel
-          header="基本情報"
+          header={t("basic_info")}
           key="2"
           style={{
             background: "#fff",
@@ -196,14 +193,14 @@ const ProfilePage = () => {
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             <div>
               <label style={{ fontWeight: 600, marginBottom: 6, display: "block" }}>
-                メールアドレス（変更不可）
+                {t("email_readonly")}
               </label>
               <Input value={user?.email} disabled style={{ height: 42, borderRadius: 8 }} />
             </div>
 
             <div>
               <label style={{ fontWeight: 600, marginBottom: 6, display: "block" }}>
-                氏名
+                {t("full_name")}
               </label>
               <Input
                 value={fullName}
@@ -214,7 +211,7 @@ const ProfilePage = () => {
 
             <div>
               <label style={{ fontWeight: 600, marginBottom: 6, display: "block" }}>
-                電話番号
+                {t("phone")}
               </label>
               <Input
                 value={phone}
@@ -235,14 +232,14 @@ const ProfilePage = () => {
                 fontSize: 15,
               }}
             >
-              保存する
+              {t("save")}
             </Button>
           </div>
         </Panel>
 
         {/* Password Change */}
         <Panel
-          header="パスワード変更"
+          header={t("change_password")}
           key="3"
           style={{
             background: "#fff",
@@ -254,39 +251,39 @@ const ProfilePage = () => {
           <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
             <div>
               <label style={{ display: "block", marginBottom: 6, fontWeight: 600 }}>
-                現在のパスワード
+                {t("current_password")}
               </label>
               <Input.Password
                 prefix={<LockOutlined />}
                 value={oldPassword}
                 onChange={(e) => setOldPassword(e.target.value)}
-                placeholder="現在のパスワードを入力してください"
+                placeholder={t("enter_current_password")}
                 style={{ height: 42, borderRadius: 8 }}
               />
             </div>
 
             <div>
               <label style={{ display: "block", marginBottom: 6, fontWeight: 600 }}>
-                新しいパスワード
+                {t("new_password")}
               </label>
               <Input.Password
                 prefix={<LockOutlined />}
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
-                placeholder="6文字以上"
+                placeholder={t("password_min_length")}
                 style={{ height: 42, borderRadius: 8 }}
               />
             </div>
 
             <div>
               <label style={{ display: "block", marginBottom: 6, fontWeight: 600 }}>
-                新しいパスワード（確認）
+                {t("confirm_new_password")}
               </label>
               <Input.Password
                 prefix={<LockOutlined />}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="新しいパスワードを再入力してください"
+                placeholder={t("password_confirm_placeholder")}
                 style={{ height: 42, borderRadius: 8 }}
               />
             </div>
@@ -305,7 +302,7 @@ const ProfilePage = () => {
                 fontSize: 15,
               }}
             >
-              パスワードを変更
+              {t("change_password")}
             </Button>
           </div>
         </Panel>

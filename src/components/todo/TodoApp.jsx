@@ -11,6 +11,9 @@ import FoodDetailDrawer from "../../pages/FoodDetailDrawer";
 import { AuthContext } from "../context/auth.context";
 import { fetchAllPostAPI, fetchMenuAPI } from "../../services/api.services";
 
+// ⭐ i18n
+import { useTranslation } from "react-i18next";
+
 const parsePostListResponse = (res, current, pageSize) => {
   if (!res?.data) return { posts: [], total: 0, current, pageSize };
 
@@ -38,6 +41,7 @@ const parsePostListResponse = (res, current, pageSize) => {
 
 const TodoApp = () => {
   const { user } = useContext(AuthContext);
+  const { t } = useTranslation();   // ⭐ dùng i18n
 
   const [dataPosts, setDataPosts] = useState([]);
   const [dataMenu, setDataMenu] = useState([]);
@@ -56,44 +60,38 @@ const TodoApp = () => {
 
   const foodListRef = useRef(null);
 
-  // ⭐ BANNER SLIDESHOW FIXED VERSION
-const bannerImages = [
-  banner,
-  banner1,
-];
+  // ⭐ BANNER SLIDESHOW
+  const bannerImages = [banner, banner1];
+  const [bannerIndex, setBannerIndex] = useState(0);
+  const slideshowTimer = useRef(null);
 
-const [bannerIndex, setBannerIndex] = useState(0);
-const slideshowTimer = useRef(null);
+  useEffect(() => {
+    startAutoSlide();
+    return () => stopAutoSlide();
+  }, []);
 
-// ⭐ Auto slideshow + reset khi bấm nút
-useEffect(() => {
-  startAutoSlide();
-  return () => stopAutoSlide();
-}, []);
+  const startAutoSlide = () => {
+    stopAutoSlide();
+    slideshowTimer.current = setInterval(() => {
+      setBannerIndex((prev) => (prev + 1) % bannerImages.length);
+    }, 4000);
+  };
 
-const startAutoSlide = () => {
-  stopAutoSlide();
-  slideshowTimer.current = setInterval(() => {
+  const stopAutoSlide = () => {
+    if (slideshowTimer.current) clearInterval(slideshowTimer.current);
+  };
+
+  const goNext = () => {
     setBannerIndex((prev) => (prev + 1) % bannerImages.length);
-  }, 4000);
-};
+    startAutoSlide();
+  };
 
-const stopAutoSlide = () => {
-  if (slideshowTimer.current) clearInterval(slideshowTimer.current);
-};
-
-const goNext = () => {
-  setBannerIndex((prev) => (prev + 1) % bannerImages.length);
-  startAutoSlide(); // reset timer
-};
-
-const goPrev = () => {
-  setBannerIndex((prev) =>
-    prev === 0 ? bannerImages.length - 1 : prev - 1
-  );
-  startAutoSlide(); // reset timer
-};
-
+  const goPrev = () => {
+    setBannerIndex((prev) =>
+      prev === 0 ? bannerImages.length - 1 : prev - 1
+    );
+    startAutoSlide();
+  };
 
   useEffect(() => {
     loadPost();
@@ -116,7 +114,7 @@ const goPrev = () => {
 
       if (res?.statusCode >= 400) {
         notification.error({
-          message: "投稿の読み込みエラー",
+          message: t("post_load_error"),
           description: JSON.stringify(res.message),
         });
         if (page === 1) setDataPosts([]);
@@ -141,8 +139,8 @@ const goPrev = () => {
       setTotal(totalCount);
     } catch {
       notification.error({
-        message: "接続エラー",
-        description: "バックエンドに接続できません。",
+        message: t("connection_error"),
+        description: t("backend_error"),
       });
       if (page === 1) setDataPosts([]);
     } finally {
@@ -181,38 +179,31 @@ const goPrev = () => {
 
       {/* ⭐ SLIDESHOW BANNER */}
       <div className="home-banner">
-  <img
-    src={bannerImages[bannerIndex]}
-    alt="banner"
-    className="banner-image"
-  />
+        <img
+          src={bannerImages[bannerIndex]}
+          alt="banner"
+          className="banner-image"
+        />
 
-  <button
-    type="button"
-    className="banner-btn left"
-    onClick={goPrev}
-  >
-    <LeftOutlined />
-  </button>
+        <button type="button" className="banner-btn left" onClick={goPrev}>
+          <LeftOutlined />
+        </button>
 
-  <button
-    type="button"
-    className="banner-btn right"
-    onClick={goNext}
-  >
-    <RightOutlined />
-  </button>
+        <button type="button" className="banner-btn right" onClick={goNext}>
+          <RightOutlined />
+        </button>
 
-  <div className="banner-text">
-    <h1>Discover the Best of Food</h1>
-    <p>日本のラーメンを楽しもう</p>
-  </div>
-</div>
+        <div className="banner-text">
+          <h1>{t("discover")}</h1>
+          <p>{t("banner_sub")}</p>
+        </div>
+      </div>
 
       {/* FOOD LIST */}
       <div className="food-section">
         <div className="food-section-header">
-          <h2 className="section-title">おすすめメニュー</h2>
+          <h2 className="section-title">{t("menu")}</h2>
+
           {dataMenu.length > 4 && (
             <div className="food-scroll-controls">
               <button className="food-scroll-btn" onClick={() => scrollFoodList("left")}>
@@ -235,17 +226,18 @@ const goPrev = () => {
               >
                 <img src={dish.image || banner1} alt={dish.name} />
                 <h3>{dish.name}</h3>
+
                 {dish.total > 0 ? (
                   <p className="rating">
-                    ⭐ {(dish.average || 0).toFixed(1)} ({dish.total}件の評価)
+                    ⭐ {(dish.average || 0).toFixed(1)} ({dish.total}{t("reviews")})
                   </p>
                 ) : (
-                  <p className="rating">まだ評価がありません</p>
+                  <p className="rating">{t("rating_none")}</p>
                 )}
               </div>
             ))
           ) : (
-            <p>料理がありません</p>
+            <p>{t("no_food")}</p>
           )}
         </div>
       </div>
@@ -253,7 +245,7 @@ const goPrev = () => {
       {/* POSTS */}
       <div className="posts-section">
         <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "20px" }}>
-          <h2 className="section-title">最新の投稿</h2>
+          <h2 className="section-title">{t("latest_posts")}</h2>
           {user?.id && <PostForm loadPost={() => loadPost(1)} />}
         </div>
 
@@ -269,7 +261,7 @@ const goPrev = () => {
         {dataPosts.length > 0 && dataPosts.length < total && (
           <div className="load-more-btn">
             <Button type="primary" size="large" onClick={handleLoadMore} loading={loading}>
-              もっと見る
+              {t("see_more")}
             </Button>
           </div>
         )}

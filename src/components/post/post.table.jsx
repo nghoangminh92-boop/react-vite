@@ -6,6 +6,9 @@ import PostDetail from "./post.detail";
 import UpdatePostModal from "./updatePost.modal";
 import RatingDisplay from "./RatingDisplay";
 
+// ⭐ i18n
+import { useTranslation } from "react-i18next";
+
 const PostTable = (props) => {
   const {
     dataPosts,
@@ -17,9 +20,10 @@ const PostTable = (props) => {
     setPageSize,
   } = props;
 
+  const { t } = useTranslation(); // ⭐ dùng i18n
+
   const [dataDetail, setDataDetail] = useState(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
-
   const [dataUpdate, setDataUpdate] = useState(null);
   const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false);
 
@@ -30,24 +34,26 @@ const PostTable = (props) => {
         setDataDetail(updated);
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataPosts]);
 
   const handleDeletePost = async (id) => {
     const res = await deletePostAPI(id);
+
     if (res.data) {
       notification.success({
-        message: "Delete post",
-        description: "Xóa bài viết thành công",
+        message: t("delete_post"),
+        description: t("delete_post_success"),
       });
+
       if (dataDetail?._id === id) {
         setDataDetail(null);
         setIsDetailOpen(false);
       }
+
       await loadPost();
     } else {
       notification.error({
-        message: "Error delete post",
+        message: t("delete_post_error"),
         description: JSON.stringify(res.message),
       });
     }
@@ -69,37 +75,41 @@ const PostTable = (props) => {
 
   const columns = [
     {
-      title: "STT",
+      title: t("index"),
       render: (_, __, index) => <>{index + 1 + (current - 1) * pageSize}</>,
     },
-{
-  title: "ID",
-  dataIndex: "_id",
-  render: (_, record) => (
-    
-      <a href="#"
-      onClick={(e) => {
-        e.preventDefault();
-        setDataDetail(record);
-        setIsDetailOpen(true);
-      }}
-    >
-      {record._id}
-    </a>
-  ),
-},
     {
-      title: "Tiêu đề",
+      title: "ID",
+      dataIndex: "_id",
+      render: (_, record) => (
+        <a
+          href="#"
+          onClick={(e) => {
+            e.preventDefault();
+            setDataDetail(record);
+            setIsDetailOpen(true);
+          }}
+        >
+          {record._id}
+        </a>
+      ),
+    },
+    {
+      title: t("title"),
       dataIndex: "title",
       ellipsis: true,
     },
     {
-      title: "Ảnh",
+      title: t("image"),
       dataIndex: "image",
       render: (image) =>
         image ? (
           <img
-            src={image?.startsWith('http') ? image : `${import.meta.env.VITE_BACKEND_URL}/images/${image}`}
+            src={
+              image?.startsWith("http")
+                ? image
+                : `${import.meta.env.VITE_BACKEND_URL}/images/${image}`
+            }
             alt=""
             style={{
               width: 60,
@@ -113,22 +123,22 @@ const PostTable = (props) => {
         ),
     },
     {
-      title: "Đánh giá",
+      title: t("rating"),
       key: "rating",
       render: (_, record) =>
         record.foodId ? <RatingDisplay postId={record.foodId} /> : "-",
     },
     {
-      title: "Tác giả",
+      title: t("author"),
       dataIndex: "author",
     },
     {
-      title: "Ngày tạo",
+      title: t("created_at"),
       dataIndex: "createdAt",
       render: (text) => formatDate(text),
     },
     {
-      title: "Thao tác",
+      title: t("actions"),
       key: "action",
       render: (_, record) => (
         <div style={{ display: "flex", gap: "20px" }}>
@@ -141,11 +151,11 @@ const PostTable = (props) => {
           />
 
           <Popconfirm
-            title="Xóa bài viết"
-            description="Bạn chắc chắn xóa bài viết này?"
+            title={t("delete_post")}
+            description={t("delete_post_confirm")}
             onConfirm={() => handleDeletePost(record._id)}
-            okText="Có"
-            cancelText="Không"
+            okText={t("yes")}
+            cancelText={t("no")}
             placement="left"
           >
             <DeleteOutlined style={{ cursor: "pointer", color: "red" }} />
@@ -168,7 +178,7 @@ const PostTable = (props) => {
           showSizeChanger: true,
           showTotal: (totalCount, range) => (
             <div>
-              {range[0]}-{range[1]} trên {totalCount} bài viết
+              {range[0]}-{range[1]} {t("on")} {totalCount} {t("posts")}
             </div>
           ),
         }}

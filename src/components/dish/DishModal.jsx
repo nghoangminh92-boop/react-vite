@@ -1,11 +1,19 @@
 import { useEffect, useState } from "react";
-import { Modal, Form, Input, notification, Upload, Button, Divider } from "antd";
+import {
+  Modal,
+  Form,
+  Input,
+  notification,
+  Upload,
+  Button,
+  Divider,
+} from "antd";
 import {
   UploadOutlined,
   FileTextOutlined,
   DollarOutlined,
   PictureOutlined,
-  InfoCircleOutlined
+  InfoCircleOutlined,
 } from "@ant-design/icons";
 import {
   createDishAPI,
@@ -13,16 +21,16 @@ import {
   handleUpdateFile,
 } from "../../services/api.services";
 
+// ⭐ i18n
+import { useTranslation } from "react-i18next";
+
 const { TextArea } = Input;
 
 const DishModal = (props) => {
-  const {
-    isModalOpen,
-    setIsModalOpen,
-    dataUpdate,
-    setDataUpdate,
-    loadDishes,
-  } = props;
+  const { isModalOpen, setIsModalOpen, dataUpdate, setDataUpdate, loadDishes } =
+    props;
+
+  const { t } = useTranslation(); // ⭐ dùng i18n
 
   const [form] = Form.useForm();
   const [uploading, setUploading] = useState(false);
@@ -56,9 +64,9 @@ const DishModal = (props) => {
 
     if (res?.data) {
       setImageUrl(res.data.fileUploaded || res.data.url || res.data);
-      notification.success({ message: "画像アップロード成功" });
+      notification.success({ message: t("upload_success") });
     } else {
-      notification.error({ message: "画像アップロード失敗" });
+      notification.error({ message: t("upload_failed") });
     }
   };
 
@@ -84,91 +92,88 @@ const DishModal = (props) => {
 
     if (res?.data) {
       notification.success({
-        message: dataUpdate ? "料理更新成功" : "料理追加成功",
+        message: dataUpdate ? t("dish_update_success") : t("dish_add_success"),
       });
       handleClose();
       await loadDishes();
     } else {
       notification.error({
-        message: "エラー",
-        description: JSON.stringify(res?.message || "問題が発生しました"),
+        message: t("error"),
+        description: JSON.stringify(res?.message || t("error_occurred")),
       });
     }
   };
 
   return (
     <Modal
-      title={dataUpdate ? "🍽️ 料理を編集" : "🍽️ 新しい料理を追加"}
+      title={dataUpdate ? t("edit_dish") : t("add_new_dish")}
       open={isModalOpen}
       onCancel={handleClose}
       onOk={() => form.submit()}
-      okText={dataUpdate ? "更新" : "追加"}
-      cancelText="キャンセル"
+      okText={dataUpdate ? t("update") : t("add")}
+      cancelText={t("cancel")}
       centered
     >
       <Divider orientation="left">
-        <InfoCircleOutlined /> 基本情報
+        <InfoCircleOutlined /> {t("basic_info")}
       </Divider>
 
       <Form form={form} layout="vertical" onFinish={onFinish}>
-
         {/* Tên món */}
         <Form.Item
           label={
             <span>
-              <FileTextOutlined style={{ marginRight: 6 }} />
-              料理名
+              <FileTextOutlined style={{ marginRight: 6 }} /> {t("dish_name")}
             </span>
           }
           name="name"
-          rules={[{ required: true, message: "料理名を入力してください" }]}
+          rules={[{ required: true, message: t("enter_dish_name") }]}
         >
-          <Input placeholder="例: 牛肉フォー" />
+          <Input placeholder={t("dish_name_placeholder")} />
         </Form.Item>
 
         {/* Giá tiền */}
         <Form.Item
           label={
             <span>
-              <DollarOutlined style={{ marginRight: 6 }} />
-              価格
+              <DollarOutlined style={{ marginRight: 6 }} /> {t("price")}
             </span>
           }
           name="price"
           rules={[
-            { required: true, message: "価格を入力してください" },
+            { required: true, message: t("enter_price") },
             {
               validator: (_, value) => {
-                if (!value) return Promise.reject("価格は必須です");
-                if (isNaN(value)) return Promise.reject("価格は数字である必要があります");
-                if (Number(value) < 0) return Promise.reject("価格は0以上である必要があります");
+                if (!value) return Promise.reject(t("price_required"));
+                if (isNaN(value)) return Promise.reject(t("price_must_be_number"));
+                if (Number(value) < 0)
+                  return Promise.reject(t("price_must_be_positive"));
                 return Promise.resolve();
               },
             },
           ]}
         >
-          <Input placeholder="例: 1200" allowClear />
+          <Input placeholder={t("price_placeholder")} allowClear />
         </Form.Item>
 
         <Divider orientation="left">
-          <InfoCircleOutlined /> 詳細情報
+          <InfoCircleOutlined /> {t("detail_info")}
         </Divider>
 
         {/* Mô tả */}
         <Form.Item
           label={
             <span>
-              <FileTextOutlined style={{ marginRight: 6 }} />
-              説明
+              <FileTextOutlined style={{ marginRight: 6 }} /> {t("description")}
             </span>
           }
           name="description"
         >
-          <TextArea rows={3} placeholder="料理の簡単な説明" />
+          <TextArea rows={3} placeholder={t("description_placeholder")} />
         </Form.Item>
 
         <Divider orientation="left">
-          <PictureOutlined /> 料理画像
+          <PictureOutlined /> {t("dish_image")}
         </Divider>
 
         {/* Ảnh món ăn */}
@@ -179,7 +184,7 @@ const DishModal = (props) => {
             accept="image/*"
           >
             <Button icon={<UploadOutlined />} loading={uploading}>
-              画像をアップロード
+              {t("upload_image")}
             </Button>
           </Upload>
 
