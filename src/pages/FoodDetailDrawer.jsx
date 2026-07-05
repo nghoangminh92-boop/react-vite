@@ -10,6 +10,11 @@ import PostDetail from "../components/post/post.detail";
 // ⭐ i18n
 import { useTranslation } from "react-i18next";
 
+// ⭐ nút dịch
+import TranslateButton from "../components/common/TranslateButton";
+
+
+
 const formatPrice = (price) => {
   if (price == null) return "";
   return new Intl.NumberFormat("ja-JP", {
@@ -130,9 +135,14 @@ const FoodDetailDrawer = ({
 
               <div style={{ flex: 1, minWidth: 200 }}>
                 <h2 style={{ margin: 0 }}>{dish.name}</h2>
+
+                {/* ⭐ MÔ TẢ MÓN ĂN */}
                 <p style={{ color: "#666", margin: "8px 0" }}>
                   {dish.description}
                 </p>
+
+                {/* ⭐ NÚT DỊCH MÔ TẢ MÓN ĂN */}
+                <TranslateButton text={dish.description} />
 
                 <div
                   style={{
