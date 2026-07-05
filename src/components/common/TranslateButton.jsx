@@ -25,15 +25,23 @@ const TranslateButton = ({ text }) => {
     setLoading(true);
 
     try {
+      // ⭐ FIX LỖI 400: KHÔNG BAO GIỜ DỊCH JA → JA
+      const targetLang =
+        i18n.language === 'ja'
+          ? 'en' // nếu giao diện đang là tiếng Nhật → dịch sang tiếng Anh
+          : LANG_MAP[i18n.language] || 'en';
+
       const res = await fetch(
         `${import.meta.env.VITE_BACKEND_URL}/api/v1/translate`,
         {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+          },
           body: JSON.stringify({
             q: text,
             source: 'auto',
-            target: LANG_MAP[i18n.language] || 'en',
+            target: targetLang,
           }),
         }
       );
