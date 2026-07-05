@@ -269,7 +269,8 @@
   "phone_rule": "電話番号は9〜11桁で入力してください",
   "register_button": "登録",
   "already_have_account": "すでにアカウントがありますか？",
-  "login_here": "ログインはこちら"
+  "login_here": "ログインはこちら",
+  "translated": "翻訳済み"
 
 
 }

@@ -268,7 +268,8 @@
   "phone_rule": "Phone number must be 9-11 digits",
   "register_button": "Register",
   "already_have_account": "Already have an account?",
-  "login_here": "Login here"
+  "login_here": "Login here",
+  "translated": "Translated"
 
 }
 

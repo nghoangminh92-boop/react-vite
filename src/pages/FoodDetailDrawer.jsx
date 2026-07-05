@@ -6,6 +6,7 @@ import {
 } from "../services/api.services";
 import PostsFeedList from "../components/post/PostsFeedList";
 import PostDetail from "../components/post/post.detail";
+import './translateButton.css';
 
 // ⭐ i18n
 import { useTranslation } from "react-i18next";
