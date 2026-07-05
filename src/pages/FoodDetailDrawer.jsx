@@ -6,15 +6,12 @@ import {
 } from "../services/api.services";
 import PostsFeedList from "../components/post/PostsFeedList";
 import PostDetail from "../components/post/post.detail";
-import './translateButton.css';
 
 // ⭐ i18n
 import { useTranslation } from "react-i18next";
 
 // ⭐ nút dịch
 import TranslateButton from "../components/common/TranslateButton";
-
-
 
 const formatPrice = (price) => {
   if (price == null) return "";
@@ -32,7 +29,7 @@ const FoodDetailDrawer = ({
   onRatingChanged,
   refreshKey,
 }) => {
-  const { t } = useTranslation(); // ⭐ dùng i18n
+  const { t } = useTranslation();
 
   const [dish, setDish] = useState(null);
   const [posts, setPosts] = useState([]);
@@ -137,13 +134,10 @@ const FoodDetailDrawer = ({
               <div style={{ flex: 1, minWidth: 200 }}>
                 <h2 style={{ margin: 0 }}>{dish.name}</h2>
 
-                {/* ⭐ MÔ TẢ MÓN ĂN */}
-                <p style={{ color: "#666", margin: "8px 0" }}>
-                  {dish.description}
-                </p>
-
-                {/* ⭐ NÚT DỊCH MÔ TẢ MÓN ĂN */}
-                <TranslateButton text={dish.description} />
+                {/* ⭐ MÔ TẢ MÓN ĂN + NÚT DỊCH (TranslateButton tự hiển thị text) */}
+                <div style={{ margin: "8px 0" }}>
+                  <TranslateButton text={dish.description} />
+                </div>
 
                 <div
                   style={{
