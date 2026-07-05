@@ -24,6 +24,7 @@ import {
 } from "../../services/api.services";
 import UpdateCommentModal from "./updateComment.modal";
 import UpdatePostModal from "./updatePost.modal";
+import TranslateButton from "./TranslateButton";
 import "./postDetail.css";
 
 // ⭐ i18n
@@ -343,7 +344,11 @@ const PostDetail = (props) => {
               🕒<strong>{formatDate(postDetail.createdAt)}</strong>
             </div>
             <br />
-            <p className="post-content">{postDetail.content}</p>
+
+            {/* NỘI DUNG BÀI VIẾT - có nút dịch */}
+            <div className="post-content">
+              <TranslateButton text={postDetail.content} />
+            </div>
 
             {postDetail.image && (
               <img
@@ -429,7 +434,10 @@ const PostDetail = (props) => {
                       <div className="comment-body">
                         <div className="comment-bubble">
                           <div className="comment-author-name">{item.user || t("anonymous")}</div>
-                          <div className="comment-text">{item.content}</div>
+                          {/* NỘI DUNG BÌNH LUẬN - có nút dịch */}
+                          <div className="comment-text">
+                            <TranslateButton text={item.content} />
+                          </div>
                         </div>
                         <div className="comment-actions">
                           <span className="comment-time">{formatDate(item.createdAt)}</span>

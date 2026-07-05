@@ -25,11 +25,9 @@ const TranslateButton = ({ text }) => {
     setLoading(true);
 
     try {
-      // ⭐ KHÔNG BAO GIỜ DỊCH JA → JA
-      const targetLang =
-        i18n.language === 'ja'
-          ? 'en'
-          : LANG_MAP[i18n.language] || 'en';
+      // Dịch sang đúng ngôn ngữ giao diện hiện tại (vi / en / ja)
+      // Nếu ngôn ngữ nguồn trùng ngôn ngữ đích, backend sẽ tự trả về nguyên văn
+      const targetLang = LANG_MAP[i18n.language] || 'en';
 
       const res = await fetch(
         `${import.meta.env.VITE_BACKEND_URL}/api/v1/translate`,
@@ -46,21 +44,22 @@ const TranslateButton = ({ text }) => {
         }
       );
 
-      const data = await res.json();
+      const resJson = await res.json();
+      const translatedText = resJson?.data?.translatedText;
 
-      // ⭐ Nếu backend trả lỗi → fallback sang chính text
-      if (!data?.translatedText) {
+      // Nếu backend trả lỗi hoặc không có kết quả → fallback sang chính text
+      if (!translatedText) {
         setTranslated(text);
         setShowOriginal(false);
         return;
       }
 
-      setTranslated(data.translatedText);
+      setTranslated(translatedText);
       setShowOriginal(false);
     } catch (err) {
       console.error('Lỗi dịch:', err);
 
-      // ⭐ Fallback khi lỗi mạng / lỗi server
+      // Fallback khi lỗi mạng / lỗi server
       setTranslated(text);
       setShowOriginal(false);
     } finally {
