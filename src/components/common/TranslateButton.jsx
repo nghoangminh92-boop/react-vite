@@ -25,10 +25,10 @@ const TranslateButton = ({ text }) => {
     setLoading(true);
 
     try {
-      // ⭐ FIX LỖI 400: KHÔNG BAO GIỜ DỊCH JA → JA
+      // ⭐ KHÔNG BAO GIỜ DỊCH JA → JA
       const targetLang =
         i18n.language === 'ja'
-          ? 'en' // nếu giao diện đang là tiếng Nhật → dịch sang tiếng Anh
+          ? 'en'
           : LANG_MAP[i18n.language] || 'en';
 
       const res = await fetch(
@@ -48,12 +48,21 @@ const TranslateButton = ({ text }) => {
 
       const data = await res.json();
 
-      if (data?.translatedText) {
-        setTranslated(data.translatedText);
+      // ⭐ Nếu backend trả lỗi → fallback sang chính text
+      if (!data?.translatedText) {
+        setTranslated(text);
         setShowOriginal(false);
+        return;
       }
+
+      setTranslated(data.translatedText);
+      setShowOriginal(false);
     } catch (err) {
       console.error('Lỗi dịch:', err);
+
+      // ⭐ Fallback khi lỗi mạng / lỗi server
+      setTranslated(text);
+      setShowOriginal(false);
     } finally {
       setLoading(false);
     }
