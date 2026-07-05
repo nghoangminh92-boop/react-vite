@@ -3,6 +3,7 @@ import { Button, Spin } from 'antd';
 import { TranslationOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import i18n from '../../i18n';
+import './translateButton.css';
 
 const LANG_MAP = {
   vi: 'vi',
@@ -25,8 +26,6 @@ const TranslateButton = ({ text }) => {
     setLoading(true);
 
     try {
-      // Dịch sang đúng ngôn ngữ giao diện hiện tại (vi / en / ja)
-      // Nếu ngôn ngữ nguồn trùng ngôn ngữ đích, backend sẽ tự trả về nguyên văn
       const targetLang = LANG_MAP[i18n.language] || 'en';
 
       const res = await fetch(
@@ -47,7 +46,6 @@ const TranslateButton = ({ text }) => {
       const resJson = await res.json();
       const translatedText = resJson?.data?.translatedText;
 
-      // Nếu backend trả lỗi hoặc không có kết quả → fallback sang chính text
       if (!translatedText) {
         setTranslated(text);
         setShowOriginal(false);
@@ -58,8 +56,6 @@ const TranslateButton = ({ text }) => {
       setShowOriginal(false);
     } catch (err) {
       console.error('Lỗi dịch:', err);
-
-      // Fallback khi lỗi mạng / lỗi server
       setTranslated(text);
       setShowOriginal(false);
     } finally {
@@ -67,18 +63,29 @@ const TranslateButton = ({ text }) => {
     }
   };
 
+  const isShowingTranslation = translated && !showOriginal;
+
   return (
-    <div>
-      <p style={{ margin: 0, whiteSpace: 'pre-line' }}>
+    <div className="translate-wrapper">
+      <p
+        className={`translate-text ${isShowingTranslation ? 'is-translated' : ''}`}
+        style={{ margin: 0, whiteSpace: 'pre-line' }}
+      >
         {showOriginal || !translated ? text : translated}
       </p>
+
+      {isShowingTranslation && (
+        <div className="translate-badge">
+          <TranslationOutlined /> {t('translated')}
+        </div>
+      )}
 
       <Button
         type="link"
         size="small"
         icon={loading ? <Spin size="small" /> : <TranslationOutlined />}
         onClick={handleTranslate}
-        style={{ padding: 0, height: 'auto', fontSize: 13 }}
+        className="translate-btn"
         disabled={loading}
       >
         {translated

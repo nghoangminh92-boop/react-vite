@@ -24,7 +24,7 @@ import {
 } from "../../services/api.services";
 import UpdateCommentModal from "./updateComment.modal";
 import UpdatePostModal from "./updatePost.modal";
-import TranslateButton from "./TranslateButton";
+import TranslateButton from "../common/TranslateButton";
 import "./postDetail.css";
 
 // ⭐ i18n

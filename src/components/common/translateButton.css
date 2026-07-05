@@ -1,0 +1,55 @@
+.translate-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.translate-text {
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  animation: translateFadeIn 0.3s ease;
+}
+
+@keyframes translateFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.translate-text.is-translated {
+  background: linear-gradient(135deg, #f0f7ff 0%, #e6f4ff 100%);
+  border-left: 3px solid #1677ff;
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+
+.translate-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  width: fit-content;
+  font-size: 11px;
+  font-weight: 600;
+  color: #1677ff;
+  background: #e6f4ff;
+  padding: 2px 8px;
+  border-radius: 999px;
+  animation: translateFadeIn 0.3s ease;
+}
+
+.translate-btn.ant-btn-link {
+  padding: 0 !important;
+  height: auto !important;
+  font-size: 12.5px !important;
+  color: #8a8d91 !important;
+  width: fit-content;
+  transition: color 0.2s;
+}
+
+.translate-btn.ant-btn-link:hover {
+  color: #1677ff !important;
+}
