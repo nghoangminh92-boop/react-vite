@@ -1,8 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Inter:wght@400;500;600&display=swap');
 
 :root {
-  --hd-ink: #4a4a4a;         /* đổi từ #141414 đen sang xám đậm */
-  --hd-ink-light: #565656;   /* đổi từ #232323 sang xám nhạt hơn 1 chút (dùng cho mobile dropdown) */
+  --hd-ink: #4a4a4a;
+  --hd-ink-light: #565656;
   --hd-gray: #3a3a3a;
   --hd-gray-text: hwb(0 100% 0%);
   --hd-gray-text-hover: #ffffff;
@@ -25,7 +25,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 24px;
+  gap: 16px;
 }
 
 /* ===== LOGO ===== */
@@ -55,18 +55,19 @@
 
 /* ===== NAV DESKTOP ===== */
 .app-nav {
-  display: flex;
+  display: flex !important;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   flex: 1;
   justify-content: center;
+  min-width: 0;
 }
 
 .app-nav-link {
   display: flex;
   align-items: center;
   gap: 7px;
-  padding: 9px 16px;
+  padding: 9px 14px;
   border-radius: 999px;
   font-family: 'Inter', sans-serif;
   font-size: 14px;
@@ -75,6 +76,7 @@
   text-decoration: none;
   transition: all 0.2s ease;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .app-nav-link:hover {
@@ -92,7 +94,7 @@
 .app-header-right {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
   flex-shrink: 0;
 }
 
@@ -108,6 +110,7 @@
   font-weight: 600;
   text-decoration: none;
   transition: background 0.2s ease, transform 0.15s ease;
+  white-space: nowrap;
 }
 
 .app-login-btn:hover {
@@ -152,9 +155,9 @@
   font-size: 11px;
 }
 
-/* ===== HAMBURGER (mobile) ===== */
+/* ===== HAMBURGER (ẩn mặc định trên desktop, CHỈ hiện khi mobile) ===== */
 .app-hamburger {
-  display: none;
+  display: none !important;
   flex-direction: column;
   justify-content: center;
   gap: 5px;
@@ -164,6 +167,7 @@
   border: none;
   cursor: pointer;
   padding: 0;
+  flex-shrink: 0;
 }
 
 .app-hamburger span {
@@ -227,14 +231,46 @@
   font-weight: 600;
 }
 
-/* ============ RESPONSIVE ============ */
-@media (max-width: 900px) {
+/* ============================================
+   RESPONSIVE STRATEGY (3 mốc rõ ràng)
+   >= 1101px : Desktop rộng — nav đầy đủ
+   769–1100px: Laptop/tablet hẹp — nav thu gọn, vẫn hiện ngang
+   <= 768px  : Mobile thật sự — chuyển sang hamburger
+   ============================================ */
+
+@media (max-width: 1100px) and (min-width: 769px) {
+  .app-header-inner {
+    padding: 0 16px;
+    gap: 10px;
+  }
+
   .app-nav {
-    display: none;
+    gap: 2px;
+  }
+
+  .app-nav-link {
+    padding: 7px 10px;
+    font-size: 13px;
+    gap: 5px;
+  }
+
+  .app-logo-text {
+    font-size: 17px;
+  }
+
+  .app-user-name {
+    max-width: 90px;
+  }
+}
+
+/* ----- CHỈ Ở ĐÂY MỚI ĐƯỢC PHÉP HIỆN HAMBURGER VÀ ẨN NAV ----- */
+@media (max-width: 768px) {
+  .app-nav {
+    display: none !important;
   }
 
   .app-hamburger {
-    display: flex;
+    display: flex !important;
   }
 
   .app-mobile-nav {
@@ -276,7 +312,6 @@
   align-items: center;
 }
 
-/* Style chung cho mọi button/text bên trong LanguageSwitcher nếu nó không có class riêng */
 .app-header-right .ant-dropdown-trigger,
 .app-header-right button {
   display: flex;
@@ -291,14 +326,10 @@
   border: none;
   cursor: pointer;
   transition: background 0.2s ease;
+  white-space: nowrap;
 }
 
 .app-header-right .ant-dropdown-trigger:hover,
 .app-header-right button:hover {
   background: rgba(255,255,255,0.16);
-}
-
-/* Căn đều khoảng cách các khối bên phải */
-.app-header-right {
-  gap: 12px;
 }
