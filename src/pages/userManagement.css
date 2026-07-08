@@ -22,7 +22,7 @@
 
 .user-mgmt-stats {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 16px;
   margin-bottom: 24px;
 }
@@ -51,6 +51,7 @@
 
 .user-stat-icon.total { background: #1677ff; }
 .user-stat-icon.admin { background: #d4380d; }
+.user-stat-icon.staff { background: linear-gradient(135deg, #1554b3 0%, #3d7ce0 100%); }
 .user-stat-icon.google { background: #fa8c16; }
 
 .user-stat-value {
@@ -105,6 +106,15 @@
 }
 
 /* ============================
+   💻 TABLET (900px - 769px)
+   ============================ */
+@media (max-width: 900px) and (min-width: 769px) {
+  .user-mgmt-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ============================
    📱 MOBILE RESPONSIVE (≤ 768px)
    ============================ */
 @media (max-width: 768px) {
@@ -125,7 +135,7 @@
   }
 
   .user-mgmt-stats {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
     gap: 12px;
   }
 
@@ -185,6 +195,10 @@
 
   .user-mgmt-title {
     font-size: 18px;
+  }
+
+  .user-mgmt-stats {
+    grid-template-columns: 1fr;
   }
 
   .user-stat-card {
