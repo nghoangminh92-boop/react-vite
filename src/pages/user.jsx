@@ -1,7 +1,7 @@
 import UserForm from "../components/user/user.form";
 import UserTable from "../components/user/user.table";
 import { fetchAllUserAPI } from '../services/api.services';
-import { TeamOutlined, CrownOutlined, GoogleOutlined } from "@ant-design/icons";
+import { TeamOutlined, CrownOutlined, GoogleOutlined, UserSwitchOutlined } from "@ant-design/icons";
 import { Input } from "antd";
 import { useEffect, useMemo, useState } from "react";
 import "./userManagement.css";
@@ -43,6 +43,7 @@ const UserPage = () => {
   }, [dataUsers, searchText]);
 
   const adminCount = dataUsers.filter((u) => u.role === "ADMIN").length;
+  const staffCount = dataUsers.filter((u) => u.role === "STAFF").length;
   const googleCount = dataUsers.filter((u) => u.authProvider === "google").length;
 
   return (
@@ -71,6 +72,16 @@ const UserPage = () => {
           <div>
             <div className="user-stat-value">{adminCount}</div>
             <div className="user-stat-label">{t("admin_users")}</div>
+          </div>
+        </div>
+
+        <div className="user-stat-card">
+          <div className="user-stat-icon staff">
+            <UserSwitchOutlined />
+          </div>
+          <div>
+            <div className="user-stat-value">{staffCount}</div>
+            <div className="user-stat-label">{t("staff_users")}</div>
           </div>
         </div>
 
