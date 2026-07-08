@@ -5,6 +5,18 @@
       "dest": "/assets/$1"
     },
     {
+      "src": "/logo.png",
+      "dest": "/logo.png"
+    },
+    {
+      "src": "/manifest.json",
+      "dest": "/manifest.json"
+    },
+    {
+      "src": "/viteee.svg",
+      "dest": "/viteee.svg"
+    },
+    {
       "src": "/(.*)",
       "dest": "/index.html"
     }
