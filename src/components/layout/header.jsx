@@ -48,12 +48,16 @@ const Header = () => {
     // ⭐ Menu - ai cũng xem được
     { key: 'menu', to: '/menu', label: t("menu"), icon: <CoffeeOutlined /> },
 
-    ...(user.role === 'ADMIN'
+...(user.role === 'ADMIN'
       ? [
           { key: 'dishes', to: '/dishes', label: t("dishes"), icon: <AuditOutlined /> },
           { key: 'posts', to: '/posts', label: t("posts"), icon: <FileTextOutlined /> },
           { key: 'users', to: '/users', label: t("users"), icon: <UsergroupAddOutlined /> },
         ]
+      : []),
+
+    ...(user.role === 'STAFF'
+      ? [{ key: 'dishes', to: '/dishes', label: t("dishes"), icon: <AuditOutlined /> }]
       : []),
 
     // ⭐ Liên hệ - ai cũng xem được

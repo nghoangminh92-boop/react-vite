@@ -71,18 +71,23 @@ const UserTable = (props) => {
         </div>
       ),
     },
-    {
+   {
       title: t("role"),
       dataIndex: "role",
       width: 100,
-      render: (role) =>
-        role === "ADMIN" ? (
-          <Tag icon={<CrownOutlined />} color="gold">
-            {t("role_admin")}
-          </Tag>
-        ) : (
-          <Tag color="default">{t("role_user")}</Tag>
-        ),
+      render: (role) => {
+        if (role === "ADMIN") {
+          return (
+            <Tag icon={<CrownOutlined />} color="gold">
+              {t("role_admin")}
+            </Tag>
+          );
+        }
+        if (role === "STAFF") {
+          return <Tag color="blue">{t("role_staff")}</Tag>;
+        }
+        return <Tag color="default">{t("role_user")}</Tag>;
+      },
     },
     {
       title: t("login_method"),
