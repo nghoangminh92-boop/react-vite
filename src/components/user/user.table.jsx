@@ -4,6 +4,7 @@ import {
   GoogleOutlined,
   MailOutlined,
   CrownOutlined,
+  UserSwitchOutlined,
 } from "@ant-design/icons";
 import { notification, Popconfirm, Table, Tag, Tooltip } from "antd";
 import { useState } from "react";
@@ -55,8 +56,8 @@ const UserTable = (props) => {
           )}
 
           <div>
-            <a
-              href="#"
+            
+             <a href="#"
               onClick={(e) => {
                 e.preventDefault();
                 setDataDetail(record);
@@ -71,7 +72,7 @@ const UserTable = (props) => {
         </div>
       ),
     },
-   {
+    {
       title: t("role"),
       dataIndex: "role",
       width: 100,
@@ -84,7 +85,11 @@ const UserTable = (props) => {
           );
         }
         if (role === "STAFF") {
-          return <Tag color="blue">{t("role_staff")}</Tag>;
+          return (
+            <Tag className="role-tag-staff" icon={<UserSwitchOutlined />}>
+              {t("role_staff")}
+            </Tag>
+          );
         }
         return <Tag color="default">{t("role_user")}</Tag>;
       },
