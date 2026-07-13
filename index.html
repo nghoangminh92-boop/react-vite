@@ -2,21 +2,59 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-<link rel="icon" type="image/png" href="/logo.png" />
 
-    <!-- ⭐ Cho "Add to Home Screen" trên Android/Chrome -->
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/logo.png" />
+
+    <!-- Android Add to Home Screen -->
     <link rel="manifest" href="/manifest.json" />
 
-    <!-- ⭐ Cho "Add to Home Screen" trên iOS/Safari -->
-  <link rel="apple-touch-icon" href="/logo.png" />
+    <!-- iOS Add to Home Screen -->
+    <link rel="apple-touch-icon" href="/logo.png" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Food Review" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Food Review</title>
+
+    <!-- ⭐ GLOBAL CSS -->
+    <link rel="stylesheet" href="/src/styles/global.css" />
   </head>
+
   <body>
+    <!-- ⭐ BACKGROUND XÁM ĐEN -->
+    <div class="animated-bg">
+  <div class="animated-bg__mesh"></div>
+  <div class="animated-bg__moon"></div>
+  <div class="animated-bg__blob animated-bg__blob--a"></div>
+  <div class="animated-bg__blob animated-bg__blob--b"></div>
+  <div class="animated-bg__blob animated-bg__blob--c"></div>
+  <div class="animated-bg__particles" id="particles"></div>
+  <div class="animated-bg__noise"></div>
+  <div class="animated-bg__vignette"></div>
+</div>
+
+    <!-- ⭐ ROOT REACT -->
     <div id="root"></div>
+
+    <!-- ⭐ MAIN SCRIPT -->
     <script type="module" src="/src/main.jsx"></script>
+
+    <!-- ⭐ PARTICLES SCRIPT -->
+    <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const container = document.querySelector(".cyber-bg__particles");
+    if (!container) return;
+
+    for (let i = 0; i < 40; i++) {
+      const p = document.createElement("div");
+      p.className = "cyber-bg__particle";
+      p.style.left = Math.random() * 100 + "%";
+      p.style.bottom = Math.random() * 100 + "%";
+      p.style.animationDuration = 6 + Math.random() * 6 + "s";
+      container.appendChild(p);
+    }
+  });
+</script>
   </body>
 </html>

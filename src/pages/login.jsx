@@ -1,13 +1,13 @@
+import "./login.css";
 import { ArrowRightOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Row, Col, Divider, message, notification } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { loginUserAPI } from "../services/api.services";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { AuthContext } from "../components/context/auth.context";
 import { GoogleLogin } from '@react-oauth/google';
 import { googleLoginAPI } from "../services/api.services";
 
-// ⭐ i18n
 import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "../components/language/LanguageSwitcher";
 
@@ -16,7 +16,28 @@ const LoginPage = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { setUser } = useContext(AuthContext);
-  const { t, i18n } = useTranslation(); // ⭐ dùng i18n
+  const { t, i18n } = useTranslation();
+  const sakuraContainerRef = useRef(null);
+
+  // ⭐ SAKURA BACKGROUND
+  useEffect(() => {
+    const container = sakuraContainerRef.current;
+    if (!container || container.childElementCount > 0) return;
+
+    for (let i = 0; i < 35; i++) {
+      const petal = document.createElement("div");
+      petal.className = "sakura-bg__petal";
+      petal.style.left = Math.random() * 100 + "%";
+      petal.style.top = "-10px";
+      petal.style.animationDuration = 9 + Math.random() * 8 + "s";
+      petal.style.animationDelay = -(Math.random() * 12) + "s";
+      container.appendChild(petal);
+    }
+
+    return () => {
+      container.innerHTML = "";
+    };
+  }, []);
 
   const onFinish = async (values) => {
     setLoading(true);
@@ -74,124 +95,95 @@ const LoginPage = () => {
   };
 
   return (
-    <Row justify="center" style={{ margin: "30px", position: "relative" }}>
-      {/* ⭐ NÚT ĐỔI NGÔN NGỮ - góc trên phải */}
-      <div style={{ position: "absolute", top: 0, right: 20 }}>
-        <LanguageSwitcher />
+    <>
+      <div className="sakura-bg">
+        <div className="sakura-bg__mesh"></div>
+        <div className="sakura-bg__petals" ref={sakuraContainerRef}></div>
+        <div className="sakura-bg__noise"></div>
       </div>
 
-      <Col span={24}>
-        <fieldset
-          style={{
-            padding: "20px",
-            margin: "5px auto",
-            border: "1px solid #ccc",
-            borderRadius: "6px",
-            maxWidth: "420px",
-            background: "#fff",
-          }}
-        >
-          <legend style={{ padding: "0 10px", fontWeight: 600 }}>
-            {t("login")}
-          </legend>
+      <Row justify="center" className="login-page-wrapper">
+        <div className="login-lang-switcher">
+          <LanguageSwitcher />
+        </div>
 
-          {/* LOGO */}
-          <div
-            style={{
-              width: "100%",
-              display: "flex",
-              justifyContent: "center",
-              marginBottom: 20,
-            }}
-          >
-            <img
-              src="https://image.jimcdn.com/app/cms/image/transf/dimension=320x10000:format=jpg/path/sdebecf2bdf0cca64/image/icfa5182b8564128f/version/1752621256/image.jpg"
-              alt="Logo"
-              style={{
-                width: 90,
-                height: 90,
-                borderRadius: "50%",
-                objectFit: "cover",
-                boxShadow: "none",
-                border: "none",
-              }}
-            />
-          </div>
+        <Col span={24}>
+          <div className="login-card">
+            <div className="login-title">{t("login")}</div>
 
-          <Form form={form} layout="vertical" onFinish={onFinish}>
-            <Form.Item
-              label={t("email")}
-              name="email"
-              rules={[
-                { required: true, message: t("email_required") },
-                { type: "email", message: t("email_invalid") },
-              ]}
-            >
-              <Input placeholder="example@gmail.com" />
-            </Form.Item>
-
-            <Form.Item
-              label={t("password")}
-              name="password"
-              rules={[{ required: true, message: t("password_required") }]}
-            >
-              <Input.Password
-                placeholder={t("password_placeholder")}
-                onKeyDown={(event) => {
-                  if (event.key === "Enter") form.submit();
-                }}
+            <div className="login-logo-wrap">
+              <img
+                src="https://image.jimcdn.com/app/cms/image/transf/dimension=320x10000:format=jpg/path/sdebecf2bdf0cca64/image/icfa5182b8564128f/version/1752621256/image.jpg"
+                alt="Logo"
               />
-            </Form.Item>
-
-            <div style={{ textAlign: "right", marginTop: -8, marginBottom: 12 }}>
-              <Link to={"/forgot-password"} style={{ fontSize: 13 }}>
-                {t("forgot_password")}
-              </Link>
             </div>
 
-            <Form.Item>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  marginTop: "10px",
-                }}
+            <Form form={form} layout="vertical" onFinish={onFinish}>
+              <Form.Item
+                label={t("email")}
+                name="email"
+                rules={[
+                  { required: true, message: t("email_required") },
+                  { type: "email", message: t("email_invalid") },
+                ]}
               >
-                <Button
-                  loading={loading}
-                  type="primary"
-                  htmlType="submit"
-                  icon={<ArrowRightOutlined />}
-                >
-                  {t("login")}
-                </Button>
+                <Input placeholder="example@gmail.com" />
+              </Form.Item>
 
-                <Link to={"/"} style={{ fontWeight: 500 }}>
-                  {t("back_to_home")} <ArrowRightOutlined />
-                </Link>
+              <Form.Item
+                label={t("password")}
+                name="password"
+                rules={[{ required: true, message: t("password_required") }]}
+              >
+                <Input.Password
+                  placeholder={t("password_placeholder")}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter") form.submit();
+                  }}
+                />
+              </Form.Item>
+
+              <div className="login-forgot-row">
+                <Link to={"/forgot-password"}>{t("forgot_password")}</Link>
               </div>
-            </Form.Item>
 
-            <Divider>
-              <div style={{ textAlign: "center" }}>
-                {t("no_account")}{" "}
-                <Link to={"/register"}>{t("register_here")}</Link>
+              <Form.Item>
+                <div className="login-actions-row">
+                  <Button
+                    loading={loading}
+                    type="primary"
+                    htmlType="submit"
+                    icon={<ArrowRightOutlined />}
+                  >
+                    {t("login")}
+                  </Button>
+
+                  <Link to={"/"} className="login-back-home">
+                    {t("back_to_home")} <ArrowRightOutlined />
+                  </Link>
+                </div>
+              </Form.Item>
+
+              <Divider>
+                <div className="login-divider-text">
+                  {t("no_account")}{" "}
+                  <Link to={"/register"}>{t("register_here")}</Link>
+                </div>
+              </Divider>
+
+              <div className="login-google-btn-wrap">
+                <GoogleLogin
+                  key={i18n.language}
+                  onSuccess={handleGoogleSuccess}
+                  onError={handleGoogleError}
+                  locale={i18n.language === "vi" ? "vi" : i18n.language === "ja" ? "ja" : "en"}
+                />
               </div>
-            </Divider>
-
-            <div style={{ textAlign: "center", marginTop: 16 }}>
-              <GoogleLogin
-                key={i18n.language}
-                onSuccess={handleGoogleSuccess}
-                onError={handleGoogleError}
-                locale={i18n.language === "vi" ? "vi" : i18n.language === "ja" ? "ja" : "en"}
-              />
-            </div>
-          </Form>
-        </fieldset>
-      </Col>
-    </Row>
+            </Form>
+          </div>
+        </Col>
+      </Row>
+    </>
   );
 };
 

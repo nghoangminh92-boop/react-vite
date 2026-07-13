@@ -1,31 +1,25 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Inter:wght@400;500;600&display=swap');
-
-:root {
-  --hd-ink: #4a4a4a;
-  --hd-ink-light: #565656;
-  --hd-gray: #3a3a3a;
-  --hd-gray-text: hwb(0 100% 0%);
-  --hd-gray-text-hover: #ffffff;
-  --hd-border: rgba(255,255,255,0.08);
-}
-
 .app-header {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: var(--hd-ink);
-  box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+  padding-block: 0.9rem;
+  padding-inline: 1rem;
+  background: transparent;
+  box-shadow: none;
 }
 
 .app-header-inner {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 0 24px;
-  height: 68px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
+  padding: 0.6rem 1.2rem;
+  border-radius: 999px;
+  background: var(--color-ink);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+  height: auto;
 }
 
 /* ===== LOGO ===== */
@@ -38,14 +32,15 @@
 }
 
 .app-logo-image {
-  width: 38px;
-  height: 38px;
-  border-radius: 8px;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
   object-fit: cover;
+  background: linear-gradient(135deg, var(--sakura-petal-a), var(--sakura-petal-b));
 }
 
 .app-logo-text {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-serif);
   font-size: 19px;
   font-weight: 800;
   letter-spacing: 0.2px;
@@ -53,89 +48,89 @@
   white-space: nowrap;
 }
 
-/* ===== NAV DESKTOP ===== */
+/* ===== NAV DESKTOP (dạng pill) ===== */
 .app-nav {
   display: flex !important;
   align-items: center;
-  gap: 4px;
+  gap: 0.35rem;
   flex: 1;
   justify-content: center;
   min-width: 0;
 }
 
 .app-nav-link {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 7px;
-  padding: 9px 14px;
+  padding: 0.5rem 0.9rem;
   border-radius: 999px;
-  font-family: 'Inter', sans-serif;
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--hd-gray-text);
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #c9c9c9;
   text-decoration: none;
-  transition: all 0.2s ease;
+  transition: background 0.2s ease, color 0.2s ease;
   white-space: nowrap;
   flex-shrink: 0;
 }
 
-.app-nav-link:hover {
-  color: var(--hd-gray-text-hover);
-  background: rgba(255,255,255,0.06);
-}
-
+.app-nav-link:hover,
 .app-nav-link.active {
-  color: var(--hd-ink);
-  background: #f2f2f2;
-  font-weight: 600;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--sakura-petal-a);
 }
 
 /* ===== RIGHT SIDE ===== */
 .app-header-right {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 0.5rem;
   flex-shrink: 0;
 }
 
 .app-login-btn {
-  display: flex;
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
-  padding: 8px 20px;
+  padding: 0.55rem 0.95rem;
   border-radius: 999px;
-  background: #f2f2f2;
-  color: var(--hd-ink);
-  font-size: 14px;
-  font-weight: 600;
+  background: rgba(255, 255, 255, 0.08);
+  color: #f2f2f2;
+  font-size: 0.9rem;
+  font-weight: 700;
   text-decoration: none;
   transition: background 0.2s ease, transform 0.15s ease;
   white-space: nowrap;
 }
 
 .app-login-btn:hover {
-  background: #ffffff;
+  background: var(--sakura-petal-a);
+  color: var(--color-ink);
   transform: translateY(-1px);
 }
 
 /* ===== USER CHIP ===== */
 .app-user-chip {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 9px;
-  padding: 6px 12px 6px 6px;
+  gap: 0.4rem;
+  padding: 0.45rem 0.8rem 0.45rem 0.45rem;
   border-radius: 999px;
-  background: rgba(255,255,255,0.06);
+  background: color-mix(in srgb, var(--sakura-petal-a) 16%, rgba(255, 255, 255, 0.06));
+  color: #f2f2f2;
+  font-weight: 700;
+  font-size: 0.9rem;
   cursor: pointer;
   transition: background 0.2s ease;
 }
 
 .app-user-chip:hover {
-  background: rgba(255,255,255,0.12);
+  background: rgba(255, 255, 255, 0.14);
 }
 
 .app-user-avatar-fallback {
-  background: var(--hd-gray) !important;
+  background: var(--color-primary) !important;
   color: #fff !important;
   font-weight: 700;
 }
@@ -151,11 +146,29 @@
 }
 
 .app-user-caret {
-  color: var(--hd-gray-text);
+  color: #c9c9c9;
   font-size: 11px;
 }
 
-/* ===== HAMBURGER (ẩn mặc định trên desktop, CHỈ hiện khi mobile) ===== */
+/* ===== ICON BUTTON dùng chung (nếu có nút icon tròn) ===== */
+.icon-btn {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+  color: #f2f2f2;
+  font-size: 1.1rem;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+.icon-btn:hover {
+  transform: scale(1.08) rotate(-6deg);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* ===== HAMBURGER ===== */
 .app-hamburger {
   display: none !important;
   flex-direction: column;
@@ -179,134 +192,76 @@
   transition: transform 0.25s ease, opacity 0.25s ease;
 }
 
-.app-hamburger.open span:nth-child(1) {
-  transform: translateY(7px) rotate(45deg);
-}
+.app-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.app-hamburger.open span:nth-child(2) { opacity: 0; }
+.app-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-.app-hamburger.open span:nth-child(2) {
-  opacity: 0;
-}
-
-.app-hamburger.open span:nth-child(3) {
-  transform: translateY(-7px) rotate(-45deg);
-}
-
-/* ===== MOBILE NAV DROPDOWN ===== */
+/* ===== MOBILE NAV DROPDOWN (dạng pill card riêng, tách khỏi thanh header) ===== */
 .app-mobile-nav {
   display: none;
   flex-direction: column;
   max-height: 0;
   overflow: hidden;
-  background: var(--hd-ink-light);
+  margin: 0.5rem 1rem 0;
+  border-radius: 1.25rem;
+  background: var(--color-ink);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
   transition: max-height 0.3s ease;
-  border-top: 1px solid transparent;
 }
 
 .app-mobile-nav.open {
   max-height: 500px;
-  border-top: 1px solid var(--hd-border);
 }
 
 .app-mobile-nav-link {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 14px 24px;
-  color: var(--hd-gray-text);
+  padding: 0.9rem 1.2rem;
+  color: #c9c9c9;
   text-decoration: none;
   font-size: 15px;
-  font-weight: 500;
-  border-bottom: 1px solid var(--hd-border);
+  font-weight: 700;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   transition: background 0.2s ease, color 0.2s ease;
 }
 
-.app-mobile-nav-link:hover {
-  background: rgba(255,255,255,0.05);
-  color: #fff;
+.app-mobile-nav-link:last-child {
+  border-bottom: none;
 }
 
+.app-mobile-nav-link:hover,
 .app-mobile-nav-link.active {
-  color: #fff;
-  background: rgba(255,255,255,0.08);
-  font-weight: 600;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--sakura-petal-a);
 }
 
-/* ============================================
-   RESPONSIVE STRATEGY (3 mốc rõ ràng)
-   >= 1101px : Desktop rộng — nav đầy đủ
-   769–1100px: Laptop/tablet hẹp — nav thu gọn, vẫn hiện ngang
-   <= 768px  : Mobile thật sự — chuyển sang hamburger
-   ============================================ */
-
+/* ============ RESPONSIVE ============ */
 @media (max-width: 1100px) and (min-width: 769px) {
-  .app-header-inner {
-    padding: 0 16px;
-    gap: 10px;
-  }
-
-  .app-nav {
-    gap: 2px;
-  }
-
-  .app-nav-link {
-    padding: 7px 10px;
-    font-size: 13px;
-    gap: 5px;
-  }
-
-  .app-logo-text {
-    font-size: 17px;
-  }
-
-  .app-user-name {
-    max-width: 90px;
-  }
+  .app-header-inner { padding: 0.5rem 1rem; gap: 10px; }
+  .app-nav { gap: 2px; }
+  .app-nav-link { padding: 0.45rem 0.7rem; font-size: 13px; }
+  .app-logo-text { font-size: 17px; }
+  .app-user-name { max-width: 90px; }
 }
 
-/* ----- CHỈ Ở ĐÂY MỚI ĐƯỢC PHÉP HIỆN HAMBURGER VÀ ẨN NAV ----- */
 @media (max-width: 768px) {
-  .app-nav {
-    display: none !important;
-  }
-
-  .app-hamburger {
-    display: flex !important;
-  }
-
-  .app-mobile-nav {
-    display: flex;
-  }
-
-  .app-user-name {
-    display: none;
-  }
+  .app-nav { display: none !important; }
+  .app-hamburger { display: flex !important; }
+  .app-mobile-nav { display: flex; }
+  .app-user-name { display: none; }
 }
 
 @media (max-width: 480px) {
-  .app-header-inner {
-    height: 60px;
-    padding: 0 16px;
-  }
-
-  .app-logo-image {
-    width: 32px;
-    height: 32px;
-  }
-
-  .app-logo-text {
-    font-size: 16px;
-  }
-
-  .app-login-btn span {
-    display: none;
-  }
-
-  .app-login-btn {
-    padding: 8px 12px;
-  }
+  .app-header { padding-block: 0.6rem; padding-inline: 0.75rem; }
+  .app-header-inner { padding: 0.5rem 0.9rem; }
+  .app-logo-image { width: 2rem; height: 2rem; }
+  .app-logo-text { font-size: 16px; }
+  .app-login-btn span { display: none; }
+  .app-login-btn { padding: 0.5rem 0.8rem; }
 }
 
-/* ===== LANGUAGE SWITCHER WRAPPER ===== */
+/* ===== LANGUAGE SWITCHER ===== */
 .app-header-right > *:first-child {
   display: flex;
   align-items: center;
@@ -314,15 +269,15 @@
 
 .app-header-right .ant-dropdown-trigger,
 .app-header-right button {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 7px 12px;
+  padding: 0.45rem 0.8rem;
   border-radius: 999px;
-  background: rgba(255,255,255,0.08);
+  background: rgba(255, 255, 255, 0.08);
   color: #f2f2f2 !important;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 700;
   border: none;
   cursor: pointer;
   transition: background 0.2s ease;
@@ -331,5 +286,5 @@
 
 .app-header-right .ant-dropdown-trigger:hover,
 .app-header-right button:hover {
-  background: rgba(255,255,255,0.16);
+  background: rgba(255, 255, 255, 0.16);
 }

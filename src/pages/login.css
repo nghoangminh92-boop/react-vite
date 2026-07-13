@@ -1,0 +1,131 @@
+.login-page-wrapper {
+  margin: 30px;
+  position: relative;
+  min-height: calc(100vh - 60px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-lang-switcher {
+  position: absolute;
+  top: 0;
+  right: 20px;
+}
+
+.login-card {
+  padding: 32px 28px;
+  margin: 5px auto;
+  border: none;
+  border-radius: var(--radius-lg);
+  max-width: 420px;
+  width: 100%;
+  background: var(--color-bg-card);
+  box-shadow: var(--shadow-md);
+}
+
+.login-card legend,
+.login-card .login-title {
+  padding: 0 0 20px;
+  font-family: var(--font-serif);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--color-ink);
+  text-align: center;
+  width: 100%;
+}
+
+.login-logo-wrap {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.login-logo-wrap img {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  border: 3px solid var(--sakura-petal-a);
+}
+
+.login-card .ant-form-item-label label {
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+.login-card .ant-input,
+.login-card .ant-input-password {
+  border-radius: 10px;
+  border: 1px solid var(--color-border);
+}
+
+.login-card .ant-input:focus,
+.login-card .ant-input-affix-wrapper-focused {
+  border-color: var(--sakura-petal-b) !important;
+  box-shadow: 0 0 0 3px var(--sakura-glow) !important;
+}
+
+.login-forgot-row {
+  text-align: right;
+  margin-top: -8px;
+  margin-bottom: 12px;
+}
+
+.login-forgot-row a {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+
+.login-forgot-row a:hover {
+  color: var(--sakura-petal-b);
+}
+
+.login-actions-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.login-actions-row .ant-btn-primary {
+  background: var(--color-ink) !important;
+  border-color: var(--color-ink) !important;
+  border-radius: 999px !important;
+  font-weight: 600 !important;
+  padding: 0 22px !important;
+  height: 40px !important;
+}
+
+.login-actions-row .ant-btn-primary:hover {
+  background: #2c2c2c !important;
+  border-color: #2c2c2c !important;
+}
+
+.login-back-home {
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.login-back-home:hover {
+  color: var(--sakura-petal-b);
+}
+
+.login-divider-text {
+  text-align: center;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+
+.login-divider-text a {
+  color: var(--color-ink);
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.login-google-btn-wrap {
+  text-align: center;
+  margin-top: 16px;
+}

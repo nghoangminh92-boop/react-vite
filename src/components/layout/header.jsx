@@ -8,8 +8,10 @@ import {
   UserOutlined,
   LogoutOutlined,
   DownOutlined,
-  CoffeeOutlined,   // ⭐ icon cho Menu
-  PhoneOutlined,    // ⭐ icon cho Liên hệ
+  CoffeeOutlined,
+  PhoneOutlined,
+  SunOutlined,
+  MoonOutlined,
 } from '@ant-design/icons';
 import { Dropdown, message, Avatar } from 'antd';
 import { useContext, useState } from 'react';
@@ -19,17 +21,16 @@ import './header.css';
 import logoMuji from "../../assets/image7.jpg";
 import LanguageFlag from "../language/LanguageFlag";
 
-// ⭐ i18n
 import { useTranslation } from "react-i18next";
-
-// ⭐ Language Switcher
 import LanguageSwitcher from "../language/LanguageSwitcher";
+import { useTheme } from "../context/ThemeContext";
 
 const Header = () => {
   const { user, setUser } = useContext(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
   const { t } = useTranslation();
+  const { theme, toggleTheme } = useTheme();
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleLogout = async () => {
@@ -44,11 +45,9 @@ const Header = () => {
 
   const navLinks = [
     { key: 'home', to: '/', label: t("home"), icon: <HomeOutlined /> },
-
-    // ⭐ Menu - ai cũng xem được
     { key: 'menu', to: '/menu', label: t("menu"), icon: <CoffeeOutlined /> },
 
-...(user.role === 'ADMIN'
+    ...(user.role === 'ADMIN'
       ? [
           { key: 'dishes', to: '/dishes', label: t("dishes"), icon: <AuditOutlined /> },
           { key: 'posts', to: '/posts', label: t("posts"), icon: <FileTextOutlined /> },
@@ -60,8 +59,7 @@ const Header = () => {
       ? [{ key: 'dishes', to: '/dishes', label: t("dishes"), icon: <AuditOutlined /> }]
       : []),
 
-    // ⭐ Liên hệ - ai cũng xem được
-    { key: 'contact', to: '/liên hệ', label: t("contact"), icon: <PhoneOutlined /> },
+    { key: 'contact', to: '/contact', label: t("contact"), icon: <PhoneOutlined /> },
   ];
 
   const userMenuItems = {
@@ -83,7 +81,7 @@ const Header = () => {
     ],
   };
 
-  const isActive = (to) => location.pathname === decodeURIComponent(to) || decodeURIComponent(location.pathname) === to;
+  const isActive = (to) => location.pathname === to;
 
   return (
     <header className="app-header">
@@ -100,7 +98,7 @@ const Header = () => {
           {navLinks.map((item) => (
             <Link
               key={item.key}
-              to={encodeURI(item.to)}
+              to={item.to}
               className={`app-nav-link ${isActive(item.to) ? 'active' : ''}`}
             >
               {item.icon}
@@ -111,6 +109,16 @@ const Header = () => {
 
         {/* RIGHT SIDE */}
         <div className="app-header-right">
+
+          {/* ⭐ NÚT SÁNG/TỐI */}
+          <button
+            className="icon-btn"
+            onClick={toggleTheme}
+            aria-label={theme === "dark" ? t("switch_to_light") : t("switch_to_dark")}
+            title={theme === "dark" ? t("switch_to_light") : t("switch_to_dark")}
+          >
+            {theme === "dark" ? <SunOutlined /> : <MoonOutlined />}
+          </button>
 
           {/* ⭐ NÚT ĐỔI NGÔN NGỮ */}
           <LanguageSwitcher />
@@ -162,7 +170,7 @@ const Header = () => {
         {navLinks.map((item) => (
           <Link
             key={item.key}
-            to={encodeURI(item.to)}
+            to={item.to}
             className={`app-mobile-nav-link ${isActive(item.to) ? 'active' : ''}`}
             onClick={() => setMobileOpen(false)}
           >

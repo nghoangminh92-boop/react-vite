@@ -20,14 +20,13 @@ import PrivateRoute from './pages/private.route.jsx';
 import MenuPage from './pages/menu.jsx';
 import DishPage from './pages/dish.jsx';
 import ForgotPasswordPage from './pages/ForgotPasswordPage.jsx';
-import ContactPage from './pages/contact.jsx'; // ⭐ trang liên hệ mới
+import ContactPage from './pages/contact.jsx';
 import "./i18n";
 
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
-// ⭐ IMPORT i18n + LanguageProvider
-import "./i18n";
 import { LanguageProvider } from "./components/context/language.context.jsx";
+import { ThemeProvider } from "./components/context/ThemeContext.jsx"; // ⭐ sáng/tối
 
 const router = createBrowserRouter([
   {
@@ -54,7 +53,7 @@ const router = createBrowserRouter([
         )
       },
       { path:"/menu", element:<MenuPage/> },
-      { path:"/liên hệ", element:<ContactPage/> }, // ⭐ route liên hệ
+      { path:"/contact", element:<ContactPage/> },
       {
         path: "/profile",
         element: (
@@ -72,10 +71,12 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
-    <AuthWrapper>
-      <LanguageProvider>   {/* ⭐ Toàn bộ web nằm trong đây */}
-        <RouterProvider router={router} />
-      </LanguageProvider>
-    </AuthWrapper>
+    <ThemeProvider>
+      <AuthWrapper>
+        <LanguageProvider>
+          <RouterProvider router={router} />
+        </LanguageProvider>
+      </AuthWrapper>
+    </ThemeProvider>
   </GoogleOAuthProvider>
-)
+) 

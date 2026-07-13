@@ -1,6 +1,8 @@
+import "./register.css";
 import { Button, Form, Input, notification, Card, Typography, Row, Col, Divider } from 'antd';
 import { registerUserAPI } from '../services/api.services';
 import { Link, useNavigate } from 'react-router-dom';
+import { useEffect, useRef } from 'react';
 
 // ⭐ i18n
 import { useTranslation } from "react-i18next";
@@ -11,7 +13,28 @@ const { Title, Text } = Typography;
 const RegisterPage = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
-  const { t } = useTranslation(); // ⭐ dùng i18n
+  const { t } = useTranslation();
+  const sakuraContainerRef = useRef(null);
+
+  // ⭐ SAKURA BACKGROUND
+  useEffect(() => {
+    const container = sakuraContainerRef.current;
+    if (!container || container.childElementCount > 0) return;
+
+    for (let i = 0; i < 35; i++) {
+      const petal = document.createElement("div");
+      petal.className = "sakura-bg__petal";
+      petal.style.left = Math.random() * 100 + "%";
+      petal.style.top = "-10px";
+      petal.style.animationDuration = 9 + Math.random() * 8 + "s";
+      petal.style.animationDelay = -(Math.random() * 12) + "s";
+      container.appendChild(petal);
+    }
+
+    return () => {
+      container.innerHTML = "";
+    };
+  }, []);
 
   const onFinish = async (values) => {
     const res = await registerUserAPI(
@@ -36,89 +59,44 @@ const RegisterPage = () => {
   };
 
   return (
-    <div
-      style={{
-        width: "100%",
-        minHeight: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        background: "#f5f7fa",
-        padding: 20,
-        position: "relative",
-      }}
-    >
-      {/* ⭐ NÚT ĐỔI NGÔN NGỮ - góc trên phải */}
-      <div style={{ position: "absolute", top: 20, right: 20 }}>
-        <LanguageSwitcher />
+    <>
+      <div className="sakura-bg">
+        <div className="sakura-bg__mesh"></div>
+        <div className="sakura-bg__petals" ref={sakuraContainerRef}></div>
+        <div className="sakura-bg__noise"></div>
       </div>
 
-      <Card
-        style={{
-          width: 520,
-          padding: "40px 35px",
-          borderRadius: 14,
-          boxShadow: "0 12px 35px rgba(0,0,0,0.10)",
-        }}
-      >
-        {/* LOGO */}
-        <div
-          style={{
-            width: "100%",
-            display: "flex",
-            justifyContent: "center",
-            marginBottom: 25,
-          }}
-        >
-          <div
-            style={{
-              width: 110,
-              height: 110,
-              borderRadius: "50%",
-              overflow: "hidden",
-              background: "#fff",
-              boxShadow: "0 8px 25px rgba(0,0,0,0.15)",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <img
-              src="https://image.jimcdn.com/app/cms/image/transf/dimension=320x10000:format=jpg/path/sdebecf2bdf0cca64/image/icfa5182b8564128f/version/1752621256/image.jpg"
-              alt="Logo"
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-              }}
-            />
-          </div>
+      <div className="register-page-wrapper">
+        <div className="register-lang-switcher">
+          <LanguageSwitcher />
         </div>
 
-        <Title level={3} style={{ textAlign: "center", marginBottom: 5 }}>
-          {t("register_title")}
-        </Title>
+        <Card className="register-card">
+          <div className="register-logo-wrap">
+            <div className="register-logo-circle">
+              <img
+                src="https://image.jimcdn.com/app/cms/image/transf/dimension=320x10000:format=jpg/path/sdebecf2bdf0cca64/image/icfa5182b8564128f/version/1752621256/image.jpg"
+                alt="Logo"
+              />
+            </div>
+          </div>
 
-        <Text
-          style={{
-            display: "block",
-            textAlign: "center",
-            marginBottom: 30,
-            color: "#666",
-          }}
-        >
-          {t("register_subtitle")}
-        </Text>
+          <Title level={3} className="register-title">
+            {t("register_title")}
+          </Title>
 
-        <Form
-          form={form}
-          layout="vertical"
-          onFinish={onFinish}
-          style={{ width: "100%" }}
-          labelCol={{ style: { fontWeight: 600, marginBottom: 6 } }}
-        >
-          <div style={{ display: "flex", justifyContent: "center" }}>
-            <div style={{ width: "360px" }}>
+          <Text className="register-subtitle">
+            {t("register_subtitle")}
+          </Text>
+
+          <Form
+            form={form}
+            layout="vertical"
+            onFinish={onFinish}
+            className="register-form-inner"
+            labelCol={{ style: { fontWeight: 600, marginBottom: 6 } }}
+          >
+            <div className="register-field-col">
               <Row justify="center">
                 <Col span={24}>
                   <Form.Item
@@ -183,27 +161,18 @@ const RegisterPage = () => {
 
               <Row justify="center">
                 <Col span={24}>
-                  <div>
-                    <Button
-                      type="primary"
-                      htmlType="submit"
-                      block
-                      size="large"
-                      style={{
-                        height: 48,
-                        borderRadius: 8,
-                        fontSize: 16,
-                        fontWeight: 600,
-                        background: "linear-gradient(135deg, #4b7bec, #3867d6)",
-                        boxShadow: "0 4px 12px rgba(56,103,214,0.3)",
-                      }}
-                    >
-                      {t("register_button")}
-                    </Button>
-                  </div>
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    block
+                    size="large"
+                    className="register-submit-btn"
+                  >
+                    {t("register_button")}
+                  </Button>
 
                   <Divider>
-                    <div>
+                    <div className="register-divider-text">
                       {t("already_have_account")}{" "}
                       <Link to={"/login"}>{t("login_here")}</Link>
                     </div>
@@ -211,10 +180,10 @@ const RegisterPage = () => {
                 </Col>
               </Row>
             </div>
-          </div>
-        </Form>
-      </Card>
-    </div>
+          </Form>
+        </Card>
+      </div>
+    </>
   );
 };
 

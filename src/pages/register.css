@@ -1,0 +1,121 @@
+.register-page-wrapper {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
+  padding: 20px;
+  position: relative;
+}
+
+.register-lang-switcher {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.register-card {
+  width: 520px;
+  max-width: 100%;
+  padding: 40px 35px;
+  border-radius: var(--radius-lg);
+  background: var(--color-bg-card);
+  box-shadow: var(--shadow-md);
+  border: none;
+}
+
+.register-logo-wrap {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 25px;
+}
+
+.register-logo-circle {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 3px solid var(--sakura-petal-a);
+}
+
+.register-logo-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.register-title {
+  text-align: center;
+  margin-bottom: 5px !important;
+  font-family: var(--font-serif) !important;
+  color: var(--color-ink) !important;
+}
+
+.register-subtitle {
+  display: block;
+  text-align: center;
+  margin-bottom: 30px;
+  color: var(--color-text-secondary);
+}
+
+.register-form-inner {
+  width: 100%;
+}
+
+.register-field-col {
+  width: 360px;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.register-form-inner .ant-form-item-label label {
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+.register-form-inner .ant-input,
+.register-form-inner .ant-input-password {
+  border-radius: 10px;
+  border: 1px solid var(--color-border);
+}
+
+.register-form-inner .ant-input:focus,
+.register-form-inner .ant-input-affix-wrapper-focused {
+  border-color: var(--sakura-petal-b) !important;
+  box-shadow: 0 0 0 3px var(--sakura-glow) !important;
+}
+
+.register-submit-btn {
+  height: 48px !important;
+  border-radius: 999px !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  background: var(--color-ink) !important;
+  border-color: var(--color-ink) !important;
+  box-shadow: var(--shadow-sm) !important;
+  transition: background 0.2s ease !important;
+}
+
+.register-submit-btn:hover {
+  background: #2c2c2c !important;
+  border-color: #2c2c2c !important;
+}
+
+.register-divider-text {
+  text-align: center;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+
+.register-divider-text a {
+  color: var(--color-ink);
+  font-weight: 600;
+  text-decoration: underline;
+}
