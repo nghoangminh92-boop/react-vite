@@ -152,7 +152,7 @@ const Header = () => {
             </Link>
           )}
 
-          {/* HAMBURGER - mobile */}
+          {/* HAMBURGER - mobile (biến mất khi menu mở) */}
           <button
             className={`app-hamburger ${mobileOpen ? 'open' : ''}`}
             onClick={() => setMobileOpen(!mobileOpen)}
@@ -164,6 +164,12 @@ const Header = () => {
           </button>
         </div>
       </div>
+
+      {/* OVERLAY — bấm ra ngoài để đóng menu (thay cho nút hamburger đã ẩn) */}
+      <div
+        className={`app-mobile-nav-overlay ${mobileOpen ? 'open' : ''}`}
+        onClick={() => setMobileOpen(false)}
+      />
 
       {/* MOBILE MENU */}
       <div className={`app-mobile-nav ${mobileOpen ? 'open' : ''}`}>

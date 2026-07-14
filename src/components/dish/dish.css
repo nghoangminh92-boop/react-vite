@@ -18,7 +18,7 @@
   font-family: var(--font-serif);
   font-size: 22px;
   font-weight: 700;
-  color: var(--color-ink);
+  color: var(--color-text);
   margin: 0;
   display: flex;
   align-items: center;
@@ -34,8 +34,9 @@
 }
 
 .dish-add-btn {
-  background: var(--color-ink) !important;
-  border-color: var(--color-ink) !important;
+  background: var(--color-primary-dark) !important;
+  border-color: var(--color-primary-dark) !important;
+  color: var(--text-on-dark) !important;
   border-radius: 999px !important;
   height: 42px !important;
   padding: 0 22px !important;
@@ -55,6 +56,8 @@
   border: 1px solid var(--color-border) !important;
   padding: 8px 16px !important;
   box-shadow: none !important;
+  background: var(--color-bg-card) !important;
+  color: var(--color-text) !important;
 }
 
 .dish-search-input:hover,
@@ -65,7 +68,7 @@
 
 /* ===== TABLE (desktop) ===== */
 .dish-table-wrapper {
-  background: #fff;
+  background: var(--color-bg-card);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
   padding: 6px;
@@ -74,27 +77,30 @@
 
 .dish-table .ant-table {
   border-radius: var(--radius-lg);
+  background: transparent;
 }
 
 .dish-table .ant-table-thead > tr > th {
-  background: #fafafa !important;
-  color: var(--color-ink) !important;
+  background: var(--color-bg-page) !important;
+  color: var(--color-text) !important;
   font-weight: 600 !important;
   font-family: var(--font-sans);
   border-bottom: 1px solid var(--color-border) !important;
 }
 
 .dish-table .ant-table-tbody > tr > td {
+  background: var(--color-bg-card) !important;
+  color: var(--color-text) !important;
   border-bottom: 1px solid var(--color-border) !important;
 }
 
 .dish-table .ant-table-tbody > tr:hover > td {
-  background: #f7f7f6 !important;
+  background: var(--color-bg-page) !important;
 }
 
 .dish-name-cell {
   font-weight: 500;
-  color: var(--color-ink);
+  color: var(--color-text);
   display: flex;
   align-items: center;
   gap: 6px;
@@ -102,7 +108,7 @@
 
 .dish-price-cell {
   font-weight: 600;
-  color: var(--color-primary);
+  color: var(--sakura-petal-a);
 }
 
 .dish-thumb {
@@ -121,7 +127,7 @@
 }
 
 .dish-action-icon.edit:hover {
-  color: var(--color-ink);
+  color: var(--color-text);
   transform: scale(1.15);
 }
 
@@ -142,7 +148,7 @@
 }
 
 .dish-mobile-card {
-  background: #fff;
+  background: var(--color-bg-card);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   padding: 14px;
@@ -169,7 +175,7 @@
 .dish-mobile-card-name {
   font-weight: 600;
   font-size: 15px;
-  color: var(--color-ink);
+  color: var(--color-text);
   margin: 0 0 4px;
   white-space: nowrap;
   overflow: hidden;
@@ -179,7 +185,7 @@
 .dish-mobile-card-price {
   font-size: 14px;
   font-weight: 600;
-  color: var(--color-primary);
+  color: var(--sakura-petal-a);
   margin: 0 0 4px;
 }
 
