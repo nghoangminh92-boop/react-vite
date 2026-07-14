@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { message } from 'antd';
-
+import './contact.css';
 // ⭐ Thay bằng endpoint Formspree thật của bạn (đăng ký ở formspree.io)
 const FORMSPREE_ENDPOINT = 'https://formspree.io/f/mqevnkew';
 

@@ -1,0 +1,175 @@
+/* ============================================================
+   CONTACT PAGE — SAKURA EDITION (đã đồng bộ dark/light theme)
+   ============================================================ */
+.contact-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+
+.contact-hero {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.contact-hero h1 {
+  font-family: var(--font-serif);
+  font-size: 34px;
+  font-weight: 800;
+  color: var(--color-text);
+  margin: 0 0 10px;
+}
+
+.contact-hero p {
+  font-size: 15px;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.contact-container {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 28px;
+}
+
+/* ===== THÔNG TIN LIÊN HỆ — luôn nền tối cố định, giống pill header ===== */
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background: var(--color-primary-dark);
+  border-radius: var(--radius-lg);
+  padding: 28px 24px;
+  box-shadow: var(--shadow-md);
+}
+
+.contact-info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.contact-icon {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--sakura-petal-a), var(--sakura-petal-b));
+  font-size: 16px;
+}
+
+.contact-info-item h4 {
+  font-family: var(--font-serif);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-on-dark);
+  margin: 0 0 4px;
+}
+
+.contact-info-item p {
+  font-size: 13px;
+  color: #b8b4ac;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ===== FORM LIÊN HỆ ===== */
+.contact-form {
+  background: var(--color-bg-card);
+  border-radius: var(--radius-lg);
+  padding: 32px 28px;
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+}
+
+.contact-form h3 {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0 0 24px;
+}
+
+.contact-form-group {
+  margin-bottom: 18px;
+}
+
+.contact-form-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  margin-bottom: 6px;
+}
+
+.contact-form-group input,
+.contact-form-group textarea {
+  width: 100%;
+  padding: 11px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-page);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  color: var(--color-text);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.contact-form-group input:focus,
+.contact-form-group textarea:focus {
+  outline: none;
+  border-color: var(--sakura-petal-b);
+  box-shadow: 0 0 0 3px var(--sakura-glow);
+}
+
+.contact-form-group textarea {
+  resize: vertical;
+  min-height: 110px;
+}
+
+.contact-form-group input:disabled,
+.contact-form-group textarea:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.contact-submit-btn {
+  width: 100%;
+  padding: 13px;
+  border: none;
+  border-radius: 999px;
+  background: var(--color-primary-dark);
+  color: var(--text-on-dark);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.contact-submit-btn:hover:not(:disabled) {
+  background: #2c2c2c;
+  transform: translateY(-1px);
+}
+
+.contact-submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 768px) {
+  .contact-container {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-hero h1 {
+    font-size: 26px;
+  }
+
+  .contact-form {
+    padding: 24px 20px;
+  }
+}

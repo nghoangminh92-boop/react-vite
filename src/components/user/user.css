@@ -6,15 +6,15 @@
   height: 34px;
   border-radius: 50%;
   object-fit: cover;
-  border: 1px solid #eee;
+  border: 1px solid var(--color-border);
 }
 
 .user-table-avatar-placeholder {
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  background: #1677ff;
-  color: #fff;
+  background: linear-gradient(135deg, var(--sakura-petal-a), var(--sakura-petal-b));
+  color: var(--text-on-light);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -33,12 +33,16 @@
 
 .user-name-link {
   font-weight: 600;
-  color: #1677ff;
+  color: var(--color-text);
+}
+
+.user-name-link:hover {
+  color: var(--sakura-petal-b);
 }
 
 .user-email {
   font-size: 12px;
-  color: #999;
+  color: var(--color-text-muted);
 }
 
 /* ============================
@@ -53,43 +57,74 @@
 .action-icon {
   cursor: pointer;
   font-size: 16px;
+  transition: transform 0.15s ease;
+}
+
+.action-icon:hover {
+  transform: scale(1.15);
 }
 
 .action-icon.edit {
-  color: orange;
+  color: #d98a3d;
 }
 
 .action-icon.delete {
-  color: red;
+  color: #c0453a;
 }
 
 .action-role {
   cursor: pointer;
-  color: blue;
+  color: var(--sakura-petal-a);
   font-size: 14px;
   font-weight: 600;
+}
+
+.action-role:hover {
+  color: var(--sakura-petal-b);
 }
 
 /* ============================
    FIX RESPONSIVE CHO ANT DESIGN TABLE
    ============================ */
 
-/* ⭐ BẮT BUỘC: Thu gọn bảng khi màn hình nhỏ */
+.user-table-responsive {
+  background: var(--color-bg-card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: 6px;
+}
+
 .user-table-responsive .ant-table {
   width: 100%;
   overflow-x: auto;
+  background: transparent;
 }
 
-/* ⭐ Cấu trúc đúng của Ant Design Table */
 .user-table-responsive .ant-table-container .ant-table-content {
   overflow-x: auto;
 }
 
-/* ⭐ Thu gọn cell */
 .user-table-responsive .ant-table-container .ant-table-cell {
   padding: 12px !important;
   font-size: 14px;
 }
+
+.user-table-responsive .ant-table-thead > tr > th {
+  background: var(--color-bg-page) !important;
+  color: var(--color-text) !important;
+  border-bottom: 1px solid var(--color-border) !important;
+}
+
+.user-table-responsive .ant-table-tbody > tr > td {
+  background: var(--color-bg-card) !important;
+  color: var(--color-text) !important;
+  border-bottom: 1px solid var(--color-border) !important;
+}
+
+.user-table-responsive .ant-table-tbody > tr:hover > td {
+  background: var(--color-bg-page) !important;
+}
+
 /* ============================
    Role Tag - STAFF
    ============================ */
@@ -99,8 +134,8 @@
   gap: 4px;
   font-weight: 600;
   border: none;
-  background: linear-gradient(135deg, #e6f0ff 0%, #d6e8ff 100%);
-  color: #1554b3;
+  background: var(--sakura-glow);
+  color: var(--sakura-petal-b);
   border-radius: 6px;
   padding: 2px 10px;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
@@ -108,20 +143,20 @@
 
 .role-tag-staff:hover {
   transform: translateY(-1px);
-  box-shadow: 0 2px 6px rgba(21, 84, 179, 0.2);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
 .role-tag-staff .anticon {
   font-size: 12px;
 }
 
-/* Đồng bộ kích thước icon Crown (Admin) khi so sánh cạnh Staff */
 @media (max-width: 480px) {
   .role-tag-staff {
     font-size: 12px;
     padding: 1px 8px;
   }
 }
+
 /* ============================
    📱 MOBILE (≤ 768px)
    ============================ */

@@ -1,70 +1,83 @@
 .lang-dropdown {
   position: relative;
-  margin-right: 16px;
 }
 
 .lang-trigger {
-  background: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 2.5rem;
+  padding: 0 0.9rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
   border: none;
   cursor: pointer;
-  padding: 6px;
+  color: var(--text-on-dark);
+  font-size: 0.9rem;
+  font-weight: 700;
+  transition: background 0.2s ease;
 }
 
-.lang-icon {
-  font-size: 22px;
-  color: #333;
+.lang-trigger:hover {
+  background: rgba(255, 255, 255, 0.16);
 }
 
 .lang-menu {
   position: absolute;
-  top: 36px;
+  top: calc(100% + 8px);
   right: 0;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
   padding: 8px 0;
-  width: 140px;
+  width: 160px;
   z-index: 999;
+  overflow: hidden;
 }
 
 .lang-item {
   padding: 10px 14px;
   cursor: pointer;
-  font-size: 15px;
+  font-size: 14px;
+  color: var(--color-text);
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
+  transition: background 0.15s ease;
 }
 
 .lang-item:hover {
-  background: #f5f5f5;
+  background: var(--color-bg-page);
 }
 
 .lang-item.active {
-  background: #e6f4ff;
-  font-weight: bold;
-}
-.lang-switcher {
-  display: flex;
-  gap: 6px;
-  align-items: center;
+  background: var(--sakura-glow);
+  color: var(--sakura-petal-b);
+  font-weight: 700;
 }
 
-.lang-btn {
-  background: transparent;
-  border: none;
-  font-size: 22px;
-  cursor: pointer;
-  opacity: 0.6;
-  transition: 0.2s;
+/* ============ RESPONSIVE — khớp mốc thu nhỏ của header ============ */
+@media (max-width: 768px) {
+  .lang-trigger {
+    height: 2.25rem;
+    padding: 0 0.6rem;
+    font-size: 0.85rem;
+  }
 }
 
-.lang-btn.active {
-  opacity: 1;
-  transform: scale(1.15);
+@media (max-width: 480px) {
+  .lang-trigger {
+    height: 2rem;
+    padding: 0 0.5rem;
+    font-size: 0.8rem;
+  }
 }
 
-.lang-btn:hover {
-  opacity: 1;
+@media (max-width: 360px) {
+  .lang-menu {
+    width: 140px;
+    right: -8px;
+  }
 }
-

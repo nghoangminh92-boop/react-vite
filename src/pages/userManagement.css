@@ -18,6 +18,8 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  color: var(--color-text);
+  font-family: var(--font-serif);
 }
 
 .user-mgmt-stats {
@@ -28,10 +30,10 @@
 }
 
 .user-stat-card {
-  background: #fff;
-  border-radius: 12px;
+  background: var(--color-bg-card);
+  border-radius: var(--radius-md);
   padding: 18px 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  box-shadow: var(--shadow-sm);
   display: flex;
   align-items: center;
   gap: 14px;
@@ -49,20 +51,21 @@
   flex-shrink: 0;
 }
 
-.user-stat-icon.total { background: #1677ff; }
-.user-stat-icon.admin { background: #d4380d; }
-.user-stat-icon.staff { background: linear-gradient(135deg, #1554b3 0%, #3d7ce0 100%); }
-.user-stat-icon.google { background: #fa8c16; }
+.user-stat-icon.total { background: linear-gradient(135deg, var(--sakura-petal-a), var(--sakura-petal-b)); }
+.user-stat-icon.admin { background: #c0453a; }
+.user-stat-icon.staff { background: var(--color-primary-dark); }
+.user-stat-icon.google { background: #d98a3d; }
 
 .user-stat-value {
   font-size: 22px;
   font-weight: 700;
   line-height: 1.2;
+  color: var(--color-text);
 }
 
 .user-stat-label {
   font-size: 13px;
-  color: #888;
+  color: var(--color-text-muted);
 }
 
 .user-mgmt-toolbar {
@@ -74,10 +77,10 @@
 }
 
 .user-mgmt-card {
-  background: #fff;
-  border-radius: 12px;
+  background: var(--color-bg-card);
+  border-radius: var(--radius-md);
   padding: 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  box-shadow: var(--shadow-sm);
 }
 
 .user-table-avatar {
@@ -85,15 +88,15 @@
   height: 34px;
   border-radius: 50%;
   object-fit: cover;
-  border: 1px solid #eee;
+  border: 1px solid var(--color-border);
 }
 
 .user-table-avatar-placeholder {
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  background: #1677ff;
-  color: #fff;
+  background: linear-gradient(135deg, var(--sakura-petal-a), var(--sakura-petal-b));
+  color: var(--text-on-light);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -222,4 +225,22 @@
   .ant-table-cell {
     padding: 6px !important;
   }
+}
+.user-mgmt-toolbar .ant-input,
+.user-mgmt-toolbar .ant-input-affix-wrapper {
+  background: var(--color-bg-page) !important;
+  color: var(--color-text) !important;
+  border-color: var(--color-border) !important;
+}
+
+.user-mgmt-toolbar .ant-btn-primary {
+  background: var(--color-primary-dark) !important;
+  border-color: var(--color-primary-dark) !important;
+  color: var(--text-on-dark) !important;
+  border-radius: 999px !important;
+}
+
+.user-mgmt-toolbar .ant-btn-primary:hover {
+  background: #2c2c2c !important;
+  border-color: #2c2c2c !important;
 }
