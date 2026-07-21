@@ -21,7 +21,11 @@
   --sakura-sky-2: #141414;
   --sakura-sky-3: #0d0d0d;
 
-  /* ⭐ Token cố định — dùng cho chữ/nút luôn có nền tối/sáng bất kể theme */
+  /* ⭐ Điểm nhấn UI xám-bạc (thay cho hồng-tím ở logo, viền, hover, spinner...) */
+  --accent-a: #d4d4d4;
+  --accent-b: #9a9a9a;
+  --accent-glow: rgba(154, 154, 154, 0.18);
+
   --text-on-dark: #f2f2f2;
   --text-on-light: #1c1c1c;
 
@@ -54,6 +58,10 @@
   --sakura-sky-1: #fdf2f5;
   --sakura-sky-2: #f7e4ea;
   --sakura-sky-3: #f5f5f4;
+
+  --accent-a: #b8b8b8;
+  --accent-b: #7a7a7a;
+  --accent-glow: rgba(122, 122, 122, 0.14);
 
   --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.06);
   --shadow-md: 0 10px 28px rgba(0, 0, 0, 0.14);
@@ -188,7 +196,7 @@ body {
   font-size: 26px;
   font-weight: 700;
   margin: 0 0 20px;
-  color: var(--color-text);
+  color: var(--color-text) !important;
   position: relative;
   padding-left: 18px;
 }
@@ -202,8 +210,9 @@ body {
   width: 6px;
   height: 26px;
   border-radius: 3px;
-  background: linear-gradient(180deg, var(--sakura-petal-a), var(--sakura-petal-b));
+  background: linear-gradient(180deg, var(--accent-a), var(--accent-b));
 }
+
 
 /* ============ SLIDESHOW BANNER ============ */
 .home-banner {
@@ -374,7 +383,7 @@ body {
   top: 0; left: 0;
   width: 100%;
   height: 3px;
-  background: linear-gradient(90deg, var(--sakura-petal-a), var(--sakura-petal-b), var(--sakura-petal-a));
+  background: linear-gradient(90deg, var(--accent-a), var(--accent-b), var(--accent-a));
   opacity: 0;
   transition: opacity 0.3s ease;
 }
@@ -716,4 +725,23 @@ body {
   .post-card-title {
     font-size: 15px;
   }
+}
+
+/* ============ FIX: chữ trạng thái rỗng bị chìm màu ============ */
+.food-list > p,
+.posts-feed-list > p,
+.posts-section p {
+  color: var(--color-text-secondary);
+  text-align: center;
+  width: 100%;
+  padding: 20px 0;
+}
+
+/* ============ FIX: màu spinner loading theo tông xám-bạc ============ */
+.ant-spin-dot-item {
+  background-color: var(--accent-a) !important;
+}
+
+.ant-spin-text {
+  color: var(--color-text-secondary) !important;
 }

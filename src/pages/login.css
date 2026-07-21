@@ -48,7 +48,7 @@
   border-radius: 50%;
   object-fit: cover;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-  border: 3px solid var(--sakura-petal-a);
+  border: 3px solid var(--accent-a);
 }
 
 .login-card .ant-form-item-label label {
@@ -66,8 +66,8 @@
 
 .login-card .ant-input:focus,
 .login-card .ant-input-affix-wrapper-focused {
-  border-color: var(--sakura-petal-b) !important;
-  box-shadow: 0 0 0 3px var(--sakura-glow) !important;
+  border-color: var(--accent-b) !important;
+  box-shadow: 0 0 0 3px rgba(154, 154, 154, 0.18) !important;
 }
 
 .login-forgot-row {
@@ -82,7 +82,7 @@
 }
 
 .login-forgot-row a:hover {
-  color: var(--sakura-petal-b);
+  color: var(--accent-b);
 }
 
 .login-actions-row {
@@ -113,7 +113,7 @@
 }
 
 .login-back-home:hover {
-  color: var(--sakura-petal-b);
+  color: var(--accent-b);
 }
 
 .login-divider-text {
