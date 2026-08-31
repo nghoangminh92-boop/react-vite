@@ -142,7 +142,7 @@ const FoodDetailDrawer = ({
                 <div
                   style={{
                     fontWeight: "bold",
-                    color: "#d4380d",
+                    color: "#dfeec7",
                     fontSize: 18,
                     marginBottom: 8,
                   }}

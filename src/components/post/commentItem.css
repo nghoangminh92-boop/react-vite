@@ -2,12 +2,12 @@
   display: flex;
   flex-direction: column;
   padding: 12px 0;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--color-border);
   transition: background-color 0.2s ease;
 }
 
 .comment-item:hover {
-  background-color: #fafafa;
+  background-color: color-mix(in srgb, var(--color-primary) 10%, var(--color-bg-card));
   margin: 0 -12px;
   padding: 12px 12px;
 }
@@ -50,7 +50,7 @@
 
 .comment-user-name {
   font-weight: 600;
-  color: #1f1f1f;
+  color: var(--color-text);
   font-size: 14px;
 }
 
@@ -63,7 +63,7 @@
 
 .comment-time {
   font-size: 12px;
-  color: #8a8d91;
+  color: var(--color-text-muted);
 }
 
 .comment-actions {
@@ -113,7 +113,7 @@
   margin: 0;
   font-size: 13px;
   line-height: 1.4;
-  color: #1f1f1f;
+  color: var(--color-text);
 }
 
 /* Responsive */

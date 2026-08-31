@@ -92,7 +92,7 @@ const PostsFeedList = ({
             {canEdit(post) && (
               <div
                 className="post-card-delete-btn"
-                style={{ color: "#faad14", position: "static" }}
+                style={{ color: "#dfeec7", position: "static" }}
                 onClick={(e) => {
                   e.stopPropagation();
                   setDataUpdate(post);

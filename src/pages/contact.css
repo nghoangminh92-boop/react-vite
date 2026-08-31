@@ -150,7 +150,7 @@
 }
 
 .contact-submit-btn:hover:not(:disabled) {
-  background: #2c2c2c;
+  background: var(--color-primary);
   transform: translateY(-1px);
 }
 

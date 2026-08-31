@@ -2,7 +2,6 @@ import "./register.css";
 import { Button, Form, Input, notification, Card, Typography, Row, Col, Divider } from 'antd';
 import { registerUserAPI } from '../services/api.services';
 import { Link, useNavigate } from 'react-router-dom';
-import { useEffect, useRef } from 'react';
 
 // ⭐ i18n
 import { useTranslation } from "react-i18next";
@@ -14,28 +13,6 @@ const RegisterPage = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const sakuraContainerRef = useRef(null);
-
-  // ⭐ SAKURA BACKGROUND
-  useEffect(() => {
-    const container = sakuraContainerRef.current;
-    if (!container || container.childElementCount > 0) return;
-
-    for (let i = 0; i < 35; i++) {
-      const petal = document.createElement("div");
-      petal.className = "sakura-bg__petal";
-      petal.style.left = Math.random() * 100 + "%";
-      petal.style.top = "-10px";
-      petal.style.animationDuration = 9 + Math.random() * 8 + "s";
-      petal.style.animationDelay = -(Math.random() * 12) + "s";
-      container.appendChild(petal);
-    }
-
-    return () => {
-      container.innerHTML = "";
-    };
-  }, []);
-
   const onFinish = async (values) => {
     const res = await registerUserAPI(
       values.fullName,
@@ -60,12 +37,6 @@ const RegisterPage = () => {
 
   return (
     <>
-      <div className="sakura-bg">
-        <div className="sakura-bg__mesh"></div>
-        <div className="sakura-bg__petals" ref={sakuraContainerRef}></div>
-        <div className="sakura-bg__noise"></div>
-      </div>
-
       <div className="register-page-wrapper">
         <div className="register-lang-switcher">
           <LanguageSwitcher />

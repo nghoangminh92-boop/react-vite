@@ -14,7 +14,7 @@ import {
   MoonOutlined,
 } from '@ant-design/icons';
 import { Dropdown, message, Avatar } from 'antd';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../context/auth.context';
 import { logoutAPI } from '../../services/api.services';
 import './header.css';
@@ -32,6 +32,17 @@ const Header = () => {
   const { t } = useTranslation();
   const { theme, toggleTheme } = useTheme();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => {
+      setScrolled(window.scrollY > 16);
+    };
+
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   const handleLogout = async () => {
     const res = await logoutAPI();
@@ -84,7 +95,7 @@ const Header = () => {
   const isActive = (to) => location.pathname === to;
 
   return (
-    <header className="app-header">
+    <header className={`app-header ${scrolled ? 'scrolled' : ''}`}>
       <div className="app-header-inner">
 
         {/* LOGO */}

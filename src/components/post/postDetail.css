@@ -1,17 +1,17 @@
 :root {
-  --pd-primary: #d4380d;
-  --pd-primary-light: #ff6b3d;
-  --pd-text: #1f1f1f;
-  --pd-text-secondary: #65676b;
-  --pd-text-muted: #8a8d91;
-  --pd-border: #e4e6eb;
-  --pd-bg-hover: #f2f3f5;
-  --pd-bg-comment: #f0f2f5;
-  --pd-radius-sm: 8px;
-  --pd-radius-md: 12px;
+  --pd-primary: #7ea94f;
+  --pd-primary-light: #b8d686;
+  --pd-text: var(--color-text);
+  --pd-text-secondary: var(--color-text-secondary);
+  --pd-text-muted: var(--color-text-muted);
+  --pd-border: var(--color-border);
+  --pd-bg-hover: color-mix(in srgb, var(--color-primary) 12%, var(--color-bg-card));
+  --pd-bg-comment: color-mix(in srgb, var(--color-primary) 10%, var(--color-bg-card));
+  --pd-radius-sm: 10px;
+  --pd-radius-md: 14px;
   --pd-radius-lg: 18px;
-  --pd-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
-  --pd-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.10);
+  --pd-shadow-sm: 0 8px 22px rgba(0, 0, 0, 0.18);
+  --pd-shadow-md: 0 14px 28px rgba(0, 0, 0, 0.25);
   --pd-transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -20,6 +20,58 @@
   flex-direction: column;
   gap: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans JP", sans-serif;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(242, 246, 239, 0.98) 100%) !important;
+  color: #1b1b1b !important;
+  padding: 20px;
+  border-radius: 12px;
+}
+
+.post-detail-container .post-header,
+.post-detail-container .post-title,
+.post-detail-container .post-meta,
+.post-detail-container .post-content,
+.post-detail-container .comments-section,
+.post-detail-container .empty-state,
+.post-detail-container .empty-state-text {
+  color: #1f1f1f !important;
+}
+
+.post-detail-container .post-author-name {
+  color: #1b281c !important;
+  font-weight: 700 !important;
+}
+
+.post-detail-container .post-header {
+  border-bottom-color: rgba(83, 108, 56, 0.22) !important;
+}
+
+.post-detail-container .divider {
+  border-top-color: rgba(83, 108, 56, 0.22) !important;
+}
+
+.post-detail-container .comments-header {
+  color: #1b281c !important;
+}
+
+.post-detail-container .comment-time {
+  color: #666 !important;
+}
+
+.post-detail-container .comment-text {
+  color: #1f1f1f !important;
+}
+
+.post-detail-container .comment-author-name {
+  color: #1b281c !important;
+}
+
+.post-detail-container .comment-action-btn {
+  color: #666 !important;
+}
+
+.post-detail-container .comment-action-btn:hover {
+  color: #536c38 !important;
+  background: rgba(83, 108, 56, 0.08) !important;
 }
 
 /* ===== HEADER ===== */
@@ -37,14 +89,9 @@
   height: 48px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid #fff;
+  border: 2px solid var(--color-bg-card);
   box-shadow: 0 0 0 1px var(--pd-border), var(--pd-shadow-sm);
   flex-shrink: 0;
-  transition: var(--pd-transition);
-}
-
-.post-avatar:hover {
-  transform: scale(1.05);
 }
 
 .post-author-section {
@@ -100,12 +147,7 @@
   border-radius: var(--pd-radius-md);
   margin-bottom: 18px;
   box-shadow: var(--pd-shadow-sm);
-  background: #fafafa;
-  transition: var(--pd-transition);
-}
-
-.post-image:hover {
-  box-shadow: var(--pd-shadow-md);
+  background: var(--color-bg-page);
 }
 
 .divider {
@@ -130,13 +172,13 @@
 }
 
 .comments-count {
-  background: linear-gradient(135deg, var(--pd-primary) 0%, var(--pd-primary-light) 100%);
-  color: #fff;
+  background: linear-gradient(135deg, #18241d 0%, #2d4a35 100%);
+  color: #e9f8dd;
   border-radius: 999px;
   padding: 2px 10px;
   font-size: 12px;
   font-weight: 600;
-  box-shadow: 0 2px 6px rgba(212, 56, 13, 0.25);
+  box-shadow: inset 0 0 0 1px rgba(170, 194, 149, 0.35);
 }
 
 /* ===== COMMENT INPUT ===== */
@@ -167,40 +209,42 @@
 .ant-input-textarea,
 textarea.ant-input {
   border-radius: var(--pd-radius-md) !important;
-  border: 1px solid var(--pd-border) !important;
-  background: var(--pd-bg-comment) !important;
+  border: 1px solid rgba(83, 108, 56, 0.2) !important;
+  background: rgba(255, 255, 255, 0.96) !important;
+  color: #1f1f1f !important;
   font-size: 13.5px;
   padding: 10px 14px !important;
-  transition: var(--pd-transition);
   resize: none;
 }
 
 textarea.ant-input:hover {
-  background: #e9ebee !important;
+  background: rgba(255, 255, 255, 0.98) !important;
+  border-color: rgba(83, 108, 56, 0.3) !important;
 }
 
 textarea.ant-input:focus,
 .ant-input-textarea-focused {
   background: #fff !important;
-  border-color: var(--pd-primary) !important;
-  box-shadow: 0 0 0 3px rgba(212, 56, 13, 0.1) !important;
+  border-color: #536c38 !important;
+  box-shadow: 0 0 0 2px rgba(83, 108, 56, 0.15) !important;
 }
 
 .comment-button {
   border-radius: 999px !important;
   height: 34px !important;
   padding: 0 20px !important;
-  font-weight: 600 !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.02em;
   align-self: flex-end;
-  background: linear-gradient(135deg, var(--pd-primary) 0%, var(--pd-primary-light) 100%) !important;
-  border: none !important;
-  box-shadow: 0 3px 10px rgba(212, 56, 13, 0.25);
-  transition: var(--pd-transition) !important;
+  background: linear-gradient(135deg, #536c38 0%, #718d4b 100%) !important;
+  border: 1px solid rgba(83, 108, 56, 0.32) !important;
+  color: #fff !important;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15), 0 6px 16px rgba(83, 108, 56, 0.18);
 }
 
 .comment-button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 5px 14px rgba(212, 56, 13, 0.35);
+  background: linear-gradient(135deg, #3d4f2a 0%, #5a7738 100%) !important;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2), 0 8px 20px rgba(83, 108, 56, 0.25);
 }
 
 /* ===== COMMENT LIST / BUBBLES ===== */
@@ -214,18 +258,6 @@ textarea.ant-input:focus,
   display: flex;
   gap: 10px;
   padding: 8px 0;
-  animation: commentFadeIn 0.25s ease;
-}
-
-@keyframes commentFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 .comment-avatar {
@@ -257,16 +289,17 @@ textarea.ant-input:focus,
 }
 
 .comment-bubble {
-  background: var(--pd-bg-comment);
+  background: rgba(242, 246, 239, 0.98) !important;
+  border: 1px solid rgba(83, 108, 56, 0.18) !important;
   border-radius: var(--pd-radius-lg);
   padding: 8px 14px;
   display: inline-block;
   max-width: 100%;
-  transition: var(--pd-transition);
 }
 
 .comment-bubble:hover {
-  background: var(--pd-bg-hover);
+  background: rgba(229, 237, 225, 0.98) !important;
+  border-color: rgba(83, 108, 56, 0.25) !important;
 }
 
 .comment-author-name {
@@ -301,18 +334,25 @@ textarea.ant-input:focus,
   font-weight: 600;
   color: var(--pd-text-muted);
   cursor: pointer;
-  transition: var(--pd-transition);
+  border-radius: 999px;
+  padding: 5px 10px;
+  border: 1px solid transparent;
   display: flex;
   align-items: center;
   gap: 4px;
+  background: rgba(126, 169, 79, 0.06);
 }
 
 .comment-action-btn:hover {
-  color: var(--pd-primary);
+  color: #eaf7d6;
+  border-color: rgba(126, 169, 79, 0.3);
+  background: rgba(126, 169, 79, 0.12);
 }
 
 .comment-action-btn.danger:hover {
-  color: #d32029;
+  color: #ff9499;
+  border-color: rgba(211, 32, 41, 0.3);
+  background: rgba(211, 32, 41, 0.08);
 }
 
 .comments-list .ant-empty {
@@ -346,98 +386,86 @@ textarea.ant-input:focus,
 
 /* ===== FOOD REVIEW CARD - thiết kế mới ===== */
 .food-review-card {
-  background: linear-gradient(135deg, #fff8f0 0%, #fff1e0 100%);
-  border: 1.5px solid #ffcc80;
-  border-radius: var(--pd-radius-md);
-  padding: 14px 16px;
-  margin-bottom: 16px;
-  box-shadow: 0 3px 10px rgba(212, 56, 13, 0.1);
-  animation: cardPop 0.3s ease;
-}
-
-@keyframes cardPop {
-  from {
-    opacity: 0;
-    transform: scale(0.96);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+  background: linear-gradient(135deg, rgba(230, 241, 220, 0.96) 0%, rgba(217, 232, 202, 0.96) 100%) !important;
+  border: 1px solid rgba(83, 108, 56, 0.25) !important;
+  border-radius: var(--pd-radius-md) !important;
+  padding: 14px 16px !important;
+  margin-bottom: 16px !important;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.5) !important;
 }
 
 .food-review-top {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  flex-wrap: wrap !important;
 }
 
 .food-review-icon {
-  font-size: 24px;
-  flex-shrink: 0;
+  font-size: 24px !important;
+  flex-shrink: 0 !important;
 }
 
 .food-review-info {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-  flex: 1;
-  min-width: 120px;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 1px !important;
+  flex: 1 !important;
+  min-width: 120px !important;
 }
 
 .food-review-label {
-  font-size: 11.5px;
-  font-weight: 600;
-  color: #a06a2a;
-  text-transform: uppercase;
-  letter-spacing: 0.3px;
+  font-size: 11.5px !important;
+  font-weight: 700 !important;
+  color: #536c38 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.3px !important;
 }
 
 .food-review-name {
-  font-size: 16px;
-  font-weight: 800;
-  color: var(--pd-primary);
-  letter-spacing: -0.2px;
-  line-height: 1.3;
+  font-size: 16px !important;
+  font-weight: 800 !important;
+  color: #1b281c !important;
+  letter-spacing: -0.2px !important;
+  line-height: 1.3 !important;
 }
 
 .food-review-avg {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 1px;
-  flex-shrink: 0;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-end !important;
+  gap: 1px !important;
+  flex-shrink: 0 !important;
 }
 
 .food-review-avg-star {
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--pd-text);
-  white-space: nowrap;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  color: #1f1f1f !important;
+  white-space: nowrap !important;
 }
 
 .food-review-avg-count {
-  font-size: 11.5px;
-  color: var(--pd-text-muted);
-  white-space: nowrap;
+  font-size: 11.5px !important;
+  color: #666 !important;
+  white-space: nowrap !important;
 }
 
 .food-review-bottom {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px dashed #ffcc80;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+  margin-top: 12px !important;
+  padding-top: 12px !important;
+  border-top: 1px dashed rgba(83, 108, 56, 0.25) !important;
 }
 
 .food-review-your-label {
-  font-size: 13px;
-  font-weight: 600;
-  color: #8a5a1f;
-  flex-shrink: 0;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: #536c38 !important;
+  flex-shrink: 0 !important;
 }
 
 .food-review-rate {
@@ -450,15 +478,16 @@ textarea.ant-input:focus,
   align-items: center;
   gap: 4px;
   font-size: 12.5px;
-  color: var(--pd-text-secondary);
-  background: var(--pd-bg-comment);
+  color: #666;
+  background: rgba(242, 246, 239, 0.98);
   padding: 4px 12px;
   border-radius: 999px;
   margin-bottom: 14px;
+  border: 1px solid rgba(83, 108, 56, 0.15);
 }
 
 .post-datetime strong {
-  color: var(--pd-text);
+  color: #1b281c;
   font-weight: 700;
 }
 
