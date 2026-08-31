@@ -2,29 +2,29 @@
 
 :root,
 [data-theme="dark"] {
-  --color-primary: #3a3a3a;
-  --color-primary-dark: #1c1c1c;
-  --color-accent: #8a8a8a;
-  --color-ink: #141414;
-  --color-text: #f2f2f2;
-  --color-text-secondary: #b8b4ac;
-  --color-text-muted: #8a8680;
-  --color-border: #2c2c2c;
-  --color-bg-card: #1c1c1c;
-  --color-bg-page: #0d0d0d;
+  --color-primary: #687d45;
+  --color-primary-dark: #162018;
+  --color-accent: #9caf70;
+  --color-ink: #0b100d;
+  --color-text: #edf2e8;
+  --color-text-secondary: #b4c0ae;
+  --color-text-muted: #82907c;
+  --color-border: #304331;
+  --color-bg-card: #18231b;
+  --color-bg-page: #0d120e;
 
-  --sakura-petal-a: #f3c6d3;
-  --sakura-petal-b: #e79cb2;
-  --sakura-glow: rgba(243, 198, 211, 0.16);
+  --sakura-petal-a: #a9c27a;
+  --sakura-petal-b: #718d4b;
+  --sakura-glow: rgba(156, 175, 112, 0.2);
 
   --sakura-sky-1: #201a1e;
   --sakura-sky-2: #141414;
   --sakura-sky-3: #0d0d0d;
 
   /* ⭐ Điểm nhấn UI xám-bạc (thay cho hồng-tím ở logo, viền, hover, spinner...) */
-  --accent-a: #d4d4d4;
-  --accent-b: #9a9a9a;
-  --accent-glow: rgba(154, 154, 154, 0.18);
+  --accent-a: #b7ca8b;
+  --accent-b: #718d4b;
+  --accent-glow: rgba(156, 175, 112, 0.2);
 
   --text-on-dark: #f2f2f2;
   --text-on-light: #1c1c1c;
@@ -40,28 +40,28 @@
 }
 
 [data-theme="light"] {
-  --color-primary: #6e6e6e;
-  --color-primary-dark: #3a3a3a;
-  --color-accent: #a3a3a3;
-  --color-ink: #f5f5f4;
-  --color-text: #1f1f1f;
-  --color-text-secondary: #6e6e6e;
-  --color-text-muted: #a3a3a3;
-  --color-border: #e4e4e4;
+  --color-primary: #536c38;
+  --color-primary-dark: #263522;
+  --color-accent: #718d4b;
+  --color-ink: #f3f6ef;
+  --color-text: #1b281c;
+  --color-text-secondary: #53624f;
+  --color-text-muted: #71806c;
+  --color-border: #d5dfcd;
   --color-bg-card: #ffffff;
-  --color-bg-page: #f5f5f4;
+  --color-bg-page: #f2f6ef;
 
-  --sakura-petal-a: #e2789a;
-  --sakura-petal-b: #c95d81;
-  --sakura-glow: rgba(226, 120, 154, 0.14);
+  --sakura-petal-a: #718d4b;
+  --sakura-petal-b: #536c38;
+  --sakura-glow: rgba(83, 108, 56, 0.16);
 
   --sakura-sky-1: #fdf2f5;
   --sakura-sky-2: #f7e4ea;
   --sakura-sky-3: #f5f5f4;
 
-  --accent-a: #b8b8b8;
-  --accent-b: #7a7a7a;
-  --accent-glow: rgba(122, 122, 122, 0.14);
+  --accent-a: #8da967;
+  --accent-b: #536c38;
+  --accent-glow: rgba(83, 108, 56, 0.16);
 
   --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.06);
   --shadow-md: 0 10px 28px rgba(0, 0, 0, 0.14);
@@ -83,60 +83,6 @@ body {
   position: relative;
   overflow-x: hidden;
   transition: background 0.4s ease;
-}
-
-.sakura-bg {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  overflow: hidden;
-  background: radial-gradient(ellipse at 50% -10%, var(--sakura-sky-1) 0%, var(--sakura-sky-2) 55%, var(--sakura-sky-3) 100%);
-  transition: background 0.4s ease;
-}
-
-.sakura-bg__mesh {
-  position: absolute;
-  inset: -15%;
-  background:
-    radial-gradient(circle at 18% 22%, var(--sakura-glow), transparent 50%),
-    radial-gradient(circle at 82% 12%, rgba(180, 150, 165, 0.14), transparent 55%),
-    radial-gradient(circle at 55% 82%, rgba(120, 120, 120, 0.16), transparent 55%);
-  filter: blur(80px) saturate(120%);
-  animation: sakura-mesh-drift 22s ease-in-out infinite alternate;
-}
-
-@keyframes sakura-mesh-drift {
-  0%   { transform: translate3d(0, 0, 0) scale(1); }
-  50%  { transform: translate3d(-4%, 3%, 0) scale(1.1); }
-  100% { transform: translate3d(4%, -3%, 0) scale(1.04); }
-}
-
-.sakura-bg__petals { position: absolute; inset: 0; }
-
-.sakura-bg__petal {
-  position: absolute;
-  width: 9px;
-  height: 7px;
-  background: linear-gradient(135deg, var(--sakura-petal-a), var(--sakura-petal-b));
-  border-radius: 60% 0 60% 0;
-  opacity: 0.5;
-  animation: sakura-fall linear infinite;
-}
-
-@keyframes sakura-fall {
-  0%   { transform: translateY(-10vh) translateX(0) rotate(0deg); opacity: 0; }
-  10%  { opacity: 0.55; }
-  50%  { transform: translateY(45vh) translateX(-26px) rotate(180deg); }
-  90%  { opacity: 0.25; }
-  100% { transform: translateY(110vh) translateX(18px) rotate(360deg); opacity: 0; }
-}
-
-.sakura-bg__noise {
-  position: absolute;
-  inset: 0;
-  opacity: 0.03;
-  mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
 }
 
 .home-container {

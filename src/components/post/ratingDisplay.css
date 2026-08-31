@@ -5,16 +5,16 @@
   gap: 8px;
   margin-top: 8px;
   padding-top: 8px;
-  border-top: 1px dashed #eee;
+  border-top: 1px dashed rgba(180, 210, 140, 0.28);
 }
 
 .rating-display-dish {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
-  border: 1px solid #ffb74d;
-  color: #8a5a1f;
+  background: linear-gradient(135deg, rgba(32, 51, 35, 0.96) 0%, rgba(58, 83, 58, 0.96) 100%);
+  border: 1px solid rgba(180, 210, 140, 0.3);
+  color: #edf8dd;
   font-size: 12.5px;
   font-weight: 700;
   padding: 3px 10px;
@@ -37,7 +37,7 @@
 
 .rating-display-text {
   font-size: 12.5px;
-  color: #888;
+  color: var(--color-text-secondary);
   font-weight: 500;
 }
 
