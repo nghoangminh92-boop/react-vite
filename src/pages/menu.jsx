@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
-import { Empty, Spin, Rate, Tag } from "antd";
+import { useEffect, useMemo, useState } from "react";
+import { Empty, Spin, Rate, Tag, Input, Select } from "antd";
+import { SearchOutlined } from "@ant-design/icons";
 import { fetchMenuAPI } from "../services/api.services";
 import FoodDetailDrawer from "./FoodDetailDrawer";
 
@@ -14,6 +15,8 @@ const MenuPage = () => {
 
   const [selectedFoodId, setSelectedFoodId] = useState(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [searchText, setSearchText] = useState("");
+  const [sortBy, setSortBy] = useState("default");
 
   useEffect(() => {
     loadMenu();
@@ -41,6 +44,27 @@ const MenuPage = () => {
     setIsDrawerOpen(true);
   };
 
+  const filteredMenu = useMemo(() => {
+    const keyword = searchText.trim().toLowerCase();
+    let result = menu.filter((item) =>
+      [item.name, item.description].some((value) =>
+        value?.toLowerCase?.().includes(keyword)
+      )
+    );
+
+    if (sortBy === "priceAsc") {
+      result = [...result].sort((a, b) => (a.price || 0) - (b.price || 0));
+    }
+    if (sortBy === "priceDesc") {
+      result = [...result].sort((a, b) => (b.price || 0) - (a.price || 0));
+    }
+    if (sortBy === "rating") {
+      result = [...result].sort((a, b) => (b.average || 0) - (a.average || 0));
+    }
+
+    return result;
+  }, [menu, searchText, sortBy]);
+
   if (loading) {
     return (
       <div style={{ textAlign: "center", padding: "60px" }}>
@@ -57,7 +81,40 @@ const MenuPage = () => {
     <div style={{ maxWidth: 900, margin: "0 auto", padding: "24px 16px" }}>
       <h2 style={{ marginBottom: 24 }}>{t("menu_title")}</h2>
 
-      {menu.map((item, index) => (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          gap: 12,
+          marginBottom: 24,
+          flexWrap: "wrap",
+        }}
+      >
+        <Input
+          allowClear
+          value={searchText}
+          onChange={(event) => setSearchText(event.target.value)}
+          prefix={<SearchOutlined />}
+          placeholder={t("search_food_placeholder")}
+          style={{ maxWidth: 420, width: "100%" }}
+        />
+
+        <Select
+          value={sortBy}
+          onChange={setSortBy}
+          style={{ width: 180 }}
+          options={[
+            { value: "default", label: "Mặc định" },
+            { value: "priceAsc", label: "Giá tăng dần" },
+            { value: "priceDesc", label: "Giá giảm dần" },
+            { value: "rating", label: "Đánh giá cao" },
+          ]}
+        />
+      </div>
+
+      {filteredMenu.length === 0 ? (
+        <Empty description={t("no_food_search")} />
+      ) : filteredMenu.map((item, index) => (
         <div
           key={item._id}
           onClick={() => handleFoodClick(item._id)}
@@ -115,7 +172,7 @@ const MenuPage = () => {
               {formatPrice(item.price)}
             </div>
 
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
               <Rate disabled allowHalf value={item.average} style={{ fontSize: 14 }} />
 
               <span style={{ fontSize: 13, color: "#888" }}>

@@ -1,8 +1,8 @@
 import PostForm from "../components/post/post.form";
 import PostTable from "../components/post/post.table";
 import { fetchAllPostAPI } from "../services/api.services";
-import { notification, Spin } from "antd";
-import { useEffect, useState } from "react";
+import { notification, Spin, Input } from "antd";
+import { useEffect, useMemo, useState } from "react";
 
 // ⭐ i18n
 import { useTranslation } from "react-i18next";
@@ -56,6 +56,7 @@ const PostPage = () => {
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [searchText, setSearchText] = useState("");
 
   useEffect(() => {
     loadPost();
@@ -99,11 +100,37 @@ const PostPage = () => {
     }
   };
 
+  const filteredPosts = useMemo(() => {
+    const keyword = searchText.trim().toLowerCase();
+    if (!keyword) return dataPosts;
+
+    return dataPosts.filter((post) => {
+      const title = post.title?.toLowerCase?.() || "";
+      const author = post.author?.toLowerCase?.() || "";
+      const content = post.content?.toLowerCase?.() || "";
+      return (
+        title.includes(keyword) ||
+        author.includes(keyword) ||
+        content.includes(keyword)
+      );
+    });
+  }, [dataPosts, searchText]);
+
   return (
     <div style={{ padding: "20px" }}>
       <PostForm loadPost={loadPost} />
 
       <div style={{ marginTop: "20px" }}>
+        <div style={{ marginBottom: 16, display: "flex", justifyContent: "flex-end" }}>
+          <Input.Search
+            allowClear
+            placeholder={t("search_dish") || "Tìm bài viết..."}
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            style={{ maxWidth: 320, width: "100%" }}
+          />
+        </div>
+
         {loading ? (
           <div style={{ textAlign: "center", padding: "40px" }}>
             <Spin size="large" />
@@ -111,7 +138,7 @@ const PostPage = () => {
           </div>
         ) : (
           <PostTable
-            dataPosts={dataPosts}
+            dataPosts={filteredPosts}
             loadPost={loadPost}
             current={current}
             pageSize={pageSize}

@@ -2,6 +2,8 @@
   "discover": "最高の料理を見つけよう",
   "banner_sub": "日本のラーメンを楽しもう",
   "menu": "おすすめメニュー",
+  "search_food_placeholder": "料理を検索して関連投稿を見る...",
+  "no_food_search": "一致する料理が見つかりません",
   "latest_posts": "最新の投稿",
   "no_food": "料理がありません",
   "see_more": "もっと見る",
@@ -273,4 +275,3 @@
   "translated": "翻訳済み",
   "staff_users": "スタッフ数"
 }
-

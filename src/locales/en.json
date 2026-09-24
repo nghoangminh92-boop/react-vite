@@ -2,6 +2,8 @@
   "discover": "Discover the Best of Food",
   "banner_sub": "Enjoy Japanese Ramen",
   "menu": "Recommended Menu",
+  "search_food_placeholder": "Search a dish to see related posts...",
+  "no_food_search": "No matching dishes found",
   "latest_posts": "Latest Posts",
   "no_food": "No dishes available",
   "see_more": "See more",
@@ -273,5 +275,4 @@
   "staff_users": "Staff"
 
 }
-
 
