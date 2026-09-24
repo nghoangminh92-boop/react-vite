@@ -21,6 +21,7 @@ import MenuPage from './pages/menu.jsx';
 import DishPage from './pages/dish.jsx';
 import ForgotPasswordPage from './pages/ForgotPasswordPage.jsx';
 import ContactPage from './pages/contact.jsx';
+import AnnouncementPage from './pages/AnnouncementPage.jsx';
 import "./i18n";
 
 import { GoogleOAuthProvider } from '@react-oauth/google';
@@ -54,6 +55,14 @@ const router = createBrowserRouter([
       },
       { path:"/menu", element:<MenuPage/> },
       { path:"/contact", element:<ContactPage/> },
+      {
+        path: "/announcements",
+        element: (
+          <PrivateRoute>
+            <AnnouncementPage />
+          </PrivateRoute>
+        )
+      },
       {
         path: "/profile",
         element: (

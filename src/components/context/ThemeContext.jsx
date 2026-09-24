@@ -2,70 +2,85 @@ import { createContext, useContext, useEffect, useState } from "react";
 
 const THEMES = {
   dark: {
-    "--color-primary": "#3a3a3a",
-    "--color-primary-dark": "#1c1c1c",
-    "--color-accent": "#8a8a8a",
-    "--color-ink": "#141414",
-    "--color-text": "#f2f2f2",
-    "--color-text-secondary": "#b8b4ac",
-    "--color-text-muted": "#8a8680",
-    "--color-border": "#2c2c2c",
-    "--color-bg-card": "#1c1c1c",
-    "--color-bg-page": "#0d0d0d",
-    "--sakura-petal-a": "#f3c6d3",
-    "--sakura-petal-b": "#e79cb2",
-    "--sakura-glow": "rgba(243, 198, 211, 0.16)",
-    "--sakura-sky-1": "#201a1e",
-    "--sakura-sky-2": "#141414",
-    "--sakura-sky-3": "#0d0d0d",
-    "--text-on-dark": "#f2f2f2",
-    "--text-on-light": "#1c1c1c",
-    "--shadow-sm": "0 2px 10px rgba(0, 0, 0, 0.25)",
-    "--shadow-md": "0 10px 28px rgba(0, 0, 0, 0.4)",
+    "--color-primary": "#122018",
+    "--color-primary-dark": "#08110d",
+    "--color-accent": "#39d98a",
+    "--color-ink": "#0a0f0d",
+    "--color-text": "#ecfff5",
+    "--color-text-secondary": "#b5d7c3",
+    "--color-text-muted": "#7b9689",
+    "--color-border": "#1e3a2e",
+    "--color-bg-card": "#0f1915",
+    "--color-bg-page": "#060b09",
+    "--sakura-petal-a": "#7ef0b8",
+    "--sakura-petal-b": "#2ad382",
+    "--sakura-glow": "rgba(46, 204, 113, 0.18)",
+    "--sakura-sky-1": "#0f1916",
+    "--sakura-sky-2": "#0a120f",
+    "--sakura-sky-3": "#050907",
+    "--text-on-dark": "#ecfff5",
+    "--text-on-light": "#05120d",
+    "--shadow-sm": "0 2px 14px rgba(9, 20, 15, 0.45)",
+    "--shadow-md": "0 18px 44px rgba(4, 12, 9, 0.62)",
   },
   light: {
-    "--color-primary": "#6e6e6e",
-    "--color-primary-dark": "#3a3a3a",
-    "--color-accent": "#a3a3a3",
-    "--color-ink": "#f5f5f4",
-    "--color-text": "#1f1f1f",
-    "--color-text-secondary": "#6e6e6e",
-    "--color-text-muted": "#a3a3a3",
-    "--color-border": "#e4e4e4",
+    "--color-primary": "#18332a",
+    "--color-primary-dark": "#0f211b",
+    "--color-accent": "#1ea96a",
+    "--color-ink": "#f4fff9",
+    "--color-text": "#0d1713",
+    "--color-text-secondary": "#4a685f",
+    "--color-text-muted": "#72897e",
+    "--color-border": "#d7ece2",
     "--color-bg-card": "#ffffff",
-    "--color-bg-page": "#f5f5f4",
-    "--sakura-petal-a": "#e2789a",
-    "--sakura-petal-b": "#c95d81",
-    "--sakura-glow": "rgba(226, 120, 154, 0.14)",
-    "--sakura-sky-1": "#fdf2f5",
-    "--sakura-sky-2": "#f7e4ea",
-    "--sakura-sky-3": "#f5f5f4",
-    "--text-on-dark": "#f2f2f2",
-    "--text-on-light": "#1c1c1c",
-    "--shadow-sm": "0 2px 10px rgba(0, 0, 0, 0.06)",
-    "--shadow-md": "0 10px 28px rgba(0, 0, 0, 0.14)",
+    "--color-bg-page": "#eefaf3",
+    "--sakura-petal-a": "#43d392",
+    "--sakura-petal-b": "#1d9d5b",
+    "--sakura-glow": "rgba(29, 157, 91, 0.14)",
+    "--sakura-sky-1": "#ecfaf2",
+    "--sakura-sky-2": "#e3f8ee",
+    "--sakura-sky-3": "#f5faf7",
+    "--text-on-dark": "#ecfff5",
+    "--text-on-light": "#05120d",
+    "--shadow-sm": "0 2px 12px rgba(12, 32, 24, 0.08)",
+    "--shadow-md": "0 18px 40px rgba(12, 32, 24, 0.14)",
   },
+};
+
+const THEME_KEYS = Object.keys(THEMES);
+
+const getSafeTheme = () => {
+  if (typeof window === "undefined") return "dark";
+
+  try {
+    const savedTheme = localStorage.getItem("theme");
+    return THEME_KEYS.includes(savedTheme) ? savedTheme : "dark";
+  } catch {
+    return "dark";
+  }
 };
 
 const ThemeContext = createContext(null);
 
 export const ThemeProvider = ({ children }) => {
-  const [theme, setTheme] = useState(
-    () => localStorage.getItem("theme") || "dark"
-  );
+  const [theme, setTheme] = useState(getSafeTheme);
 
   useEffect(() => {
-    const vars = THEMES[theme];
+    const vars = THEMES[theme] ?? THEMES.dark;
     const root = document.documentElement;
 
-    // ⭐ Set trực tiếp từng biến CSS lên inline style — luôn thắng mọi file CSS khác
     Object.entries(vars).forEach(([key, value]) => {
       root.style.setProperty(key, value);
     });
 
     root.setAttribute("data-theme", theme);
     root.style.colorScheme = theme;
-    localStorage.setItem("theme", theme);
+
+    try {
+      localStorage.setItem("theme", theme);
+    } catch {
+      // ignore storage issues in restricted browsers or private mode
+    }
   }, [theme]);
 
   const toggleTheme = () => {

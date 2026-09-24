@@ -5,6 +5,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  background: radial-gradient(circle at top, rgba(42, 211, 130, 0.08), transparent 34%);
 }
 
 .login-lang-switcher {
@@ -16,12 +17,14 @@
 .login-card {
   padding: 32px 28px;
   margin: 5px auto;
-  border: none;
-  border-radius: var(--radius-lg);
+  border: 1px solid rgba(126, 240, 184, 0.18);
+  border-radius: 26px;
   max-width: 420px;
   width: 100%;
-  background: var(--color-bg-card);
-  box-shadow: var(--shadow-md);
+  background: rgba(8, 17, 13, 0.9);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.36), inset 0 1px 0 rgba(255,255,255,0.04), 0 0 0 1px rgba(126, 240, 184, 0.08);
 }
 
 .login-card legend,
@@ -30,7 +33,7 @@
   font-family: var(--font-serif);
   font-size: 20px;
   font-weight: 700;
-  color: var(--color-text);
+  color: #ecfff5;
   text-align: center;
   width: 100%;
 }
@@ -53,21 +56,27 @@
 
 .login-card .ant-form-item-label label {
   font-weight: 600;
-  color: var(--color-text-secondary);
+  color: #b5d7c3;
 }
 
 .login-card .ant-input,
 .login-card .ant-input-password {
-  border-radius: 10px;
-  border: 1px solid var(--color-border);
-  background: var(--color-bg-card);
-  color: var(--color-text);
+  border-radius: 12px;
+  border: 1px solid rgba(126, 240, 184, 0.18);
+  background: rgba(8, 15, 12, 0.72);
+  backdrop-filter: blur(8px);
+  color: #ecfff5;
+}
+
+.login-card .ant-input::placeholder,
+.login-card .ant-input-password input::placeholder {
+  color: #7b9689;
 }
 
 .login-card .ant-input:focus,
 .login-card .ant-input-affix-wrapper-focused {
   border-color: var(--accent-b) !important;
-  box-shadow: 0 0 0 3px rgba(154, 154, 154, 0.18) !important;
+  box-shadow: 0 0 0 3px rgba(42, 211, 130, 0.18) !important;
 }
 
 .login-forgot-row {
@@ -78,7 +87,7 @@
 
 .login-forgot-row a {
   font-size: 13px;
-  color: var(--color-text-secondary);
+  color: #b5d7c3;
 }
 
 .login-forgot-row a:hover {
@@ -93,23 +102,24 @@
 }
 
 .login-actions-row .ant-btn-primary {
-  background: var(--color-primary-dark) !important;
-  border-color: var(--color-primary-dark) !important;
-  color: var(--text-on-dark) !important;
+  background: linear-gradient(135deg, var(--color-accent), var(--sakura-petal-b)) !important;
+  border-color: transparent !important;
+  color: var(--text-on-light) !important;
   border-radius: 999px !important;
-  font-weight: 600 !important;
+  font-weight: 700 !important;
   padding: 0 22px !important;
   height: 40px !important;
+  box-shadow: 0 12px 22px rgba(42, 211, 130, 0.26) !important;
 }
 
 .login-actions-row .ant-btn-primary:hover {
-  background: #2c2c2c !important;
-  border-color: #2c2c2c !important;
+  background: linear-gradient(135deg, #71f8be, #1dbb68) !important;
+  border-color: transparent !important;
 }
 
 .login-back-home {
   font-weight: 500;
-  color: var(--color-text);
+  color: #ecfff5;
 }
 
 .login-back-home:hover {
@@ -119,11 +129,11 @@
 .login-divider-text {
   text-align: center;
   font-size: 13px;
-  color: var(--color-text-secondary);
+  color: #b5d7c3;
 }
 
 .login-divider-text a {
-  color: var(--color-text);
+  color: #ecfff5;
   font-weight: 600;
   text-decoration: underline;
 }
@@ -131,4 +141,35 @@
 .login-google-btn-wrap {
   text-align: center;
   margin-top: 16px;
+}
+
+[data-theme="light"] .login-card {
+  background: rgba(255, 255, 255, 0.82);
+  border-color: rgba(29, 157, 91, 0.24);
+  box-shadow: 0 24px 50px rgba(19, 74, 48, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+[data-theme="light"] .login-card legend,
+[data-theme="light"] .login-card .login-title,
+[data-theme="light"] .login-back-home,
+[data-theme="light"] .login-divider-text a {
+  color: #10251a;
+}
+
+[data-theme="light"] .login-card .ant-form-item-label label,
+[data-theme="light"] .login-forgot-row a,
+[data-theme="light"] .login-divider-text {
+  color: #426957;
+}
+
+[data-theme="light"] .login-card .ant-input,
+[data-theme="light"] .login-card .ant-input-password {
+  background: rgba(242, 252, 246, 0.95);
+  color: #10251a;
+  border-color: rgba(29, 157, 91, 0.26);
+}
+
+[data-theme="light"] .login-card .ant-input::placeholder,
+[data-theme="light"] .login-card .ant-input-password input::placeholder {
+  color: #6b8b79;
 }

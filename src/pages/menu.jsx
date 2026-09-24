@@ -77,7 +77,7 @@ const MenuPage = () => {
               fontSize: 20,
               fontWeight: "bold",
               minWidth: 32,
-              color: index === 0 ? "#faad14" : "#999",
+              color: index === 0 ? "var(--color-accent)" : "var(--color-text-muted)",
             }}
           >
             #{index + 1}
@@ -111,7 +111,7 @@ const MenuPage = () => {
                 : item.description}
             </p>
 
-            <div style={{ fontWeight: "bold", color: "#d4380d", marginBottom: 4 }}>
+            <div style={{ fontWeight: "bold", color: "var(--color-accent)", marginBottom: 4 }}>
               {formatPrice(item.price)}
             </div>
 

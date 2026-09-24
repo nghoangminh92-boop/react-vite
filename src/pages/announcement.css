@@ -1,0 +1,111 @@
+.announcement-page {
+  width: min(980px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 34px 0 96px;
+  color: var(--color-text);
+}
+
+.announcement-hero {
+  margin-bottom: 24px;
+}
+
+.announcement-hero h2,
+.announcement-list-heading h3 {
+  margin: 12px 0 6px;
+  color: var(--color-text);
+}
+
+.announcement-hero > span {
+  color: var(--color-text-secondary);
+}
+
+.announcement-editor .ant-card,
+.announcement-item,
+.announcement-list > .ant-card {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+}
+
+.announcement-editor .ant-card-head-title {
+  color: var(--color-text);
+}
+
+.announcement-editor .ant-form-item-label > label {
+  color: var(--color-text-secondary);
+}
+
+.announcement-editor .ant-input,
+.announcement-editor .ant-input-affix-wrapper,
+.announcement-editor textarea.ant-input {
+  background: color-mix(in srgb, var(--color-bg-card) 86%, var(--color-primary)) !important;
+  color: var(--color-text) !important;
+  border-color: var(--color-border);
+}
+
+.announcement-editor .ant-input::placeholder,
+.announcement-editor textarea.ant-input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.announcement-list {
+  margin-top: 36px;
+}
+
+.announcement-list-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+.announcement-list-heading > span {
+  color: var(--color-text-muted);
+}
+
+.announcement-item {
+  margin-bottom: 14px;
+}
+
+.announcement-item.is-pinned {
+  border-color: rgba(42, 211, 130, 0.55);
+  box-shadow: 0 12px 26px rgba(42, 211, 130, 0.12);
+}
+
+.announcement-item-main {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.announcement-item-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-text);
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.announcement-item-title svg {
+  color: var(--color-accent);
+}
+
+.announcement-item p {
+  margin: 8px 0 0;
+  color: var(--color-text-secondary);
+  white-space: pre-wrap;
+}
+
+@media (max-width: 640px) {
+  .announcement-page {
+    width: min(100% - 24px, 980px);
+    padding-top: 22px;
+  }
+
+  .announcement-item-main {
+    flex-direction: column;
+  }
+}

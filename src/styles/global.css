@@ -1,87 +1,191 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  --color-primary: #112018;
+  --color-primary-dark: #08110d;
+  --color-accent: #39d98a;
+  --color-ink: #0a0f0d;
+  --color-text: #ecfff5;
+  --color-text-secondary: #b3cfc0;
+  --color-text-muted: #7c9a88;
+  --color-border: #1f3a2e;
+  --color-bg-card: #0f1915;
+  --color-bg-page: #060b09;
+  --sakura-petal-a: #7ef0b8;
+  --sakura-petal-b: #2ad382;
+  --sakura-glow: rgba(46, 204, 113, 0.18);
+  --accent-a: #7ef0b8;
+  --accent-b: #2ad382;
+  --accent-glow: rgba(42, 211, 130, 0.24);
+  --text-on-dark: #ecfff5;
+  --text-on-light: #05120d;
+  --shadow-sm: 0 2px 14px rgba(9, 20, 15, 0.45);
+  --shadow-md: 0 18px 44px rgba(4, 12, 9, 0.62);
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --font-serif: 'Playfair Display', serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+html, body, #root {
+  background: var(--color-bg-page) !important;
+  min-height: 100%;
+  min-height: 100vh;
+}
+
+[data-theme="light"] {
+  --color-primary: #18332a;
+  --color-primary-dark: #0f211b;
+  --color-accent: #1ea96a;
+  --color-ink: #f4fff9;
+  --color-text: #0d1713;
+  --color-text-secondary: #4a685f;
+  --color-text-muted: #72897e;
+  --color-border: #d7ece2;
+  --color-bg-card: #ffffff;
+  --color-bg-page: #eefaf3;
+  --sakura-petal-a: #43d392;
+  --sakura-petal-b: #1d9d5b;
+  --sakura-glow: rgba(29, 157, 91, 0.14);
+  --accent-a: #43d392;
+  --accent-b: #1d9d5b;
+  --accent-glow: rgba(29, 157, 91, 0.14);
+  --text-on-dark: #ecfff5;
+  --text-on-light: #05120d;
+  --shadow-sm: 0 2px 12px rgba(12, 32, 24, 0.08);
+  --shadow-md: 0 18px 40px rgba(12, 32, 24, 0.14);
+}
+
+* { box-sizing: border-box; }
+
+html { background: var(--color-bg-page); }
+
+body {
+  margin: 0;
+  min-width: 320px;
+  font-family: var(--font-sans);
+  color: var(--color-text);
+  background: var(--color-bg-page);
+  overflow-x: hidden;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+a { color: var(--color-accent); }
+
+button,
+.ant-btn {
+  font-family: inherit;
+}
+
+.ant-card,
+.ant-modal-content,
+.ant-drawer-content,
+.ant-popover-inner {
+  background: var(--color-bg-card);
+  color: var(--color-text);
+}
+
+.ant-input,
+.ant-input-affix-wrapper,
+.ant-input-textarea {
+  background: var(--color-bg-card);
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+
+.ant-input::placeholder { color: var(--color-text-muted); }
+
+.ant-btn-primary {
+  background: var(--color-primary-dark);
+  border-color: var(--color-primary-dark);
+}
+
+.ant-btn-primary:hover,
+.ant-btn-primary:focus {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.ant-table,
+.ant-table-container,
+.ant-table-tbody > tr > td {
+  background: var(--color-bg-card) !important;
+  color: var(--color-text);
+}
+
+.ant-table-thead > tr > th {
+  background: var(--color-primary-dark) !important;
+  color: var(--text-on-dark) !important;
+  border-bottom-color: var(--color-border) !important;
+}
+
+.ant-table-tbody > tr:hover > td {
+  background: color-mix(in srgb, var(--color-primary) 12%, var(--color-bg-card)) !important;
+}
+
+.ant-pagination-item-active {
+  border-color: var(--color-primary) !important;
+}
+
+.ant-pagination-item-active a { color: var(--color-primary) !important; }
+
 /* ============================================================
-   BACKGROUND ANIME NIGHT — GREY + SAKURA PETALS
+   MODERN BLACK + GREEN BACKDROP
    ============================================================ */
 .cyber-bg {
   position: fixed;
   inset: 0;
   z-index: -1;
   overflow: hidden;
-  background: radial-gradient(ellipse at 50% -10%, #2a2a2a 0%, #161616 55%, #0d0d0d 100%);
+  background: radial-gradient(ellipse at 50% -10%, #122019 0%, #0b120f 42%, #050806 100%);
 }
 
-/* ---------- Sương mù xám nhẹ ---------- */
 .cyber-bg__mesh {
   position: absolute;
   inset: -15%;
   background:
-    radial-gradient(circle at 18% 22%, rgba(160,160,160,0.16), transparent 50%),
-    radial-gradient(circle at 82% 12%, rgba(130,130,130,0.18), transparent 55%),
-    radial-gradient(circle at 55% 82%, rgba(90,90,90,0.22), transparent 55%),
-    radial-gradient(circle at 88% 78%, rgba(180,180,180,0.10), transparent 50%);
-  filter: blur(80px) saturate(100%);
-  animation: mesh-drift 20s ease-in-out infinite alternate;
-}
-@keyframes mesh-drift {
-  0%   { transform: translate3d(0,0,0) scale(1); }
-  50%  { transform: translate3d(-4%,3%,0) scale(1.12); }
-  100% { transform: translate3d(4%,-3%,0) scale(1.05); }
+    radial-gradient(circle at 18% 22%, rgba(34, 197, 94, 0.16), transparent 48%),
+    radial-gradient(circle at 82% 12%, rgba(110, 231, 183, 0.14), transparent 52%),
+    radial-gradient(circle at 55% 82%, rgba(30, 64, 47, 0.32), transparent 56%),
+    radial-gradient(circle at 88% 78%, rgba(34, 197, 94, 0.12), transparent 50%);
+  filter: blur(80px) saturate(120%);
 }
 
-/* ---------- Blobs sương mù xám ---------- */
 .cyber-bg__blob {
   position: absolute;
   border-radius: 50%;
-  filter: blur(50px);
+  filter: blur(52px);
   opacity: 0.35;
-  animation: blob-float 15s ease-in-out infinite;
 }
+
 .cyber-bg__blob--a {
   width: 380px; height: 380px;
   top: 8%; left: 6%;
-  background: #3a3a3a;
+  background: rgba(34, 197, 94, 0.22);
   animation-delay: 0s;
 }
+
 .cyber-bg__blob--b {
   width: 300px; height: 300px;
   top: 52%; right: 8%;
-  background: #2c2c2c;
+  background: rgba(16, 185, 129, 0.18);
   animation-delay: -5s;
 }
+
 .cyber-bg__blob--c {
   width: 260px; height: 260px;
   bottom: 4%; left: 32%;
-  background: #262626;
+  background: rgba(74, 222, 128, 0.15);
   animation-delay: -9s;
 }
+
 @keyframes blob-float {
-  0%,100% { transform: scale(1) translateY(0); }
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  25%     { transform: translate3d(8px, -12px, 0) scale(1.08); }
   50%     { transform: scale(1.18) translateY(-14px); }
+  75%     { transform: translate3d(-10px, 10px, 0) scale(1.03); }
 }
 
-/* ---------- Cánh hoa đào rơi (giữ nguyên màu hồng, nổi bật trên nền xám) ---------- */
-.cyber-bg__particles { position: absolute; inset: 0; }
-.cyber-bg__particle {
-  position: absolute;
-  width: 10px; height: 8px;
-  background: linear-gradient(135deg, #ffc3d9, #ff9fc0);
-  border-radius: 60% 0 60% 0;
-  opacity: 0.6;
-  animation: petal-fall linear infinite;
-}
-.cyber-bg__particle--ember {
-  width: 8px; height: 7px;
-  background: linear-gradient(135deg, #ffd9e6, #ffb3cc);
-  opacity: 0.45;
-}
-@keyframes petal-fall {
-  0%   { transform: translateY(-10vh) translateX(0) rotate(0deg); opacity: 0; }
-  10%  { opacity: 0.6; }
-  50%  { transform: translateY(45vh) translateX(-30px) rotate(180deg); }
-  90%  { opacity: 0.3; }
-  100% { transform: translateY(110vh) translateX(20px) rotate(360deg); opacity: 0; }
-}
-
-/* ---------- Noise/film grain nhẹ ---------- */
 .cyber-bg__noise {
   position: absolute;
   inset: 0;

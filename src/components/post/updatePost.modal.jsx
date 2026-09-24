@@ -153,7 +153,7 @@ const UpdatePostModal = (props) => {
               htmlFor="btnUploadPostUpdate"
               style={{
                 padding: "8px 16px",
-                background: "#1677ff",
+                background: "var(--color-accent)",
                 color: "#fff",
                 borderRadius: "6px",
                 cursor: "pointer",

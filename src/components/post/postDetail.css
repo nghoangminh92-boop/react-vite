@@ -1,12 +1,12 @@
 :root {
-  --pd-primary: #d4380d;
-  --pd-primary-light: #ff6b3d;
-  --pd-text: #1f1f1f;
-  --pd-text-secondary: #65676b;
-  --pd-text-muted: #8a8d91;
-  --pd-border: #e4e6eb;
-  --pd-bg-hover: #f2f3f5;
-  --pd-bg-comment: #f0f2f5;
+  --pd-primary: var(--color-accent);
+  --pd-primary-light: var(--accent-a);
+  --pd-text: var(--color-text);
+  --pd-text-secondary: var(--color-text-secondary);
+  --pd-text-muted: var(--color-text-muted);
+  --pd-border: var(--color-border);
+  --pd-bg-hover: rgba(126, 240, 184, 0.1);
+  --pd-bg-comment: rgba(15, 25, 21, 0.82);
   --pd-radius-sm: 8px;
   --pd-radius-md: 12px;
   --pd-radius-lg: 18px;
@@ -37,7 +37,7 @@
   height: 48px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid #fff;
+  border: 2px solid rgba(126, 240, 184, 0.4);
   box-shadow: 0 0 0 1px var(--pd-border), var(--pd-shadow-sm);
   flex-shrink: 0;
   transition: var(--pd-transition);
@@ -57,20 +57,20 @@
 .post-author-name {
   font-weight: 700;
   font-size: 15px;
-  color: var(--pd-text);
+  color: #10251a;
   letter-spacing: -0.1px;
 }
 
 .post-author-id {
   font-size: 12px;
-  color: var(--pd-text-muted);
+  color: #668477;
 }
 
 /* ===== POST BODY ===== */
 .post-title {
   font-size: 19px;
   font-weight: 800;
-  color: var(--pd-text);
+  color: #10251a;
   margin-bottom: 10px;
   line-height: 1.35;
   letter-spacing: -0.3px;
@@ -78,7 +78,7 @@
 
 .post-meta {
   font-size: 13px;
-  color: var(--pd-text-muted);
+  color: #668477;
   margin-bottom: 14px;
   display: flex;
   align-items: center;
@@ -88,7 +88,7 @@
 .post-content {
   font-size: 14.5px;
   line-height: 1.65;
-  color: var(--pd-text);
+  color: #294b3a;
   white-space: pre-wrap;
   margin-bottom: 16px;
 }
@@ -100,7 +100,7 @@
   border-radius: var(--pd-radius-md);
   margin-bottom: 18px;
   box-shadow: var(--pd-shadow-sm);
-  background: #fafafa;
+  background: rgba(8, 15, 12, 0.72);
   transition: var(--pd-transition);
 }
 
@@ -122,7 +122,7 @@
 .comments-header {
   font-size: 16px;
   font-weight: 700;
-  color: var(--pd-text);
+  color: #10251a;
   margin-bottom: 14px;
   display: flex;
   align-items: center;
@@ -164,26 +164,31 @@
   gap: 10px;
 }
 
-.ant-input-textarea,
-textarea.ant-input {
+.post-detail-container .ant-input-textarea,
+.post-detail-container textarea.ant-input {
   border-radius: var(--pd-radius-md) !important;
   border: 1px solid var(--pd-border) !important;
-  background: var(--pd-bg-comment) !important;
+  background: #edf6f1 !important;
+  color: #10251a !important;
   font-size: 13.5px;
   padding: 10px 14px !important;
   transition: var(--pd-transition);
   resize: none;
 }
 
-textarea.ant-input:hover {
-  background: #e9ebee !important;
+.post-detail-container textarea.ant-input:hover {
+  background: #f5fbf7 !important;
 }
 
-textarea.ant-input:focus,
-.ant-input-textarea-focused {
-  background: #fff !important;
+ .post-detail-container textarea.ant-input:focus,
+.post-detail-container .ant-input-textarea-focused {
+  background: #ffffff !important;
   border-color: var(--pd-primary) !important;
-  box-shadow: 0 0 0 3px rgba(212, 56, 13, 0.1) !important;
+  box-shadow: 0 0 0 3px rgba(42, 211, 130, 0.16) !important;
+}
+
+.post-detail-container textarea.ant-input::placeholder {
+  color: #668477 !important;
 }
 
 .comment-button {
@@ -194,13 +199,14 @@ textarea.ant-input:focus,
   align-self: flex-end;
   background: linear-gradient(135deg, var(--pd-primary) 0%, var(--pd-primary-light) 100%) !important;
   border: none !important;
-  box-shadow: 0 3px 10px rgba(212, 56, 13, 0.25);
+  color: var(--text-on-light) !important;
+  box-shadow: 0 3px 10px rgba(42, 211, 130, 0.22);
   transition: var(--pd-transition) !important;
 }
 
 .comment-button:hover {
   transform: translateY(-1px);
-  box-shadow: 0 5px 14px rgba(212, 56, 13, 0.35);
+  box-shadow: 0 5px 14px rgba(42, 211, 130, 0.3);
 }
 
 /* ===== COMMENT LIST / BUBBLES ===== */
@@ -241,8 +247,8 @@ textarea.ant-input:focus,
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #1677ff, #4096ff);
-  color: #fff;
+  background: linear-gradient(135deg, var(--accent-a), var(--accent-b));
+  color: var(--text-on-light);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -257,7 +263,7 @@ textarea.ant-input:focus,
 }
 
 .comment-bubble {
-  background: var(--pd-bg-comment);
+  background: #293630;
   border-radius: var(--pd-radius-lg);
   padding: 8px 14px;
   display: inline-block;
@@ -266,19 +272,28 @@ textarea.ant-input:focus,
 }
 
 .comment-bubble:hover {
-  background: var(--pd-bg-hover);
+  background: #35483f;
+  color: #ecfff5;
+}
+
+.comment-bubble .translate-text {
+  color: #ecfff5;
+}
+
+.comment-bubble:hover .translate-text {
+  color: #ecfff5;
 }
 
 .comment-author-name {
   font-weight: 700;
   font-size: 13px;
-  color: var(--pd-text);
+  color: #ecfff5;
   margin-bottom: 2px;
 }
 
 .comment-text {
   font-size: 13.5px;
-  color: var(--pd-text);
+  color: #ecfff5;
   line-height: 1.5;
   word-break: break-word;
 }
@@ -299,7 +314,7 @@ textarea.ant-input:focus,
 .comment-action-btn {
   font-size: 12px;
   font-weight: 600;
-  color: var(--pd-text-muted);
+  color: #8fb2a0;
   cursor: pointer;
   transition: var(--pd-transition);
   display: flex;
@@ -308,11 +323,11 @@ textarea.ant-input:focus,
 }
 
 .comment-action-btn:hover {
-  color: var(--pd-primary);
+  color: #7ef0b8;
 }
 
 .comment-action-btn.danger:hover {
-  color: #d32029;
+  color: #ff8b8b;
 }
 
 .comments-list .ant-empty {
@@ -346,12 +361,12 @@ textarea.ant-input:focus,
 
 /* ===== FOOD REVIEW CARD - thiết kế mới ===== */
 .food-review-card {
-  background: linear-gradient(135deg, #fff8f0 0%, #fff1e0 100%);
-  border: 1.5px solid #ffcc80;
+  background: linear-gradient(135deg, rgba(17, 35, 26, 0.96), rgba(8, 17, 13, 0.96));
+  border: 1.5px solid rgba(126, 240, 184, 0.28);
   border-radius: var(--pd-radius-md);
   padding: 14px 16px;
   margin-bottom: 16px;
-  box-shadow: 0 3px 10px rgba(212, 56, 13, 0.1);
+  box-shadow: 0 3px 14px rgba(0, 0, 0, 0.24);
   animation: cardPop 0.3s ease;
 }
 
@@ -389,7 +404,7 @@ textarea.ant-input:focus,
 .food-review-label {
   font-size: 11.5px;
   font-weight: 600;
-  color: #a06a2a;
+  color: #8fb2a0;
   text-transform: uppercase;
   letter-spacing: 0.3px;
 }
@@ -413,13 +428,13 @@ textarea.ant-input:focus,
 .food-review-avg-star {
   font-size: 14px;
   font-weight: 700;
-  color: var(--pd-text);
+  color: #ecfff5;
   white-space: nowrap;
 }
 
 .food-review-avg-count {
   font-size: 11.5px;
-  color: var(--pd-text-muted);
+  color: #8fb2a0;
   white-space: nowrap;
 }
 
@@ -430,13 +445,13 @@ textarea.ant-input:focus,
   gap: 10px;
   margin-top: 12px;
   padding-top: 12px;
-  border-top: 1px dashed #ffcc80;
+  border-top: 1px dashed rgba(126, 240, 184, 0.28);
 }
 
 .food-review-your-label {
   font-size: 13px;
   font-weight: 600;
-  color: #8a5a1f;
+  color: #b5d7c3;
   flex-shrink: 0;
 }
 
@@ -450,7 +465,7 @@ textarea.ant-input:focus,
   align-items: center;
   gap: 4px;
   font-size: 12.5px;
-  color: var(--pd-text-secondary);
+  color: #b5d7c3;
   background: var(--pd-bg-comment);
   padding: 4px 12px;
   border-radius: 999px;
@@ -458,7 +473,7 @@ textarea.ant-input:focus,
 }
 
 .post-datetime strong {
-  color: var(--pd-text);
+  color: #ecfff5;
   font-weight: 700;
 }
 

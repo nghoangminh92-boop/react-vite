@@ -3,6 +3,7 @@ import { Button, Form, Input, Row, Col, notification } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { forgotPasswordAPI } from "../services/api.services";
 import { useState } from "react";
+import "./forgotPassword.css";
 
 const ForgotPasswordPage = () => {
   const [form] = Form.useForm();
@@ -47,23 +48,21 @@ const ForgotPasswordPage = () => {
   };
 
   return (
-    <Row justify="center" style={{ margin: "30px" }}>
+    <Row justify="center" className="forgot-page-wrapper">
       <Col span={24}>
-        <fieldset
-          style={{
-            padding: "20px",
-            margin: "5px auto",
-            border: "1px solid #ccc",
-            borderRadius: "6px",
-            maxWidth: "420px",
-            background: "#fff",
-          }}
-        >
-          <legend style={{ padding: "0 10px", fontWeight: 600 }}>
-            パスワードをお忘れの方
-          </legend>
+        <fieldset className="forgot-card">
+          <div className="forgot-logo-wrap">
+            <img
+              src="https://image.jimcdn.com/app/cms/image/transf/dimension=320x10000:format=jpg/path/sdebecf2bdf0cca64/image/icfa5182b8564128f/version/1752621256/image.jpg"
+              alt="Food Review logo"
+            />
+          </div>
 
-          <p style={{ color: "#888", marginBottom: 20, fontSize: 13 }}>
+          <div className="forgot-title">
+            パスワードをお忘れの方
+          </div>
+
+          <p className="forgot-description">
             登録済みのメールアドレスと電話番号を入力して、新しいパスワードを設定してください。
           </p>
 

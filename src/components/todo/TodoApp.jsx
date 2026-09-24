@@ -2,8 +2,8 @@ import "./todo.css";
 import banner from "../../assets/banner.jpg";
 import banner1 from "../../assets/banner1.jpg";
 import { useContext, useEffect, useRef, useState } from "react";
-import { Button, notification } from "antd";
-import { LeftOutlined, RightOutlined } from "@ant-design/icons";
+import { Button, Input, notification } from "antd";
+import { LeftOutlined, RightOutlined, SearchOutlined } from "@ant-design/icons";
 import PostForm from "../post/post.form";
 import PostsFeedList from "../post/PostsFeedList";
 import PostDetail from "../post/post.detail";
@@ -39,12 +39,31 @@ const parsePostListResponse = (res, current, pageSize) => {
   return { posts: [], total: 0, current, pageSize };
 };
 
+const normalizeSearchText = (value) =>
+  String(value || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLocaleLowerCase()
+    .trim();
+
+const SEARCH_ALIASES = {
+  ramen: ["ラーメン", "らーめん"],
+  pho: ["フォー", "ふぉー"],
+};
+
+const getSearchTerms = (value) => {
+  const keyword = normalizeSearchText(value);
+  return [keyword, ...(SEARCH_ALIASES[keyword] || [])].filter(Boolean);
+};
+
 const TodoApp = () => {
   const { user } = useContext(AuthContext);
   const { t } = useTranslation();   // ⭐ dùng i18n
 
   const [dataPosts, setDataPosts] = useState([]);
   const [dataMenu, setDataMenu] = useState([]);
+  const [pinnedAnnouncement, setPinnedAnnouncement] = useState(null);
+  const [homeSearch, setHomeSearch] = useState("");
   const [current, setCurrent] = useState(1);
   const [pageSize] = useState(10);
   const [total, setTotal] = useState(0);
@@ -96,6 +115,13 @@ const TodoApp = () => {
   useEffect(() => {
     loadPost();
     loadMenu();
+
+    try {
+      const announcements = JSON.parse(localStorage.getItem("food-review-announcements") || "[]");
+      setPinnedAnnouncement(announcements.find((item) => item.pinned) || null);
+    } catch {
+      setPinnedAnnouncement(null);
+    }
   }, []);
 
   const loadMenu = async () => {
@@ -160,6 +186,32 @@ const TodoApp = () => {
     setIsFoodDrawerOpen(true);
   };
 
+  const searchTerms = getSearchTerms(homeSearch);
+  const searchKeyword = searchTerms[0] || "";
+
+  const filteredMenu = dataMenu.filter((dish) => {
+    const keyword = searchKeyword;
+    if (!keyword) return true;
+
+    return [dish.name, dish.description, dish.category]
+      .filter(Boolean)
+      .some((value) => {
+        const normalizedValue = normalizeSearchText(value);
+        return searchTerms.some((term) => normalizedValue.includes(term));
+      });
+  });
+
+  const filteredPosts = dataPosts.filter((post) => {
+    if (!searchKeyword) return true;
+
+    return [post.title, post.content, post.author]
+      .filter(Boolean)
+      .some((value) => {
+        const normalizedValue = normalizeSearchText(value);
+        return searchTerms.some((term) => normalizedValue.includes(term));
+      });
+  });
+
   const handleRatingChanged = () => {
     setRatingRefreshKey((k) => k + 1);
     loadMenu();
@@ -196,15 +248,34 @@ const TodoApp = () => {
         <div className="banner-text">
           <h1>{t("discover")}</h1>
           <p>{t("banner_sub")}</p>
+          <Input
+            allowClear
+            prefix={<SearchOutlined />}
+            value={homeSearch}
+            onChange={(event) => setHomeSearch(event.target.value)}
+            placeholder={t("search_home")}
+            aria-label={t("search_home")}
+            className="home-search"
+          />
         </div>
       </div>
+
+      {pinnedAnnouncement && (
+        <section className="pinned-announcement" aria-label={pinnedAnnouncement.title}>
+          <div className="pinned-announcement-icon">!</div>
+          <div>
+            <strong>{pinnedAnnouncement.title}</strong>
+            <p>{pinnedAnnouncement.content}</p>
+          </div>
+        </section>
+      )}
 
       {/* FOOD LIST */}
       <div className="food-section">
         <div className="food-section-header">
           <h2 className="section-title">{t("menu")}</h2>
 
-          {dataMenu.length > 4 && (
+          {filteredMenu.length > 4 && (
             <div className="food-scroll-controls">
               <button className="food-scroll-btn" onClick={() => scrollFoodList("left")}>
                 <LeftOutlined />
@@ -217,8 +288,8 @@ const TodoApp = () => {
         </div>
 
         <div className="food-list" ref={foodListRef}>
-          {dataMenu.length > 0 ? (
-            dataMenu.map((dish) => (
+          {filteredMenu.length > 0 ? (
+            filteredMenu.map((dish) => (
               <div
                 className="food-card"
                 key={dish._id}
@@ -237,7 +308,9 @@ const TodoApp = () => {
               </div>
             ))
           ) : (
-            <p>{t("no_food")}</p>
+            <p className="home-menu-empty">
+              {homeSearch.trim() ? t("no_search_results") : t("no_food")}
+            </p>
           )}
         </div>
       </div>
@@ -250,7 +323,7 @@ const TodoApp = () => {
         </div>
 
         <PostsFeedList
-          posts={dataPosts}
+          posts={filteredPosts}
           onPostClick={handlePostClick}
           loading={loading && dataPosts.length === 0}
           currentUser={user}

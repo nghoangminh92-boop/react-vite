@@ -5,13 +5,13 @@
   bottom: 0;
   width: 100%;
   z-index: 5;
-  background: #1f1f1f;
-  color: #b8b8b8;
+  background: rgba(8, 17, 13, 0.9);
+  color: var(--color-text-secondary);
   text-align: center;
   font-family: var(--font-sans);
   font-size: 12px;
   letter-spacing: 0.2px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid rgba(126, 240, 184, 0.14);
   box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.3);
 }
 
@@ -26,7 +26,7 @@
 }
 
 .footer a:hover {
-  color: #ffffff;
+  color: var(--color-text);
 }
 .home-container {
   width: 100%;

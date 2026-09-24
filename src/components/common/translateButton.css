@@ -21,10 +21,11 @@
 }
 
 .translate-text.is-translated {
-  background: linear-gradient(135deg, #f0f7ff 0%, #e6f4ff 100%);
-  border-left: 3px solid #1677ff;
+  background: linear-gradient(135deg, rgba(126, 240, 184, 0.14), rgba(42, 211, 130, 0.06));
+  border-left: 3px solid var(--color-accent);
   padding: 8px 12px;
   border-radius: 6px;
+  color: #ecfff5;
 }
 
 .translate-badge {
@@ -34,8 +35,8 @@
   width: fit-content;
   font-size: 11px;
   font-weight: 600;
-  color: #1677ff;
-  background: #e6f4ff;
+  color: #7ef0b8;
+  background: rgba(126, 240, 184, 0.14);
   padding: 2px 8px;
   border-radius: 999px;
   animation: translateFadeIn 0.3s ease;
@@ -45,11 +46,11 @@
   padding: 0 !important;
   height: auto !important;
   font-size: 12.5px !important;
-  color: #8a8d91 !important;
+  color: #8fb2a0 !important;
   width: fit-content;
   transition: color 0.2s;
 }
 
 .translate-btn.ant-btn-link:hover {
-  color: #1677ff !important;
+  color: #7ef0b8 !important;
 }

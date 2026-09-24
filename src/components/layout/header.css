@@ -7,8 +7,8 @@
   background: transparent;
   box-shadow: none;
   --header-btn-h: 2.5rem;
-  --header-accent-a: #d4d4d4;
-  --header-accent-b: #9a9a9a;
+  --header-accent-a: #7ef0b8;
+  --header-accent-b: #2ad382;
 }
 
 .app-header-inner {
@@ -18,16 +18,17 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 0.6rem 1.2rem;
+  padding: 0.7rem 1.2rem;
   border-radius: 999px;
-  background: var(--color-primary-dark);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+  background: rgba(8, 17, 13, 0.8);
+  border: 1px solid rgba(126, 240, 184, 0.2);
+  box-shadow: 0 18px 38px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(14px);
   height: auto;
   position: relative;
   z-index: 101;
 }
 
-/* ===== LOGO ===== */
 .app-logo {
   display: flex;
   align-items: center;
@@ -51,13 +52,12 @@
   font-size: 19px;
   font-weight: 800;
   letter-spacing: 0.2px;
-  color: var(--text-on-dark);
+  color: #f2fff8;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-/* ===== NAV DESKTOP (dạng pill) ===== */
 .app-nav {
   display: flex !important;
   align-items: center;
@@ -71,25 +71,26 @@
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  padding: 0.5rem 0.9rem;
+  padding: 0.56rem 0.95rem;
   border-radius: 999px;
   font-family: var(--font-sans);
   font-size: 0.95rem;
   font-weight: 700;
-  color: #c9c9c9;
+  color: rgba(236, 255, 245, 0.74);
   text-decoration: none;
-  transition: background 0.2s ease, color 0.2s ease;
+  transition: background 0.22s ease, color 0.22s ease, transform 0.2s ease;
   white-space: nowrap;
   flex-shrink: 0;
 }
 
 .app-nav-link:hover,
 .app-nav-link.active {
-  background: rgba(255, 255, 255, 0.1);
-  color: var(--header-accent-a);
+  background: linear-gradient(135deg, rgba(126, 240, 184, 0.14), rgba(42, 211, 130, 0.08));
+  color: #f2fff8;
+  box-shadow: inset 0 0 0 1px rgba(126, 240, 184, 0.14);
+  transform: translateY(-1px);
 }
 
-/* ===== RIGHT SIDE ===== */
 .app-header-right {
   display: flex;
   align-items: center;
@@ -97,7 +98,6 @@
   flex-shrink: 0;
 }
 
-/* ⭐ Chiều cao đồng bộ qua 1 biến duy nhất — không còn xung đột specificity với breakpoint */
 .icon-btn,
 .app-login-btn,
 .app-user-chip,
@@ -114,30 +114,30 @@
   gap: 8px;
   padding: 0 0.95rem;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
-  color: var(--text-on-dark);
+  background: linear-gradient(135deg, var(--color-accent), var(--header-accent-b));
+  color: var(--text-on-light);
   font-size: 0.9rem;
   font-weight: 700;
   text-decoration: none;
-  transition: background 0.2s ease, transform 0.15s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
   white-space: nowrap;
   flex-shrink: 0;
+  box-shadow: 0 12px 22px rgba(42, 211, 130, 0.22);
 }
 
 .app-login-btn:hover {
-  background: var(--header-accent-a);
-  color: var(--text-on-light);
   transform: translateY(-1px);
+  box-shadow: 0 16px 28px rgba(42, 211, 130, 0.3);
 }
 
-/* ===== USER CHIP ===== */
 .app-user-chip {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
   padding: 0 0.8rem 0 0.45rem;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(126, 240, 184, 0.14);
   color: var(--text-on-dark);
   font-weight: 700;
   font-size: 0.9rem;
@@ -147,7 +147,7 @@
 }
 
 .app-user-chip:hover {
-  background: rgba(255, 255, 255, 0.14);
+  background: rgba(126, 240, 184, 0.08);
 }
 
 .app-user-avatar-fallback {
@@ -171,25 +171,25 @@
   font-size: 11px;
 }
 
-/* ===== ICON BUTTON dùng chung ===== */
 .icon-btn {
   display: grid;
   place-items: center;
   width: var(--header-btn-h);
   border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(126, 240, 184, 0.18);
+  background: rgba(8, 17, 13, 0.7);
   color: var(--text-on-dark);
   font-size: 1.1rem;
   flex-shrink: 0;
-  transition: transform 0.2s ease, background 0.2s ease;
-}
-.icon-btn:hover {
-  transform: scale(1.08) rotate(-6deg);
-  background: rgba(255, 255, 255, 0.12);
+  transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
 }
 
-/* ===== HAMBURGER — biến mất khi menu mở ===== */
+.icon-btn:hover {
+  transform: scale(1.08) rotate(-6deg);
+  background: rgba(126, 240, 184, 0.1);
+  border-color: rgba(126, 240, 184, 0.32);
+}
+
 .app-hamburger {
   display: none !important;
   flex-direction: column;
@@ -221,7 +221,6 @@
   border-radius: 2px;
 }
 
-/* ===== OVERLAY để bấm ra ngoài đóng menu mobile ===== */
 .app-mobile-nav-overlay {
   display: none;
   position: fixed;
@@ -234,7 +233,6 @@
   display: block;
 }
 
-/* ===== MOBILE NAV DROPDOWN ===== */
 .app-mobile-nav {
   display: none;
   flex-direction: column;
@@ -242,8 +240,10 @@
   overflow: hidden;
   margin: 0.5rem 1rem 0;
   border-radius: 1.25rem;
-  background: var(--color-primary-dark);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+  background: rgba(8, 17, 13, 0.86);
+  border: 1px solid rgba(126, 240, 184, 0.12);
+  box-shadow: 0 18px 38px rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(14px);
   transition: max-height 0.3s ease;
   position: relative;
   z-index: 95;
@@ -258,11 +258,11 @@
   align-items: center;
   gap: 12px;
   padding: 0.9rem 1.2rem;
-  color: #c9c9c9;
+  color: rgba(236, 255, 245, 0.8);
   text-decoration: none;
   font-size: 15px;
   font-weight: 700;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(126, 240, 184, 0.08);
   transition: background 0.2s ease, color 0.2s ease;
 }
 
@@ -272,13 +272,10 @@
 
 .app-mobile-nav-link:hover,
 .app-mobile-nav-link.active {
-  background: rgba(255, 255, 255, 0.06);
-  color: var(--header-accent-a);
+  background: rgba(126, 240, 184, 0.08);
+  color: #f2fff8;
 }
 
-/* ============ RESPONSIVE ============ */
-
-/* 769–1100px: laptop/tablet hẹp — nav vẫn hiện ngang nhưng thu gọn */
 @media (max-width: 1100px) and (min-width: 769px) {
   .app-header { --header-btn-h: 2.35rem; }
   .app-header-inner { padding: 0.5rem 1rem; gap: 10px; }
@@ -288,7 +285,6 @@
   .app-user-name { max-width: 90px; }
 }
 
-/* <=768px: chuyển sang hamburger, right-side vẫn có nhiều nút cần co giãn */
 @media (max-width: 768px) {
   .app-header {
     --header-btn-h: 2.25rem;
@@ -302,12 +298,9 @@
   .app-user-name { display: none; }
 
   .app-header-right { gap: 0.35rem; }
-
   .icon-btn { font-size: 1rem; }
-
   .app-login-btn span { display: none; }
   .app-login-btn { padding: 0 0.7rem; }
-
   .app-header-right .ant-dropdown-trigger,
   .app-header-right button {
     padding: 0 0.6rem;
@@ -315,7 +308,6 @@
   }
 }
 
-/* <=480px: điện thoại — mọi nút thu nhỏ tối đa, chỉ giữ icon */
 @media (max-width: 480px) {
   .app-header {
     --header-btn-h: 2rem;
@@ -326,22 +318,16 @@
 
   .app-logo-image { width: 1.9rem; height: 1.9rem; }
   .app-logo-text { font-size: 15px; max-width: 92px; }
-
   .app-header-right { gap: 0.25rem; }
-
   .icon-btn { font-size: 0.9rem; }
-
   .app-user-chip { padding: 0 0.5rem 0 0.3rem; }
-
   .app-login-btn { padding: 0 0.6rem; }
-
   .app-hamburger {
     width: 28px;
     height: 28px;
   }
 }
 
-/* <=360px: cực nhỏ — ẩn text logo và text language switcher */
 @media (max-width: 360px) {
   .app-header-inner { gap: 4px; }
   .app-logo-text { display: none; }
@@ -351,7 +337,6 @@
   }
 }
 
-/* ===== LANGUAGE SWITCHER ===== */
 .app-header-right > *:first-child {
   display: flex;
   align-items: center;
@@ -364,7 +349,8 @@
   gap: 6px;
   padding: 0 0.8rem;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(126, 240, 184, 0.16);
   color: var(--text-on-dark) !important;
   font-size: 13px;
   font-weight: 700;
@@ -377,5 +363,5 @@
 
 .app-header-right .ant-dropdown-trigger:hover,
 .app-header-right button:hover {
-  background: rgba(255, 255, 255, 0.16);
+  background: rgba(126, 240, 184, 0.08);
 }

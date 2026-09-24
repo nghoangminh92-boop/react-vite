@@ -161,7 +161,7 @@ const ProfilePage = () => {
               icon={!avatarSrc && <UserOutlined />}
               style={{
                 cursor: "pointer",
-                border: "3px solid #1677ff",
+                border: "3px solid var(--color-accent)",
                 marginBottom: 12,
               }}
               onClick={() => fileInputRef.current?.click()}

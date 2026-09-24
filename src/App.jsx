@@ -28,31 +28,12 @@ const App = () => {
     setIsAppLoading(false);
   };
 
-  // ⭐ TẠO PARTICLES SAU KHI DOM RENDER
-  useEffect(() => {
-    const container = document.querySelector(".cyber-bg__particles");
-    if (!container) return;
-
-    for (let i = 0; i < 40; i++) {
-      const p = document.createElement("div");
-      p.className = "cyber-bg__particle";
-      p.style.left = Math.random() * 100 + "%";
-      p.style.bottom = Math.random() * 100 + "%";
-      p.style.animationDuration = 6 + Math.random() * 6 + "s";
-      container.appendChild(p);
-    }
-  }, []);
-
   return (
     <LanguageProvider>
 
-      {/* ⭐ BACKGROUND XÁM ĐEN */}
+      {/* Static black-green backdrop */}
       <div className="cyber-bg">
         <div className="cyber-bg__mesh"></div>
-        <div className="cyber-bg__blob cyber-bg__blob--a"></div>
-        <div className="cyber-bg__blob cyber-bg__blob--b"></div>
-        <div className="cyber-bg__blob cyber-bg__blob--c"></div>
-        <div className="cyber-bg__particles"></div>
         <div className="cyber-bg__noise"></div>
       </div>
 

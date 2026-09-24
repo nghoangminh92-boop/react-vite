@@ -4,7 +4,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: transparent;
+  background: radial-gradient(circle at top, rgba(42, 211, 130, 0.09), transparent 30%);
   padding: 20px;
   position: relative;
 }
@@ -19,10 +19,10 @@
   width: 520px;
   max-width: 100%;
   padding: 40px 35px;
-  border-radius: var(--radius-lg);
-  background: var(--color-bg-card);
-  box-shadow: var(--shadow-md);
-  border: none;
+  border-radius: 26px;
+  background: rgba(8, 17, 13, 0.9);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.36), 0 0 0 1px rgba(126, 240, 184, 0.08);
+  border: 1px solid rgba(126, 240, 184, 0.16);
 }
 
 .register-logo-wrap {
@@ -37,12 +37,13 @@
   height: 110px;
   border-radius: 50%;
   overflow: hidden;
-  background: #fff;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  background: rgba(8, 15, 12, 0.72);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 14px 28px rgba(42, 211, 130, 0.18);
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 3px solid var(--sakura-petal-a);
+  border: 3px solid rgba(126, 240, 184, 0.7);
 }
 
 .register-logo-circle img {
@@ -55,14 +56,14 @@
   text-align: center;
   margin-bottom: 5px !important;
   font-family: var(--font-serif) !important;
-  color: var(--color-ink) !important;
+  color: #ecfff5 !important;
 }
 
 .register-subtitle {
   display: block;
   text-align: center;
   margin-bottom: 30px;
-  color: var(--color-text-secondary);
+  color: #b5d7c3;
 }
 
 .register-form-inner {
@@ -77,45 +78,81 @@
 
 .register-form-inner .ant-form-item-label label {
   font-weight: 600;
-  color: var(--color-text-secondary);
+  color: #b5d7c3;
 }
 
 .register-form-inner .ant-input,
 .register-form-inner .ant-input-password {
-  border-radius: 10px;
-  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  border: 1px solid rgba(126, 240, 184, 0.18);
+  background: rgba(8, 15, 12, 0.72);
+  backdrop-filter: blur(8px);
+  color: #ecfff5;
+}
+
+.register-form-inner .ant-input::placeholder,
+.register-form-inner .ant-input-password input::placeholder {
+  color: #7b9689;
 }
 
 .register-form-inner .ant-input:focus,
 .register-form-inner .ant-input-affix-wrapper-focused {
   border-color: var(--sakura-petal-b) !important;
-  box-shadow: 0 0 0 3px var(--sakura-glow) !important;
+  box-shadow: 0 0 0 3px rgba(42, 211, 130, 0.18) !important;
 }
 
 .register-submit-btn {
   height: 48px !important;
   border-radius: 999px !important;
   font-size: 16px !important;
-  font-weight: 600 !important;
-  background: var(--color-ink) !important;
-  border-color: var(--color-ink) !important;
-  box-shadow: var(--shadow-sm) !important;
+  font-weight: 700 !important;
+  background: linear-gradient(135deg, var(--color-accent), var(--sakura-petal-b)) !important;
+  border-color: transparent !important;
+  box-shadow: 0 12px 22px rgba(42, 211, 130, 0.28) !important;
   transition: background 0.2s ease !important;
 }
 
 .register-submit-btn:hover {
-  background: #2c2c2c !important;
-  border-color: #2c2c2c !important;
+  background: linear-gradient(135deg, #71f8be, #1dbb68) !important;
+  border-color: transparent !important;
 }
 
 .register-divider-text {
   text-align: center;
   font-size: 13px;
-  color: var(--color-text-secondary);
+  color: #b5d7c3;
 }
 
 .register-divider-text a {
-  color: var(--color-ink);
+  color: #7ef0b8;
   font-weight: 600;
   text-decoration: underline;
+}
+
+[data-theme="light"] .register-card {
+  background: rgba(255, 255, 255, 0.82);
+  border-color: rgba(29, 157, 91, 0.24);
+  box-shadow: 0 24px 54px rgba(19, 74, 48, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+[data-theme="light"] .register-title {
+  color: #10251a !important;
+}
+
+[data-theme="light"] .register-subtitle,
+[data-theme="light"] .register-form-inner .ant-form-item-label label,
+[data-theme="light"] .register-divider-text {
+  color: #426957;
+}
+
+[data-theme="light"] .register-form-inner .ant-input,
+[data-theme="light"] .register-form-inner .ant-input-password {
+  background: rgba(242, 252, 246, 0.95);
+  color: #10251a;
+  border-color: rgba(29, 157, 91, 0.26);
+}
+
+[data-theme="light"] .register-form-inner .ant-input::placeholder,
+[data-theme="light"] .register-form-inner .ant-input-password input::placeholder {
+  color: #6b8b79;
 }

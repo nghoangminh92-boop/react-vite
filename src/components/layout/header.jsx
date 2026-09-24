@@ -12,6 +12,7 @@ import {
   PhoneOutlined,
   SunOutlined,
   MoonOutlined,
+  NotificationOutlined,
 } from '@ant-design/icons';
 import { Dropdown, message, Avatar } from 'antd';
 import { useContext, useState } from 'react';
@@ -52,6 +53,7 @@ const Header = () => {
           { key: 'dishes', to: '/dishes', label: t("dishes"), icon: <AuditOutlined /> },
           { key: 'posts', to: '/posts', label: t("posts"), icon: <FileTextOutlined /> },
           { key: 'users', to: '/users', label: t("users"), icon: <UsergroupAddOutlined /> },
+          { key: 'announcements', to: '/announcements', label: t("announcements"), icon: <NotificationOutlined /> },
         ]
       : []),
 

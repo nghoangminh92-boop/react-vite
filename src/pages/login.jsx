@@ -3,7 +3,7 @@ import { ArrowRightOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Row, Col, Divider, message, notification } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { loginUserAPI } from "../services/api.services";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "../components/context/auth.context";
 import { GoogleLogin } from '@react-oauth/google';
 import { googleLoginAPI } from "../services/api.services";
@@ -17,28 +17,6 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const { setUser } = useContext(AuthContext);
   const { t, i18n } = useTranslation();
-  const sakuraContainerRef = useRef(null);
-
-  // ⭐ SAKURA BACKGROUND
-  useEffect(() => {
-    const container = sakuraContainerRef.current;
-    if (!container || container.childElementCount > 0) return;
-
-    for (let i = 0; i < 35; i++) {
-      const petal = document.createElement("div");
-      petal.className = "sakura-bg__petal";
-      petal.style.left = Math.random() * 100 + "%";
-      petal.style.top = "-10px";
-      petal.style.animationDuration = 9 + Math.random() * 8 + "s";
-      petal.style.animationDelay = -(Math.random() * 12) + "s";
-      container.appendChild(petal);
-    }
-
-    return () => {
-      container.innerHTML = "";
-    };
-  }, []);
-
   const onFinish = async (values) => {
     setLoading(true);
     try {
@@ -96,12 +74,6 @@ const LoginPage = () => {
 
   return (
     <>
-      <div className="sakura-bg">
-        <div className="sakura-bg__mesh"></div>
-        <div className="sakura-bg__petals" ref={sakuraContainerRef}></div>
-        <div className="sakura-bg__noise"></div>
-      </div>
-
       <Row justify="center" className="login-page-wrapper">
         <div className="login-lang-switcher">
           <LanguageSwitcher />
