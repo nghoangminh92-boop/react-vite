@@ -753,7 +753,25 @@ body {
 
   .pinned-announcement {
     width: calc(100% - 32px);
-    margin-top: -4px;
+    margin: 10px auto 22px;
+    padding: 12px 14px;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .pinned-announcement-icon {
+    width: 24px;
+    height: 24px;
+    font-size: 12px;
+  }
+
+  .pinned-announcement strong {
+    font-size: 13px;
+  }
+
+  .pinned-announcement p {
+    font-size: 12px;
+    line-height: 1.45;
   }
 
   .section-title {

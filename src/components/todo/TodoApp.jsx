@@ -56,6 +56,23 @@ const getSearchTerms = (value) => {
   return [keyword, ...(SEARCH_ALIASES[keyword] || [])].filter(Boolean);
 };
 
+const readPinnedAnnouncement = () => {
+  try {
+    const announcements = JSON.parse(localStorage.getItem("food-review-announcements") || "[]");
+    if (!Array.isArray(announcements)) return null;
+
+    return (
+      announcements.find(
+        (item) =>
+          item.pinned &&
+          (!item.expiresAt || new Date(`${item.expiresAt}T23:59:59`).getTime() >= Date.now())
+      ) || null
+    );
+  } catch {
+    return null;
+  }
+};
+
 const TodoApp = () => {
   const { user } = useContext(AuthContext);
   const { t } = useTranslation();   // ⭐ dùng i18n
@@ -115,17 +132,21 @@ const TodoApp = () => {
   useEffect(() => {
     loadPost();
     loadMenu();
+    setPinnedAnnouncement(readPinnedAnnouncement());
 
-    try {
-      const announcements = JSON.parse(localStorage.getItem("food-review-announcements") || "[]");
-      setPinnedAnnouncement(
-        announcements.find(
-          (item) => item.pinned && (!item.expiresAt || new Date(`${item.expiresAt}T23:59:59`).getTime() >= Date.now())
-        ) || null
-      );
-    } catch {
-      setPinnedAnnouncement(null);
-    }
+    const handleAnnouncementUpdate = () => {
+      setPinnedAnnouncement(readPinnedAnnouncement());
+    };
+
+    window.addEventListener("announcement-storage-updated", handleAnnouncementUpdate);
+    window.addEventListener("storage", handleAnnouncementUpdate);
+    window.addEventListener("focus", handleAnnouncementUpdate);
+
+    return () => {
+      window.removeEventListener("announcement-storage-updated", handleAnnouncementUpdate);
+      window.removeEventListener("storage", handleAnnouncementUpdate);
+      window.removeEventListener("focus", handleAnnouncementUpdate);
+    };
   }, []);
 
   const loadMenu = async () => {

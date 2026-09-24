@@ -56,6 +56,10 @@ const AnnouncementPage = () => {
     return <Result status="403" title={t("announcement_admin_only")} />;
   }
 
+  const notifyAnnouncementChange = () => {
+    window.dispatchEvent(new CustomEvent("announcement-storage-updated"));
+  };
+
   const saveAnnouncement = (values) => {
     if (editingId) {
       setAnnouncements((current) =>
@@ -81,6 +85,7 @@ const AnnouncementPage = () => {
       message.success(t("announcement_created"));
     }
 
+    notifyAnnouncementChange();
     form.resetFields();
     setEditingId(null);
   };
@@ -97,6 +102,7 @@ const AnnouncementPage = () => {
       form.resetFields();
       setEditingId(null);
     }
+    notifyAnnouncementChange();
     message.success(t("announcement_deleted"));
   };
 
@@ -110,6 +116,7 @@ const AnnouncementPage = () => {
             : item
       )
     );
+    notifyAnnouncementChange();
   };
 
   return (
