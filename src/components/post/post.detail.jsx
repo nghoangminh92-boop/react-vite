@@ -350,17 +350,26 @@ const PostDetail = (props) => {
               <TranslateButton text={postDetail.content} />
             </div>
 
-            {postDetail.image && (
-              <img
-                src={
-                  postDetail.image?.startsWith("http")
-                    ? postDetail.image
-                    : `${import.meta.env.VITE_BACKEND_URL}/images/${postDetail.image}`
-                }
-                alt=""
-                className="post-image"
-              />
-            )}
+            {(() => {
+              const images = Array.isArray(postDetail.images) && postDetail.images.length > 0
+                ? postDetail.images
+                : postDetail.image
+                  ? [postDetail.image]
+                  : [];
+
+              return images.length > 0 ? (
+                <div className="post-detail-gallery">
+                  {images.map((image, index) => (
+                    <img
+                      key={`${image}-${index}`}
+                      src={image?.startsWith("http") ? image : `${import.meta.env.VITE_BACKEND_URL}/images/${image}`}
+                      alt={`${postDetail.title || "post"} ${index + 1}`}
+                      className="post-image"
+                    />
+                  ))}
+                </div>
+              ) : null;
+            })()}
 
             <hr className="divider" />
 

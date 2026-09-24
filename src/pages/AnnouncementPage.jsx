@@ -38,6 +38,9 @@ const readAnnouncements = () => {
   }
 };
 
+const isExpired = (item) =>
+  Boolean(item.expiresAt && new Date(`${item.expiresAt}T23:59:59`).getTime() < Date.now());
+
 const AnnouncementPage = () => {
   const { user } = useContext(AuthContext);
   const { t } = useTranslation();
@@ -84,7 +87,7 @@ const AnnouncementPage = () => {
 
   const editAnnouncement = (item) => {
     setEditingId(item.id);
-    form.setFieldsValue(item);
+    form.setFieldsValue({ ...item, expiresAt: item.expiresAt || "" });
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -139,6 +142,13 @@ const AnnouncementPage = () => {
             <Form.Item name="pinned" label={t("announcement_pin_now")} valuePropName="checked">
               <Switch checkedChildren={<PushpinFilled />} unCheckedChildren={<PushpinOutlined />} />
             </Form.Item>
+            <Form.Item
+              name="expiresAt"
+              label={t("announcement_expires_at")}
+              rules={[{ required: true, message: t("announcement_expires_required") }]}
+            >
+              <Input type="date" min={new Date().toISOString().slice(0, 10)} />
+            </Form.Item>
             <Space>
               <Button type="primary" htmlType="submit" icon={editingId ? <EditOutlined /> : <PlusOutlined />}>
                 {editingId ? t("save") : t("announcement_create")}
@@ -158,7 +168,7 @@ const AnnouncementPage = () => {
           <Card><Empty description={t("announcement_empty")} /></Card>
         ) : (
           announcements.map((item) => (
-            <Card key={item.id} className={item.pinned ? "announcement-item is-pinned" : "announcement-item"}>
+            <Card key={item.id} className={item.pinned && !isExpired(item) ? "announcement-item is-pinned" : "announcement-item"}>
               <div className="announcement-item-main">
                 <div>
                   <div className="announcement-item-title">
@@ -168,14 +178,18 @@ const AnnouncementPage = () => {
                   <p>{item.content}</p>
                 </div>
                 <Space>
-                  <Switch checked={item.pinned} onChange={(checked) => togglePinned(item.id, checked)} checkedChildren={<PushpinFilled />} unCheckedChildren={<PushpinOutlined />} />
+                  <Switch disabled={isExpired(item)} checked={item.pinned && !isExpired(item)} onChange={(checked) => togglePinned(item.id, checked)} checkedChildren={<PushpinFilled />} unCheckedChildren={<PushpinOutlined />} />
                   <Button icon={<EditOutlined />} onClick={() => editAnnouncement(item)} aria-label={t("edit")} />
                   <Popconfirm title={t("announcement_delete_confirm")} onConfirm={() => removeAnnouncement(item.id)}>
                     <Button danger icon={<DeleteOutlined />} aria-label={t("delete")} />
                   </Popconfirm>
                 </Space>
               </div>
-              {item.pinned && <Tag color="green" icon={<PushpinFilled />}>{t("announcement_pinned")}</Tag>}
+              <Space>
+                {item.pinned && !isExpired(item) && <Tag color="green" icon={<PushpinFilled />}>{t("announcement_pinned")}</Tag>}
+                {isExpired(item) && <Tag color="default">{t("announcement_expired")}</Tag>}
+                {item.expiresAt && <Text className="announcement-expiry">{t("announcement_expires_at")}: {item.expiresAt}</Text>}
+              </Space>
             </Card>
           ))
         )}

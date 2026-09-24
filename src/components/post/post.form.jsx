@@ -22,8 +22,8 @@ const PostForm = (props) => {
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [preview, setPreview] = useState(null);
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [previews, setPreviews] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [dishOptions, setDishOptions] = useState([]);
@@ -54,13 +54,13 @@ const PostForm = (props) => {
 
   const handleOnChangeFile = (event) => {
     if (!event.target.files || event.target.files.length === 0) {
-      setSelectedFile(null);
-      setPreview(null);
+      setSelectedFiles([]);
+      setPreviews([]);
       return;
     }
-    const file = event.target.files[0];
-    setSelectedFile(file);
-    setPreview(URL.createObjectURL(file));
+    const files = Array.from(event.target.files);
+    setSelectedFiles(files);
+    setPreviews(files.map((file) => URL.createObjectURL(file)));
   };
 
   const handleSubmitBtn = async () => {
@@ -93,13 +93,13 @@ const PostForm = (props) => {
       return;
     }
 
-    let imageName = "";
+    let imageNames = [];
 
     try {
-      if (selectedFile) {
-        const resUpload = await handleUpdateFile(selectedFile, "post");
+      for (const file of selectedFiles) {
+        const resUpload = await handleUpdateFile(file, "post");
         if (resUpload.data) {
-          imageName = resUpload.data.url;
+          imageNames.push(resUpload.data.url);
         } else {
           notification.error({
             message: t("upload_error"),
@@ -112,9 +112,10 @@ const PostForm = (props) => {
       const res = await createPostAPI(
         title,
         content,
-        imageName,
+        imageNames[0] || "",
         user?.fullName || t("anonymous"),
-        selectedFoodId
+        selectedFoodId,
+        imageNames
       );
 
       if (res.data) {
@@ -154,8 +155,8 @@ const PostForm = (props) => {
     setIsModalOpen(false);
     setTitle("");
     setContent("");
-    setSelectedFile(null);
-    setPreview(null);
+    setSelectedFiles([]);
+    setPreviews([]);
     setSelectedFoodId(null);
     setStar(0);
     if (fileInputRef.current) fileInputRef.current.value = "";
@@ -228,22 +229,17 @@ const PostForm = (props) => {
                 hidden
                 ref={fileInputRef}
                 accept="image/*"
+                multiple
                 onChange={handleOnChangeFile}
               />
             </div>
 
-            {preview && (
-              <img
-                src={preview}
-                alt="preview"
-                style={{
-                  marginTop: "10px",
-                  maxWidth: "200px",
-                  maxHeight: "150px",
-                  objectFit: "cover",
-                  borderRadius: "8px",
-                }}
-              />
+            {previews.length > 0 && (
+              <div className="post-image-preview-grid">
+                {previews.map((previewUrl) => (
+                  <img key={previewUrl} src={previewUrl} alt="preview" />
+                ))}
+              </div>
             )}
           </div>
         </div>

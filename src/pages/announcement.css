@@ -99,6 +99,11 @@
   white-space: pre-wrap;
 }
 
+.announcement-expiry {
+  color: var(--color-text-muted);
+  font-size: 12px;
+}
+
 @media (max-width: 640px) {
   .announcement-page {
     width: min(100% - 24px, 980px);

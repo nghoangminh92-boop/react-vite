@@ -31,6 +31,18 @@ const PostsFeedList = ({
     return text.length > maxLength ? text.substring(0, maxLength) + "..." : text;
   };
 
+  const getPostImages = (post) =>
+    Array.isArray(post.images) && post.images.length > 0
+      ? post.images
+      : post.image
+        ? [post.image]
+        : [];
+
+  const getImageUrl = (image) =>
+    image?.startsWith("http")
+      ? image
+      : `${import.meta.env.VITE_BACKEND_URL}/images/${image}`;
+
   const canDelete = (post) => {
     if (!currentUser) return false;
     const uid = currentUser._id || currentUser.id;
@@ -127,16 +139,12 @@ const PostsFeedList = ({
           </div>
 
           {/* IMAGE */}
-          {post.image && (
-            <img
-              src={
-                post.image?.startsWith("http")
-                  ? post.image
-                  : `${import.meta.env.VITE_BACKEND_URL}/images/${post.image}`
-              }
-              alt={post.title}
-              className="post-card-image"
-            />
+          {getPostImages(post).length > 0 && (
+            <div className="post-card-gallery">
+              {getPostImages(post).map((image, index) => (
+                <img key={`${image}-${index}`} src={getImageUrl(image)} alt={`${post.title} ${index + 1}`} className="post-card-image" />
+              ))}
+            </div>
           )}
 
           {/* CONTENT */}

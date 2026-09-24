@@ -13,6 +13,7 @@ import {
   SunOutlined,
   MoonOutlined,
   NotificationOutlined,
+  AppstoreOutlined,
 } from '@ant-design/icons';
 import { Dropdown, message, Avatar } from 'antd';
 import { useContext, useState } from 'react';
@@ -47,22 +48,26 @@ const Header = () => {
   const navLinks = [
     { key: 'home', to: '/', label: t("home"), icon: <HomeOutlined /> },
     { key: 'menu', to: '/menu', label: t("menu"), icon: <CoffeeOutlined /> },
-
-    ...(user.role === 'ADMIN'
-      ? [
-          { key: 'dishes', to: '/dishes', label: t("dishes"), icon: <AuditOutlined /> },
-          { key: 'posts', to: '/posts', label: t("posts"), icon: <FileTextOutlined /> },
-          { key: 'users', to: '/users', label: t("users"), icon: <UsergroupAddOutlined /> },
-          { key: 'announcements', to: '/announcements', label: t("announcements"), icon: <NotificationOutlined /> },
-        ]
-      : []),
-
-    ...(user.role === 'STAFF'
-      ? [{ key: 'dishes', to: '/dishes', label: t("dishes"), icon: <AuditOutlined /> }]
-      : []),
-
     { key: 'contact', to: '/contact', label: t("contact"), icon: <PhoneOutlined /> },
   ];
+
+  const managementLinks = user.role === 'ADMIN'
+    ? [
+        { key: 'dishes', to: '/dishes', label: t("dishes"), icon: <AuditOutlined /> },
+        { key: 'posts', to: '/posts', label: t("posts"), icon: <FileTextOutlined /> },
+        { key: 'users', to: '/users', label: t("users"), icon: <UsergroupAddOutlined /> },
+        { key: 'announcements', to: '/announcements', label: t("announcements"), icon: <NotificationOutlined /> },
+      ]
+    : user.role === 'STAFF'
+      ? [{ key: 'dishes', to: '/dishes', label: t("dishes"), icon: <AuditOutlined /> }]
+      : [];
+
+  const managementMenuItems = managementLinks.map((item) => ({
+    key: item.key,
+    icon: item.icon,
+    label: item.label,
+    onClick: () => navigate(item.to),
+  }));
 
   const userMenuItems = {
     items: [
@@ -107,6 +112,15 @@ const Header = () => {
               <span>{item.label}</span>
             </Link>
           ))}
+          {managementLinks.length > 0 && (
+            <Dropdown menu={{ items: managementMenuItems }} placement="bottomLeft">
+              <button className="app-nav-management" type="button">
+                <AppstoreOutlined />
+                <span>{t("management")}</span>
+                <DownOutlined />
+              </button>
+            </Dropdown>
+          )}
         </nav>
 
         {/* RIGHT SIDE */}
@@ -186,6 +200,22 @@ const Header = () => {
             <span>{item.label}</span>
           </Link>
         ))}
+        {managementLinks.length > 0 && (
+          <div className="app-mobile-management">
+            <div className="app-mobile-management-title"><AppstoreOutlined /> {t("management")}</div>
+            {managementLinks.map((item) => (
+              <Link
+                key={item.key}
+                to={item.to}
+                className={`app-mobile-nav-link ${isActive(item.to) ? 'active' : ''}`}
+                onClick={() => setMobileOpen(false)}
+              >
+                {item.icon}
+                <span>{item.label}</span>
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
     </header>
   );

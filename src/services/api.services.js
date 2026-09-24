@@ -84,9 +84,9 @@ const fetchAllFoodAPI = (current, pageSize) => {
 
 // ================= POST =================
 
-const createPostAPI = (title, content, image, author, foodId) => {
+const createPostAPI = (title, content, image, author, foodId, images = []) => {
   const URL_BACKEND = `/api/v1/post`;
-  const data = { title, content, image, author, foodId };
+  const data = { title, content, image, images, author, foodId };
   return axios.post(URL_BACKEND, data);
 };
 

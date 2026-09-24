@@ -108,6 +108,19 @@
   box-shadow: var(--pd-shadow-md);
 }
 
+.post-detail-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.post-detail-gallery .post-image {
+  width: 100%;
+  height: 220px;
+  margin-bottom: 0;
+}
+
 .divider {
   border: none;
   border-top: 1px solid var(--pd-border);

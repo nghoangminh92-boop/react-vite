@@ -118,7 +118,11 @@ const TodoApp = () => {
 
     try {
       const announcements = JSON.parse(localStorage.getItem("food-review-announcements") || "[]");
-      setPinnedAnnouncement(announcements.find((item) => item.pinned) || null);
+      setPinnedAnnouncement(
+        announcements.find(
+          (item) => item.pinned && (!item.expiresAt || new Date(`${item.expiresAt}T23:59:59`).getTime() >= Date.now())
+        ) || null
+      );
     } catch {
       setPinnedAnnouncement(null);
     }
